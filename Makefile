@@ -7,8 +7,8 @@ EXTENSION = kaasearch
 # SQL script executed on CREATE EXTENSION
 DATA = kaasearch--1.0.sql
 
-# C source files to compile (more will be added later)
-OBJS = src/kaasearch.o
+# C source files to compile
+OBJS = src/kaasearch.o src/translit.o src/stemmer.o
 
 # Path to pg_config (override with PG_CONFIG=/path/to/pg_config)
 PG_CONFIG ?= pg_config

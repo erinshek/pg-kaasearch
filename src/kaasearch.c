@@ -9,6 +9,7 @@
 #include "utils/builtins.h"
 
 #include "translit.h"
+#include "stemmer.h"
 
 PG_MODULE_MAGIC;
 
@@ -70,7 +71,8 @@ kaasearch_init(PG_FUNCTION_ARGS)
  *   1. Lowercase the token
  *   2. If Cyrillic → transliterate to Latin
  *   3. Check stop words → if match, filter out
- *   4. Return lexeme
+ *   4. Stem the word (strip one suffix)
+ *   5. Return lexeme
  */
 Datum
 kaasearch_lexize(PG_FUNCTION_ARGS)
@@ -101,7 +103,14 @@ kaasearch_lexize(PG_FUNCTION_ARGS)
         PG_RETURN_POINTER(res);
     }
 
-    /* Step 4: return the lexeme */
+    /* Step 4: stem the word */
+    {
+        char *stemmed = kaa_stem(txt, strlen(txt));
+        pfree(txt);
+        txt = stemmed;
+    }
+
+    /* Step 5: return the lexeme */
     res = palloc0(sizeof(TSLexeme) * 2);
     res[0].lexeme = txt;
 
