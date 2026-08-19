@@ -1,0 +1,17 @@
+# Build artifacts
+*.o
+*.so
+*.dylib
+*.bc
+
+# PGXS regression test output
+results/
+regression.diffs
+regression.out
+tmp_check/
+tmp_check_iso/
+log/
+output_iso/
+
+# macOS
+.DS_Store
