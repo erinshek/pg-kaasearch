@@ -97,22 +97,19 @@ static const CyrLatinEntry cyr_to_lat[] = {
     {0x044F, "ya"},             /* я */
     {0x0451, "yo"},             /* ё */
 
-    /* === Extended Karakalpak Cyrillic (uppercase) === */
+    /* === Extended Karakalpak Cyrillic (sorted by codepoint) === */
 
     {0x0492, "\xC7\xB5"},      /* Ғ → ǵ */
-    {0x049A, "q"},              /* Қ */
-    {0x04A2, "\xC5\x84"},      /* Ң → ń */
-    {0x04AE, "\xC3\xBA"},      /* Ү → ú */
-    {0x04B0, "w"},              /* Ў */
-    {0x04B2, "h"},              /* Ҳ */
-
-    /* === Extended Karakalpak Cyrillic (lowercase) === */
-
     {0x0493, "\xC7\xB5"},      /* ғ → ǵ */
+    {0x049A, "q"},              /* Қ */
     {0x049B, "q"},              /* қ */
+    {0x04A2, "\xC5\x84"},      /* Ң → ń */
     {0x04A3, "\xC5\x84"},      /* ң → ń */
+    {0x04AE, "\xC3\xBA"},      /* Ү → ú */
     {0x04AF, "\xC3\xBA"},      /* ү → ú */
+    {0x04B0, "w"},              /* Ў */
     {0x04B1, "w"},              /* ў */
+    {0x04B2, "h"},              /* Ҳ */
     {0x04B3, "h"},              /* ҳ */
     {0x04D8, "\xC3\xA1"},      /* Ә → á */
     {0x04D9, "\xC3\xA1"},      /* ә → á */
