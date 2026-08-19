@@ -1,0 +1,18 @@
+# Shared library name (produces kaasearch.so / kaasearch.dylib)
+MODULE_big = kaasearch
+
+# Extension name for CREATE EXTENSION
+EXTENSION = kaasearch
+
+# SQL script executed on CREATE EXTENSION
+DATA = kaasearch--1.0.sql
+
+# C source files to compile (more will be added later)
+OBJS = src/kaasearch.o
+
+# Path to pg_config (override with PG_CONFIG=/path/to/pg_config)
+PG_CONFIG ?= pg_config
+
+# Include PostgreSQL Extension Build System (PGXS)
+PGXS := $(shell $(PG_CONFIG) --pgxs)
+include $(PGXS)
