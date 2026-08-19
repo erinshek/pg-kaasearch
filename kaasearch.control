@@ -1,0 +1,11 @@
+# Extension description shown in pg_available_extensions view
+comment = 'Full-text search support for Karakalpak language'
+
+# Version used when CREATE EXTENSION has no VERSION clause
+default_version = '1.0'
+
+# Path to shared library ($libdir is resolved by PostgreSQL)
+module_pathname = '$libdir/kaasearch'
+
+# Allow installing into any schema
+relocatable = true
