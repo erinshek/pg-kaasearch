@@ -190,13 +190,15 @@ cyrillic_to_latin(const char *input, size_t len)
         }
 
         /* Normal lookup in charmap */
-        const char *latin = lookup_cyr(cp);
-
-        if (latin != NULL)
         {
-            size_t llen = strlen(latin);
-            memcpy(result + pos, latin, llen);
-            pos += llen;
+            const char *latin = lookup_cyr(cp);
+
+            if (latin != NULL)
+            {
+                size_t llen = strlen(latin);
+                memcpy(result + pos, latin, llen);
+                pos += llen;
+            }
         }
         /* Unknown Cyrillic: silently skip */
 
