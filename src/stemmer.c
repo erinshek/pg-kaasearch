@@ -35,11 +35,9 @@ static const SuffixRule suffixes[] = {
     {"qan",             3},     /* -qan */
     {"ken",             3},     /* -ken */
 
-    /* Ablative: -dan, -den, -tan, -ten */
+    /* Ablative: -dan, -den (not -tan/-ten: too many false positives) */
     {"dan",             3},     /* -dan */
     {"den",             3},     /* -den */
-    {"tan",             3},     /* -tan */
-    {"ten",             3},     /* -ten */
 
     /* Plural: -lar, -ler, -dar, -der, -tar, -ter */
     {"lar",             3},     /* -lar */
@@ -57,9 +55,11 @@ static const SuffixRule suffixes[] = {
     {"\xC5\x84\xC4\xB1z", 5},  /* -ńız */
     {"\xC5\x84iz",     4},     /* -ńiz */
 
-    /* Genitive: -nıń, -niń */
+    /* Genitive: -nıń, -niń, -tıń, -tiń */
     {"n\xC4\xB1\xC5\x84", 5},  /* -nıń */
+    {"t\xC4\xB1\xC5\x84", 5},  /* -tıń */
     {"ni\xC5\x84",     4},     /* -niń */
+    {"ti\xC5\x84",     4},     /* -tiń */
 
     /* Dative: -ǵa, -ge, -qa, -ke */
     {"\xC7\xB5" "a",   3},     /* -ǵa */
@@ -94,6 +94,10 @@ static const SuffixRule suffixes[] = {
     /* 2nd person singular possessive: -ıń, -iń */
     {"\xC4\xB1\xC5\x84", 4},   /* -ıń */
     {"i\xC5\x84",      3},     /* -iń */
+
+    /* 3rd person possessive (short): -ı, -i */
+    {"\xC4\xB1",       2},     /* -ı */
+    {"i",               1},     /* -i */
 
     /* Short possessive/person: -m, -ń */
     {"m",               1},     /* -m */
