@@ -1,6 +1,17 @@
 /* kaasearch extension: Full-text search for Karakalpak language */
 
-/* Step 1: Register C functions as a text search template */
+/* Register C functions for the text search template */
+CREATE FUNCTION kaasearch_init(internal)
+    RETURNS internal
+    AS 'MODULE_PATHNAME'
+    LANGUAGE C STRICT;
+
+CREATE FUNCTION kaasearch_lexize(internal, internal, internal, internal)
+    RETURNS internal
+    AS 'MODULE_PATHNAME'
+    LANGUAGE C STRICT;
+
+/* Step 1: Create a text search template using the C functions */
 CREATE TEXT SEARCH TEMPLATE kaasearch_template (
     INIT   = kaasearch_init,
     LEXIZE = kaasearch_lexize
