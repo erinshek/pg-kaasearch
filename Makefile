@@ -27,3 +27,10 @@ include $(PGXS)
 .PHONY: tables
 tables:
 	python3 tools/gen_tables.py
+
+# Equivalence test: the C stemmer core against kaastem (needs python3 and a C compiler)
+.PHONY: check-core
+check-core:
+	$(CC) -std=c99 -O1 -g -fsanitize=address,undefined -fno-omit-frame-pointer \
+		-Isrc test/core/kaacore_cli.c src/kaacore.c src/kaadata.c -o test/core/kaacore_cli
+	python3 test/core/compare.py test/core/kaacore_cli

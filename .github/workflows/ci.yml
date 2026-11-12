@@ -60,3 +60,9 @@ jobs:
 
       - name: C tables are up to date with kaastem
         run: python tools/gen_tables.py --check
+
+      - name: C core gives the same analysis as kaastem
+        run: |
+          cc -std=c99 -O1 -g -fsanitize=address,undefined -fno-omit-frame-pointer \
+             -Isrc test/core/kaacore_cli.c src/kaacore.c src/kaadata.c -o kaacore_cli
+          python test/core/compare.py ./kaacore_cli

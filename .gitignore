@@ -15,3 +15,6 @@ output_iso/
 
 # macOS
 .DS_Store
+
+# Equivalence test driver (make check-core)
+test/core/kaacore_cli
