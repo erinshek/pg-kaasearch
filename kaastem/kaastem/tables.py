@@ -51,6 +51,7 @@ SLOTS = {
     'PROG': _w('maqta mekte baqta bekte paqta pekte'),
     'SUP':  _w('maǵa mege baǵa bege paǵa pege'),
     'VN':   _w('ıw iw w'),
+    'NMSH': _w('ısh ish'),                     # action noun: quwan-ısh, ókin-ish
     'NMLZ': _w('lıq lik lıǵ lig'),              # -lıq/-lik after a participle
     'P1':   _w('man men ban ben pan pen sań seń mız miz bız biz pız piz sız siz'),   # full set
     'P2':   _w('ńız ńiz m ń q k'),                                                    # short set
@@ -61,7 +62,7 @@ SLOTS = {
 _NOUN_CASES = ['GEN', 'DAT', 'ACC', 'ABL', 'LOC']
 
 NEXT = {
-    'START': ['NEG', 'PAST', 'PRES', 'COND', 'PTCP', 'CVBP', 'CVB', 'IMP', 'INT', 'OPT', 'PROG', 'SUP', 'VN',
+    'START': ['NEG', 'PAST', 'PRES', 'COND', 'PTCP', 'CVBP', 'CVB', 'IMP', 'INT', 'OPT', 'PROG', 'SUP', 'VN', 'NMSH',
               'PL', 'PX', *_NOUN_CASES, 'PRED', 'Q2', 'GI', 'DAY', 'SHA', 'JAN', 'NIKI', 'DEG', 'NUM',
               'P1', 'P2', 'NMLZ', 'END'],
     # verb
@@ -78,6 +79,7 @@ NEXT = {
     'PROG':  ['P1', 'END'],
     'SUP':   ['END'],
     'VN':    ['PL', 'PX', *_NOUN_CASES, 'END'],
+    'NMSH':  ['PL', 'PX', *_NOUN_CASES, 'END'],
     'NMLZ':  ['PX', *_NOUN_CASES, 'END'],
     'P1':    ['PLV', 'END'],
     'P2':    ['PLV', 'END'],
@@ -107,9 +109,9 @@ NEXT = {
 }
 
 VERB_FIRST = frozenset(['NEG', 'PAST', 'PRES', 'COND', 'PTCP', 'CVBP', 'CVB', 'IMP', 'INT', 'OPT', 'PROG',
-                        'SUP', 'VN'])
+                        'SUP', 'VN', 'NMSH'])
 BARE_FIRST = frozenset(['P1', 'P2', 'NMLZ'])       # only after atır, edi, eken ...
-LIGHT = frozenset(['GI', 'DAY', 'SHA', 'JAN', 'NIKI', 'DEG', 'NUM', 'VN'])
+LIGHT = frozenset(['GI', 'DAY', 'SHA', 'JAN', 'NIKI', 'DEG', 'NUM', 'VN', 'NMSH'])
 SAFE = frozenset(['PL', 'PX', 'GEN', 'ABL'])       # classes stripped from words not in the lexicon (≥ 3 letters)
 
 # A suffix-final q/k becomes ǵ/g before a vowel: -lıq → -lıǵ-ı, -raq → -raǵ-ı, -ajaq → -ajaǵ-ı
@@ -274,6 +276,8 @@ def class_ok(prev, morph, cls, prevcls):
             return sc == 'V'
         if morph in ('sın', 'sin'):
             return True
+        return sc != 'V'
+    if cls == 'NMSH':                                 # after a consonant only
         return sc != 'V'
     if cls == 'VN':
         return (morph == 'w') == (sc == 'V')

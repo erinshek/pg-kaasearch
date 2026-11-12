@@ -401,8 +401,8 @@ class Stemmer:
             i = 0
             while i < len(classes) and classes[i] == 'NEG':
                 i += 1
-            if i < len(classes) and (classes[i] == 'VN' or (classes[i] == 'PTCP' and path[i][1] in _GAN)):
-                i += 1                                                          # jazıw, kelisken, aynımaǵan
+            if i < len(classes) and (classes[i] in ('VN', 'NMSH') or (classes[i] == 'PTCP' and path[i][1] in _GAN)):
+                i += 1                                                          # jazıw, quwanısh, kelisken, aynımaǵan
             elif i:
                 return False
             return all(c in T.LIGHT or (c in ('LOC', 'LOCP') and classes[j + 1:j + 2] == ['GI'])

@@ -145,6 +145,7 @@ cyrillic_to_latin(const char *input, size_t len)
          *
          *   ь/Ь (U+044C/U+042C) + и/И (U+0438/U+0418) → "yi"
          *   ь/Ь (U+044C/U+042C) + о/О (U+043E/U+041E) → "yo"
+ *   ь/Ь (U+044C/U+042C) + е/Е (U+0435/U+0415) → "ye"   (пьеса → pyesa)
          *   ъ/Ъ (U+044A/U+042A) + е/Е (U+0435/U+0415) → "ye"
          */
         if (cp == 0x044C || cp == 0x042C)   /* ь or Ь */
@@ -166,6 +167,16 @@ cyrillic_to_latin(const char *input, size_t len)
                 int skip;
                 result[pos++] = 'y';
                 result[pos++] = 'o';
+                p += bytes;
+                utf8_decode(p, &skip);
+                p += skip;
+                continue;
+            }
+            if (next == 0x0435 || next == 0x0415)   /* е/Е → ye */
+            {
+                int skip;
+                result[pos++] = 'y';
+                result[pos++] = 'e';
                 p += bytes;
                 utf8_decode(p, &skip);
                 p += skip;

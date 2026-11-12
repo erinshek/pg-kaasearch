@@ -25,21 +25,21 @@ python -m kaastem -f text.txt
 
 Python 3.8 or newer. No other libraries are needed. Install with `pip install .`
 
-## Test results (0.1.2)
+## Test results (0.2.0)
 
 | Table | Result |
 |---|---|
 | `tests/test_set.tsv` — 200 words verified by a native speaker | 200 / 200 |
 | `tests/exceptions.tsv` — 100 words verified by a native speaker | 100 / 100 |
-| `tests/reviewed.tsv` — entries added during implementation, 118 words reviewed by a native speaker | 118 / 118 |
-| `tests/extra.tsv` — spelling normalisation and rules added during implementation (not independently verified) | 46 / 46 |
+| `tests/reviewed.tsv` — entries added during implementation and answers to open questions, 128 words reviewed by a native speaker | 128 / 128 |
+| `tests/extra.tsv` — spelling normalisation and rules added during implementation (not independently verified) | 50 / 50 |
 
 Run them with `python tests/run_tests.py` (`-v` shows every word).
 
 In the text of 11 school textbooks (261 thousand words) 95 percent of the words are analysed through
 a list or the lexicon; the remaining 5 percent are not in the lexicon (mostly personal names, surnames
 and word fragments from exercises). This is not a measure of accuracy: how many of the analysed words are
-stemmed correctly has been checked only on the 464 test words (418 of them verified by a native speaker).
+stemmed correctly has been checked only on the 478 test words (428 of them verified by a native speaker).
 
 ## Layout
 
@@ -66,13 +66,13 @@ In every file the text after `#` is a comment. A list can be changed without tou
 | `lexicon.tsv` | headwords of «Túsindirme sózlik»: non-verbs (n) and verb stems (v) | 16 829 + 5 898 |
 | `lexicon_extra.tsv` | stems missing from the dictionary headword list: added by hand and induced from text | 752 |
 | `lexicon_exclude.tsv` | entries removed from the lexicon (headwords that are inflected forms) | 48 |
-| `protected.txt` | protected words (soraw, belgi, qanday, olar ...) | 87 |
+| `protected.txt` | protected words (soraw, belgi, qanday, olar ...) | 92 |
 | `function_words.txt` | postpositions, conjunctions, particles, modal words | 73 |
-| `ready_forms.tsv` | ready forms (maǵan → men, aldı → al, aldında → aldı ...) | 51 |
-| `overrides.tsv` | stem overrides (ákel → alıp kel ...) | 6 |
-| `voice_stop.txt` | verbs whose voice suffix is not stripped | 44 |
+| `ready_forms.tsv` | ready forms (maǵan → men, aldı → al, aldında → aldı ...) | 55 |
+| `overrides.tsv` | stem overrides (ákel → alıp kel ...) | 5 |
+| `voice_stop.txt` | verbs whose voice suffix is not stripped | 45 |
 | `voice_explicit.tsv` | explicitly listed voice forms (kórset → kór ...) | 3 |
-| `prefer.tsv` | what to do when two stems compete (al / ald, ata / at, qur = qurı ...) | 27 |
+| `prefer.tsv` | what to do when two stems compete (al / ald, ata / at, qur / qurı ...) | 27 |
 | `gi_bases.txt`, `kinship.txt`, `numerals.txt` | bases after which -ǵı, -jan and the numeral suffixes are stripped | 28, 7, 22 |
 | `bare_stems.txt` | stems that take person suffixes directly (atır, edi, eken ...) | 9 |
 | `elision.txt` | words that drop a vowel before a possessive suffix (xalıq – xalqı) | 21 |
@@ -128,11 +128,14 @@ Other changes:
 - A derived stem (*taza + lıq*), restoring a vowel in a word that is not in the elision list, and a double
   consonant are tentative analyses: they are used only if no other analysis is found.
 - A function word cannot be a stem: *ushında = ush + ı + nda*.
-- Pairs of competing stems are in `prefer.tsv`: *al / ald, qal / qala, ata / at*. For ambiguous pairs
-  (*qur = qurı, dúz = dúze, ek = ege, tiy = tiye*) the word is left unchanged: *qurıp → qurıp*.
+- Pairs of competing stems are in `prefer.tsv`: *al / ald, qal / qala, ata / at, qur / qurı*. Four reviewed
+  forms of ambiguous pairs are kept unchanged as ready forms (*qurıp, dúzedi, egedi, tiyedi*); other forms
+  follow the pair (*qurıw → qur, dúzer → dúz*).
 - Possessed headwords: *aldı, astı, ústi, keyni, aqırı, túri, bári*. A case suffix is taken to attach to
   this form: *aldında → aldı, ústinde → ústi*.
 - Forms added to the table: -maqta, -ǵay, -maǵa, -mısań (with the question particle), -ajaǵı, -raǵı.
+- The action noun -ısh/-ish is stripped like the verbal noun (*quwanısh → quwan, ókinish → ókin*);
+  nouns that only look like it (*qılısh, tınısh, burısh*) are in `protected.txt`.
 
 ## Limitations
 

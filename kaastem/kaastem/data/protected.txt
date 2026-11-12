@@ -107,3 +107,10 @@ arasha
 boqsha      # cloth bundle
 tekshe      # wall niche, shelf
 gezegen
+
+# --- nouns ending in -ısh/-ish that are not action nouns (added 2026-11-12, kaastem 0.2) ---
+qılısh      # sword (not qıl + ısh)
+tınısh      # calm, quiet (not tın + ısh)
+burısh      # corner, angle (not bur + ısh)
+qonısh      # boot shaft (not qon + ısh)
+úyish       # heap, pile (not úy + ish)

@@ -1,7 +1,7 @@
 # Pairs: what to do when two stems compete for the same word.
 # first <TAB> kind <TAB> second <TAB> kind [<TAB> =]        (kind: n = non-verb, v = verb)
 #   no mark — the first one wins (qaladı → qal, not qala)
-#   =       — ambiguous: the word is left unchanged (qurıp, dúzedi); in voice reduction the first one wins (qurılǵan → qur)
+#   =       — ambiguous: the word is left unchanged (not used at present)
 
 # --- Reviewed by a native speaker (2026-11-12) ---
 # verb vs verb
@@ -27,11 +27,12 @@ aqırı	n	aqırın	n
 soń	n	sońın	n
 dala	n	dalan	n
 alma	n	almas	n
-# ambiguous
-qur	v	qurı	v	=
-dúz	v	dúze	v	=
-ek	v	ege	v	=
-tiy	v	tiye	v	=
+# formerly ambiguous ("="); since kaastem 0.2 only the reviewed forms are kept unchanged (ready_forms.tsv),
+# other forms follow the pair: qurıw → qur, dúzer → dúz
+qur	v	qurı	v
+dúz	v	dúze	v
+ek	v	ege	v
+tiy	v	tiye	v
 
 # --- Not yet reviewed (no effect on the texts) ---
 kel	v	kelmek	n

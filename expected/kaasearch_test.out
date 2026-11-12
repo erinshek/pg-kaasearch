@@ -148,5 +148,12 @@ SELECT to_tsvector('kaasearch', 'tar kóshe, ter shıqtı');
  'kóshe':2 'shıq':4 'tar':1 'ter':3
 (1 row)
 
+-- 18. Soft sign before е → ye
+SELECT to_tsvector('kaasearch', 'пьеса');
+ to_tsvector 
+-------------
+ 'pyesa':1
+(1 row)
+
 -- Clean up
 DROP EXTENSION kaasearch;

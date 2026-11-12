@@ -45,3 +45,7 @@ n	group	word	stem	note
 44	selection	birlesken	birles	a participle listed in the lexicon is stripped too
 45	selection	tariyxında	tariyx	back-vowel suffix after x
 46	selection	aldında	aldı	possessed headword: aldı + nda (corrected on 2026-11-12)
+47	selection	qılıshtan	qılısh	protected: sword, not qıl + ısh
+48	selection	tıp-tınısh	tıp-tınısh	protected: calm, not tın + ısh
+49	voice	maqtanadı	maqtan	stop list: maqtan (follows maqtanısh → maqtan)
+50	selection	baspay	baspa	reviewed exception kept (answer 4); compare kelmey → kel

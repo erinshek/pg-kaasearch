@@ -61,5 +61,8 @@ SELECT to_tsvector('kaasearch', 'Ǵárezsizlik 1991-jılı') @@ to_tsquery('kaas
 -- 17. Real words that look like suffixes are not stop words
 SELECT to_tsvector('kaasearch', 'tar kóshe, ter shıqtı');
 
+-- 18. Soft sign before е → ye
+SELECT to_tsvector('kaasearch', 'пьеса');
+
 -- Clean up
 DROP EXTENSION kaasearch;

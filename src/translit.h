@@ -9,7 +9,7 @@
  * Returns a palloc'd null-terminated string.
  *
  * Special context rules:
- *   ьи → yi,  ьо → yo,  ъе → ye
+ *   ьи → yi,  ьо → yo,  ье → ye,  ъе → ye
  */
 char *cyrillic_to_latin(const char *input, size_t len);
 
