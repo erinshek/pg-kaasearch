@@ -58,5 +58,8 @@ SELECT to_tsvector('kaasearch', 'Ídıs') @@ to_tsquery('kaasearch', 'ıdıs') A
 SELECT to_tsvector('kaasearch', '1991-jılı 5-mektepke COVID19 2016 3.14 -7');
 SELECT to_tsvector('kaasearch', 'Ǵárezsizlik 1991-jılı') @@ to_tsquery('kaasearch', '1991') AS number_match;
 
+-- 17. Real words that look like suffixes are not stop words
+SELECT to_tsvector('kaasearch', 'tar kóshe, ter shıqtı');
+
 -- Clean up
 DROP EXTENSION kaasearch;
