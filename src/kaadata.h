@@ -1,6 +1,6 @@
 /*
  * GENERATED FILE - DO NOT EDIT.
- * Source: kaastem 0.2.0 (kaastem/kaastem/tables.py, stemmer.py, data/).
+ * Source: kaastem 0.2.1 (kaastem/kaastem/tables.py, stemmer.py, data/).
  * Regenerate with: python3 tools/gen_tables.py
  */
 
@@ -10,7 +10,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#define KAA_KAASTEM_VERSION "0.2.0"
+#define KAA_KAASTEM_VERSION "0.2.1"
 
 /* Suffix classes, then the two pseudo-states START and END (bit positions in KaaMask). */
 typedef enum
@@ -90,7 +90,8 @@ typedef struct
     size_t      n;
 } KaaPairMap;
 
-/* A ready form: the form itself maps to stem; state is KAA_END when no suffix may follow. */
+/* A ready form a suffix chain may follow: form, its stem, the state the chain continues from
+   (KAA_START for a stem that takes person suffixes directly). */
 typedef struct
 {
     const char *form;
@@ -153,5 +154,15 @@ extern const KaaDeriv kaa_deriv_harmonic[];
 extern const size_t kaa_nderiv_harmonic;
 extern const KaaDeriv kaa_deriv_verbal[];
 extern const size_t kaa_nderiv_verbal;
+
+/* --- NFC composition of a letter and a following combining mark (normalize.py) --- */
+typedef struct
+{
+    uint32_t    base;
+    uint32_t    mark;
+    uint32_t    composed;
+} KaaCompose;
+extern const KaaCompose kaa_compose[];            /* sorted by base, then mark */
+extern const size_t kaa_ncompose;
 
 #endif /* KAASEARCH_KAADATA_H */

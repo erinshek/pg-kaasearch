@@ -25,7 +25,7 @@ python -m kaastem -f text.txt
 
 Python 3.8 or newer. No other libraries are needed. Install with `pip install .`
 
-## Test results (0.2.0)
+## Test results (0.2.1)
 
 | Table | Result |
 |---|---|

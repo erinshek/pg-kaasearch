@@ -150,11 +150,11 @@ class Stemmer:
             return 2
         if depth >= 2 or len(w) < 4:
             return 0
-        if depth == 0 and k in self._nom_cache:
-            return self._nom_cache[k]
+        if depth == 0 and w in self._nom_cache:                  # cached by the word as written, like _voice_base
+            return self._nom_cache[w]
         level = 1 if self._is_derived(w, depth) else 0
         if depth == 0:
-            self._nom_cache[k] = level
+            self._nom_cache[w] = level
         return level
 
     def _is_derived(self, w, depth):
@@ -208,8 +208,10 @@ class Stemmer:
     def _voice_base(self, w):
         """Strip one voice suffix: (base, suffix) or None."""
         k = key(w)
-        if k in self._voice_cache:
-            return self._voice_cache[k]
+        # cached by the word as written (not by its key), so the base keeps the word's own spelling
+        # (baxalan → baxala, bahalan → bahala) whatever order the words come in
+        if w in self._voice_cache:
+            return self._voice_cache[w]
         res = None
         if k in self.d.voice_explicit:
             res = (self.d.voice_explicit[k], 'explicit form')
@@ -234,7 +236,7 @@ class Stemmer:
             options = [o for o in options if (key(o[0]), 'v') not in losers] or options
             if options:
                 res = options[0]
-        self._voice_cache[k] = res
+        self._voice_cache[w] = res
         return res
 
     def _voice_reduce(self, stem, notes):

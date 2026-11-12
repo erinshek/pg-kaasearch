@@ -11,7 +11,7 @@ DATA = kaasearch--1.0.sql
 DATA_TSEARCH = data/kaasearch.stop
 
 # C source files to compile
-OBJS = src/kaasearch.o src/lower.o src/translit.o src/stemmer.o src/kaadata.o
+OBJS = src/kaasearch.o src/lower.o src/translit.o src/stemmer.o src/kaadata.o src/kaacore.o
 
 # Regression test (runs sql/kaasearch_test.sql, compares with expected/)
 REGRESS = kaasearch_test

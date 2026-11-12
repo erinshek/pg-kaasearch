@@ -19,6 +19,7 @@ Every word list is sorted by its UTF-8 bytes, so the C code can look words up wi
 import argparse
 import os
 import sys
+import unicodedata
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, 'kaastem'))
@@ -100,7 +101,8 @@ def main():
           '/* A sorted map from a word to a string. */',
           'typedef struct', '{', '    const char *key;', '    const char *value;', '} KaaPair;', '',
           'typedef struct', '{', '    const KaaPair *items;', '    size_t      n;', '} KaaPairMap;', '',
-          '/* A ready form: the form itself maps to stem; state is KAA_END when no suffix may follow. */',
+          '/* A ready form a suffix chain may follow: form, its stem, the state the chain continues from',
+          '   (KAA_START for a stem that takes person suffixes directly). */',
           'typedef struct', '{', '    const char *form;', '    const char *stem;', '    KaaClass    state;', '} KaaReady;', '',
           '/* Two competing stems; kind is \'n\' (non-verb) or \'v\' (verb). */',
           'typedef struct', '{', '    const char *first;', '    char        first_kind;',
@@ -142,6 +144,10 @@ def main():
           'extern const KaaWordSet kaa_particles, kaa_gan, kaa_not_base, kaa_deriv_fixed;',
           'extern const KaaDeriv kaa_deriv_harmonic[];', 'extern const size_t kaa_nderiv_harmonic;',
           'extern const KaaDeriv kaa_deriv_verbal[];', 'extern const size_t kaa_nderiv_verbal;', '',
+          '/* --- NFC composition of a letter and a following combining mark (normalize.py) --- */',
+          'typedef struct', '{', '    uint32_t    base;', '    uint32_t    mark;', '    uint32_t    composed;', '} KaaCompose;',
+          'extern const KaaCompose kaa_compose[];            /* sorted by base, then mark */',
+          'extern const size_t kaa_ncompose;', '',
           '#endif /* KAASEARCH_KAADATA_H */', '']
 
     # ------------------------------------------------------------------ data
@@ -245,6 +251,24 @@ def main():
     for back, front, after_vowel in S._DERIV_VERBAL:
         c.append(f'    {{{c_str(back)}, {c_str(front)}, {int(after_vowel)}}},')
     c += ['};', f'const size_t kaa_nderiv_verbal = {len(S._DERIV_VERBAL)};', '']
+
+    # NFC pairs for the letters that occur in Karakalpak text (Latin, Latin-1, Cyrillic) and the
+    # combining marks that may follow them in decomposed input
+    bases = [chr(x) for x in list(range(0x41, 0x5B)) + list(range(0x61, 0x7B)) + list(range(0xC0, 0x250))
+             + list(range(0x400, 0x530))]
+    marks = [chr(x) for x in range(0x300, 0x370)]
+    comp = []
+    for b in bases:
+        for m in marks:
+            n = unicodedata.normalize('NFC', b + m)
+            if len(n) == 1:
+                comp.append((ord(b), ord(m), ord(n)))
+    c.append('/* ---------------------------------------------------------------- NFC composition */')
+    c.append('')
+    c.append('const KaaCompose kaa_compose[] = {')
+    for b, m, n in comp:
+        c.append(f'    {{0x{b:04X}, 0x{m:04X}, 0x{n:04X}}},')
+    c += ['};', f'const size_t kaa_ncompose = {len(comp)};', '']
 
     files = {OUT_H: '\n'.join(h), OUT_C: '\n'.join(c)}
     stale = []
