@@ -15,7 +15,10 @@ For every word both programs report: stem, segments, suffix classes and source. 
 Words longer than KAA_MAX_WORD characters are skipped (the C core returns them unchanged).
 
     cc -std=c99 -O2 -fsanitize=address,undefined -Isrc test/core/kaacore_cli.c src/kaacore.c src/kaadata.c -o kaacore_cli
-    python3 test/core/compare.py ./kaacore_cli [--words 150000] [--seed 1]
+    python3 test/core/compare.py ./kaacore_cli [--words 150000] [--seed 1] [--lexicon FILE]
+
+With --lexicon, both programs also use that user lexicon (word <TAB> n|v), and its words are added
+to the word list.
 """
 import argparse
 import csv
@@ -116,10 +119,20 @@ def main():
     ap.add_argument('--words', type=int, default=150000, help='approximate number of generated words')
     ap.add_argument('--seed', type=int, default=1)
     ap.add_argument('--show', type=int, default=20, help='differences to print')
+    ap.add_argument('--lexicon', help='user lexicon file used by both programs')
     args = ap.parse_args()
 
     words = build_words(args.words, args.seed)
-    proc = subprocess.run([args.cli], input='\n'.join(words) + '\n', capture_output=True, text=True)
+    cmd, extra = [args.cli], ()
+    if args.lexicon:
+        cmd += ['-l', args.lexicon]
+        extra = (args.lexicon,)
+        rnd = random.Random(args.seed)
+        for line in open(args.lexicon, encoding='utf-8'):
+            w = line.split('#', 1)[0].split('\t')[0].strip()
+            if w:
+                words += [w] + [w + rnd.choice(T.SLOTS[c]) for c in ('PL', 'DAT', 'LOC', 'PAST', 'PX')]
+    proc = subprocess.run(cmd, input='\n'.join(words) + '\n', capture_output=True, text=True)
     if proc.returncode != 0 or proc.stderr:
         print(proc.stderr, file=sys.stderr)
         print(f'kaacore_cli failed with exit code {proc.returncode}', file=sys.stderr)
@@ -128,7 +141,7 @@ def main():
     if len(c_lines) != len(words):
         print(f'kaacore_cli printed {len(c_lines)} lines for {len(words)} words', file=sys.stderr)
         return 1
-    st = Stemmer()
+    st = Stemmer(extra_lexicons=extra)
     compared = skipped = 0
     diffs = []
     for w, line in zip(words, c_lines):

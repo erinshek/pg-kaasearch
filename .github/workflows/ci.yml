@@ -61,6 +61,9 @@ jobs:
       - name: C tables are up to date with kaastem
         run: python tools/gen_tables.py --check
 
+      - name: Generated SQL test is up to date
+        run: python tools/gen_sql_tests.py --check
+
       - name: C core gives the same analysis as kaastem
         run: |
           cc -std=c99 -O1 -g -fsanitize=address,undefined -fno-omit-frame-pointer \

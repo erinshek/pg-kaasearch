@@ -1,32 +1,123 @@
-/* Required PostgreSQL headers */
+/*
+ * kaasearch: full-text search for the Karakalpak language.
+ *
+ * The text search dictionary (template kaasearch_template) and the SQL functions kaa_stem,
+ * kaa_analyze and kaa_normalize. The stemming itself is done by the core in kaacore.c.
+ */
 #include "postgres.h"
 #include "fmgr.h"
 
-/* Text search dictionary API */
+#include "catalog/pg_type.h"
 #include "commands/defrem.h"
-#include "tsearch/ts_public.h"
-#include "utils/builtins.h"
+#include "funcapi.h"
 #include "mb/pg_wchar.h"
+#include "tsearch/ts_locale.h"
+#include "tsearch/ts_public.h"
+#include "utils/array.h"
+#include "utils/builtins.h"
 
-#include "lower.h"
-#include "translit.h"
-#include "stemmer.h"
+#include "kaacore.h"
 
 PG_MODULE_MAGIC;
 
-/* Internal state for the dictionary */
+/* Internal state of a dictionary */
 typedef struct
 {
-    StopList    stoplist;   /* PostgreSQL stop word list */
+    StopList    stoplist;       /* StopWords = name: $SHAREDIR/tsearch_data/name.stop */
+    KaaExtra   *extra;          /* Lexicon = name: $SHAREDIR/tsearch_data/name.kaalex, or NULL */
 } DictKaasearch;
 
 PG_FUNCTION_INFO_V1(kaasearch_init);
 PG_FUNCTION_INFO_V1(kaasearch_lexize);
+PG_FUNCTION_INFO_V1(kaa_stem_pg);
+PG_FUNCTION_INFO_V1(kaa_analyze_pg);
+PG_FUNCTION_INFO_V1(kaa_normalize_pg);
+
+static void
+check_encoding(void)
+{
+    /*
+     * The core works on UTF-8 bytes, and the stop-word and lexicon files are UTF-8. Refuse other
+     * encodings up front with a clear message instead of failing later on a decoding error.
+     */
+    if (GetDatabaseEncoding() != PG_UTF8)
+        ereport(ERROR,
+                (errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
+                 errmsg("kaasearch requires a UTF8 database"),
+                 errdetail("The current database encoding is %s.",
+                           GetDatabaseEncodingName()),
+                 errhint("Create the database with ENCODING 'UTF8'.")));
+}
+
+static void
+out_of_memory(void)
+{
+    ereport(ERROR,
+            (errcode(ERRCODE_OUT_OF_MEMORY),
+             errmsg("out of memory in the kaasearch stemmer")));
+}
 
 /*
- * Dictionary init function.
- * Called once when the dictionary is created.
- * Loads stop words from the "stopwords" parameter.
+ * Read a user lexicon: one stem per line, "word<TAB>n" for a non-verb or "word<TAB>v" for a verb
+ * stem; a line with only a word is a non-verb. Text after '#' is a comment.
+ */
+static KaaExtra *
+read_lexicon(const char *name)
+{
+    char       *filename = get_tsearch_config_filename(name, "kaalex");
+    tsearch_readline_state trst;
+    KaaExtra   *extra = kaa_extra_new();
+    char       *line;
+
+    if (!extra)
+        out_of_memory();
+    if (!tsearch_readline_begin(&trst, filename))
+    {
+        kaa_extra_free(extra);
+        ereport(ERROR,
+                (errcode(ERRCODE_CONFIG_FILE_ERROR),
+                 errmsg("could not open kaasearch lexicon file \"%s\": %m", filename)));
+    }
+    while ((line = tsearch_readline(&trst)) != NULL)
+    {
+        char       *hash = strchr(line, '#');
+        char       *word = line;
+        char       *kind;
+        size_t      wl;
+        char        k = 'n';
+
+        if (hash)
+            *hash = '\0';
+        while (*word == ' ' || *word == '\t')
+            word++;
+        wl = strcspn(word, " \t\r\n");
+        kind = word + wl;
+        while (*kind == ' ' || *kind == '\t')
+            kind++;
+        if (*kind == 'v' || *kind == 'V')
+            k = 'v';
+        else if (*kind != '\0' && *kind != '\r' && *kind != '\n' && *kind != 'n' && *kind != 'N')
+        {
+            kaa_extra_free(extra);
+            ereport(ERROR,
+                    (errcode(ERRCODE_CONFIG_FILE_ERROR),
+                     errmsg("invalid line in kaasearch lexicon file \"%s\"", filename),
+                     errdetail("The second column must be \"n\" (non-verb) or \"v\" (verb stem).")));
+        }
+        if (wl > 0 && kaa_extra_add(extra, word, wl, k) != 0)
+        {
+            kaa_extra_free(extra);
+            out_of_memory();
+        }
+        pfree(line);
+    }
+    tsearch_readline_end(&trst);
+    pfree(filename);
+    return extra;
+}
+
+/*
+ * Dictionary init function: options StopWords = name and Lexicon = name.
  */
 Datum
 kaasearch_init(PG_FUNCTION_ARGS)
@@ -36,24 +127,12 @@ kaasearch_init(PG_FUNCTION_ARGS)
     ListCell   *l;
     bool        stoploaded = false;
 
-    /*
-     * The transliteration, lowercase and stemmer code works on UTF-8 bytes,
-     * and the stop-word file is UTF-8. Refuse other encodings up front with
-     * a clear message instead of failing later on a decoding error.
-     */
-    if (GetDatabaseEncoding() != PG_UTF8)
-        ereport(ERROR,
-                (errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
-                 errmsg("kaasearch requires a UTF8 database"),
-                 errdetail("The current database encoding is %s.",
-                           GetDatabaseEncodingName()),
-                 errhint("Create the database with ENCODING 'UTF8'.")));
-
+    check_encoding();
     d = (DictKaasearch *) palloc0(sizeof(DictKaasearch));
 
     foreach(l, dictoptions)
     {
-        DefElem *defel = (DefElem *) lfirst(l);
+        DefElem    *defel = (DefElem *) lfirst(l);
 
         if (strcmp(defel->defname, "stopwords") == 0)
         {
@@ -61,72 +140,187 @@ kaasearch_init(PG_FUNCTION_ARGS)
                 ereport(ERROR,
                         (errcode(ERRCODE_INVALID_PARAMETER_VALUE),
                          errmsg("multiple StopWords parameters")));
-
             readstoplist(defGetString(defel), &d->stoplist, NULL);
             stoploaded = true;
         }
-        else
+        else if (strcmp(defel->defname, "lexicon") == 0)
         {
+            if (d->extra)
+                ereport(ERROR,
+                        (errcode(ERRCODE_INVALID_PARAMETER_VALUE),
+                         errmsg("multiple Lexicon parameters")));
+            /* lives as long as the dictionary: the backend keeps dictionaries until it exits */
+            d->extra = read_lexicon(defGetString(defel));
+        }
+        else
             ereport(ERROR,
                     (errcode(ERRCODE_INVALID_PARAMETER_VALUE),
-                     errmsg("unrecognized parameter: \"%s\"",
-                            defel->defname)));
-        }
+                     errmsg("unrecognized parameter: \"%s\"", defel->defname)));
     }
 
     PG_RETURN_POINTER(d);
 }
 
+static bool
+is_stop(DictKaasearch *d, const char *word)
+{
+    return d->stoplist.len > 0 && searchstoplist(&d->stoplist, (char *) word);
+}
+
 /*
- * Dictionary lexize function.
- * Called for each token by the text search parser.
+ * Dictionary lexize function, called for each token.
  *
- * Pipeline:
- *   1. Lowercase the token
- *   2. If Cyrillic → transliterate to Latin
- *   3. Check stop words → if match, filter out
- *   4. Stem the word (strip one suffix)
- *   5. Return lexeme
+ *   1. normalise the token (lower case, Cyrillic → Latin, apostrophe spelling)
+ *   2. a stop word is dropped
+ *   3. stem it (kaacore)
+ *   4. a stem that is a stop word is dropped too (maǵan → men), unless it was found through a verb
+ *      suffix chain (bardı → bar stays even if bar is a stop word)
+ *   5. a stem of two words (ákeldi → alıp kel) gives one lexeme per word, each stemmed: al, kel
  */
 Datum
 kaasearch_lexize(PG_FUNCTION_ARGS)
 {
-    DictKaasearch  *d = (DictKaasearch *) PG_GETARG_POINTER(0);
-    char           *in = (char *) PG_GETARG_POINTER(1);
-    int32           len = PG_GETARG_INT32(2);
-    char           *txt;
-    TSLexeme       *res;
+    DictKaasearch *d = (DictKaasearch *) PG_GETARG_POINTER(0);
+    char       *in = (char *) PG_GETARG_POINTER(1);
+    int32       len = PG_GETARG_INT32(2);
+    char       *norm;
+    char       *stem;
+    bool        verbal = false;
+    TSLexeme   *res;
+    int         nlex = 0;
+    char       *p;
 
-    /* Step 1: lowercase (Karakalpak rules, independent of the database locale) */
-    txt = kaa_lower(in, len);
-
-    /* Step 2: transliterate Cyrillic to Latin if needed */
-    if (contains_cyrillic(txt, strlen(txt)))
+    norm = kaa_normalize(in, len);
+    if (!norm)
+        out_of_memory();
+    if (norm[0] == '\0' || is_stop(d, norm))
     {
-        char *transliterated = cyrillic_to_latin(txt, strlen(txt));
-        pfree(txt);
-        txt = transliterated;
+        free(norm);
+        PG_RETURN_POINTER(palloc0(sizeof(TSLexeme)));
+    }
+    free(norm);
+
+    stem = kaa_stem_word_ex(in, len, d->extra, &verbal);
+    if (!stem)
+        out_of_memory();
+    if (!verbal && is_stop(d, stem))
+    {
+        free(stem);
+        PG_RETURN_POINTER(palloc0(sizeof(TSLexeme)));
     }
 
-    /* Step 3: check stop words */
-    if (d->stoplist.len > 0 && searchstoplist(&d->stoplist, txt))
+    /* one lexeme per space-separated word of the stem; the array ends with an empty entry */
+    res = palloc0(sizeof(TSLexeme) * (strlen(stem) / 2 + 2));
+    for (p = stem; *p;)
     {
-        pfree(txt);
-        /* Return empty array = stop word, filter it out */
-        res = palloc0(sizeof(TSLexeme));
-        PG_RETURN_POINTER(res);
+        size_t      n = strcspn(p, " ");
+
+        if (n > 0 && p == stem && p[n] == '\0')
+            res[nlex++].lexeme = pnstrdup(p, n);
+        else if (n > 0)
+        {
+            /* a word of a multi-word stem is stemmed on its own: alıp → al */
+            bool        v;
+            char       *part = kaa_stem_word_ex(p, n, d->extra, &v);
+
+            if (!part)
+            {
+                free(stem);
+                out_of_memory();
+            }
+            res[nlex++].lexeme = pstrdup(part);
+            free(part);
+        }
+        p += n;
+        while (*p == ' ')
+            p++;
     }
-
-    /* Step 4: stem the word */
-    {
-        char *stemmed = kaa_stem(txt, strlen(txt));
-        pfree(txt);
-        txt = stemmed;
-    }
-
-    /* Step 5: return the lexeme */
-    res = palloc0(sizeof(TSLexeme) * 2);
-    res[0].lexeme = txt;
-
+    free(stem);
     PG_RETURN_POINTER(res);
+}
+
+/* ------------------------------------------------------------------------ SQL functions */
+
+/* kaa_stem(word text) → text: the stem of one word (built-in lexicon) */
+Datum
+kaa_stem_pg(PG_FUNCTION_ARGS)
+{
+    text       *t = PG_GETARG_TEXT_PP(0);
+    char       *stem;
+    text       *res;
+
+    check_encoding();
+    stem = kaa_stem_word(VARDATA_ANY(t), VARSIZE_ANY_EXHDR(t));
+    if (!stem)
+        out_of_memory();
+    res = cstring_to_text(stem);
+    free(stem);
+    PG_RETURN_TEXT_P(res);
+}
+
+/* kaa_normalize(text) → text: the text with every word normalised */
+Datum
+kaa_normalize_pg(PG_FUNCTION_ARGS)
+{
+    text       *t = PG_GETARG_TEXT_PP(0);
+    char       *norm;
+    text       *res;
+
+    check_encoding();
+    norm = kaa_normalize_text(VARDATA_ANY(t), VARSIZE_ANY_EXHDR(t));
+    if (!norm)
+        out_of_memory();
+    res = cstring_to_text(norm);
+    free(norm);
+    PG_RETURN_TEXT_P(res);
+}
+
+static ArrayType *
+text_array(char **items, int n)
+{
+    Datum      *elems = palloc(sizeof(Datum) * (n > 0 ? n : 1));
+    int         i;
+
+    for (i = 0; i < n; i++)
+        elems[i] = PointerGetDatum(cstring_to_text(items[i]));
+    return construct_array(elems, n, TEXTOID, -1, false, TYPALIGN_INT);
+}
+
+/*
+ * kaa_analyze(word text, OUT word text, OUT stem text, OUT segments text[], OUT classes text[],
+ *             OUT source text): the full analysis of one word
+ */
+Datum
+kaa_analyze_pg(PG_FUNCTION_ARGS)
+{
+    text       *t = PG_GETARG_TEXT_PP(0);
+    TupleDesc   tupdesc;
+    KaaAnalysis a;
+    Datum       values[5];
+    bool        nulls[5] = {false, false, false, false, false};
+    char      **classes;
+    int         i;
+    HeapTuple   tuple;
+
+    check_encoding();
+    if (get_call_result_type(fcinfo, NULL, &tupdesc) != TYPEFUNC_COMPOSITE)
+        ereport(ERROR,
+                (errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
+                 errmsg("function returning record called in context that cannot accept type record")));
+    tupdesc = BlessTupleDesc(tupdesc);
+
+    if (kaa_analyze_ex(VARDATA_ANY(t), VARSIZE_ANY_EXHDR(t), NULL, &a) != 0)
+        out_of_memory();
+    classes = palloc(sizeof(char *) * (a.nclasses > 0 ? a.nclasses : 1));
+    for (i = 0; i < a.nclasses; i++)
+        classes[i] = (char *) kaa_class_names[a.classes[i]];
+    values[0] = PointerGetDatum(cstring_to_text(a.word));
+    values[1] = PointerGetDatum(cstring_to_text(a.stem));
+    values[2] = PointerGetDatum(text_array(a.segments, a.nsegments));
+    values[3] = PointerGetDatum(text_array(classes, a.nclasses));
+    values[4] = PointerGetDatum(cstring_to_text(kaa_source_name(a.source)));
+    kaa_analysis_free(&a);
+
+    tuple = heap_form_tuple(tupdesc, values, nulls);
+    PG_RETURN_DATUM(HeapTupleGetDatum(tuple));
 }

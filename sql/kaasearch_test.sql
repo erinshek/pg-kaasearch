@@ -11,8 +11,8 @@ SELECT to_tsvector('kaasearch', 'Қарақалпақстан');
 SELECT to_tsvector('kaasearch', 'Qaraqalpaqstan') =
        to_tsvector('kaasearch', 'Қарақалпақстан') AS cross_script_match;
 
--- 4. Stop words are filtered out
-SELECT to_tsvector('kaasearch', 'ol bir eki');
+-- 4. Stop words are filtered out, numerals are kept
+SELECT to_tsvector('kaasearch', 'ol hám bul, sebebi bir eki');
 
 -- 5. Mixed text: stop words removed, content words kept
 SELECT to_tsvector('kaasearch', 'bul Respublika');
@@ -23,8 +23,8 @@ SELECT to_tsvector('kaasearch', 'kitaplar');
 -- 7. Stemming: case suffix -da stripped
 SELECT to_tsvector('kaasearch', 'qalada');
 
--- 8. Stemming: genitive suffix -nıń stripped
-SELECT to_tsvector('kaasearch', 'xalıqtıń');
+-- 8. Stemming: genitive suffix -nıń stripped, vowel restored
+SELECT to_tsvector('kaasearch', 'xalıqtıń xalqımızdıń');
 
 -- 9. Cyrillic stemming: transliterate then stem
 SELECT to_tsvector('kaasearch', 'китаплар');
@@ -64,5 +64,80 @@ SELECT to_tsvector('kaasearch', 'tar kóshe, ter shıqtı');
 -- 18. Soft sign before е → ye
 SELECT to_tsvector('kaasearch', 'пьеса');
 
+-- 19. Apostrophe spelling (o', g', n'): the parser splits a word at an apostrophe, so such text is
+--     passed through kaa_normalize() first; a single token is normalised by the dictionary itself
+SELECT to_tsvector('kaasearch', 'g''alaba o''zbek');
+SELECT to_tsvector('kaasearch', kaa_normalize('g''alaba o''zbek')) = to_tsvector('kaasearch', 'ǵalaba ózbek') AS apostrophe_match;
+SELECT ts_lexize('kaasearch_dict', 'o''zbekstanda');
+
+-- 20. Verb forms: tense, person, negation and voice suffixes are stripped
+SELECT to_tsvector('kaasearch', 'jazıladı barmadım keleseń oqıp otır');
+
+-- 21. A stem that is a stop word is dropped (maǵan → men), a verb found through its suffixes is kept
+SELECT to_tsvector('kaasearch', 'maǵan onıń bizlerdiń');
+SELECT to_tsvector('kaasearch', 'bardıq barǵan');
+
+-- 22. A stem of two words gives one lexeme per word
+SELECT to_tsvector('kaasearch', 'ákeldi');
+SELECT to_tsvector('kaasearch', 'Ол китапты әкелди') @@ to_tsquery('kaasearch', 'alıp & keldi') AS two_word_stem;
+
+-- 23. Search: every form of a word finds the others
+CREATE TEMP TABLE docs(id int, body text);
+INSERT INTO docs VALUES
+    (1, 'Bizler mektebimizde jańa kitaplardı oqıdıq.'),
+    (2, 'Мектепке барған балалар китап оқыйды.'),
+    (3, 'Qaraqalpaq xalqınıń tariyxı haqqında maqala.'),
+    (4, 'Ol keshe qalaǵa ketti.');
+SELECT id FROM docs WHERE to_tsvector('kaasearch', body) @@ plainto_tsquery('kaasearch', 'mektep kitap') ORDER BY id;
+SELECT id FROM docs WHERE to_tsvector('kaasearch', body) @@ plainto_tsquery('kaasearch', 'xalıqtıń tariyxın') ORDER BY id;
+SELECT id FROM docs WHERE to_tsvector('kaasearch', body) @@ websearch_to_tsquery('kaasearch', 'qala or oqıydı') ORDER BY id;
+
+-- 24. Ranking and an index
+CREATE INDEX docs_fts ON docs USING gin (to_tsvector('kaasearch', body));
+SELECT id, round(ts_rank(to_tsvector('kaasearch', body), q)::numeric, 4) AS rank
+FROM docs, to_tsquery('kaasearch', 'kitap | mektep') q
+WHERE to_tsvector('kaasearch', body) @@ q ORDER BY rank DESC, id;
+
+-- 25. Phrase search: words in a row, stop words keep their position
+SELECT to_tsvector('kaasearch', 'Qaraqalpaq xalqınıń tariyxı') @@ phraseto_tsquery('kaasearch', 'xalıq tariyxı') AS phrase_match;
+SELECT to_tsvector('kaasearch', 'tariyxı xalqınıń') @@ phraseto_tsquery('kaasearch', 'xalıq tariyxı') AS phrase_wrong_order;
+SELECT phraseto_tsquery('kaasearch', 'mektep hám kitap');
+
+-- 26. ts_headline marks the forms found
+SELECT ts_headline('kaasearch', 'Bizler mektebimizde jańa kitaplardı oqıdıq.',
+                   to_tsquery('kaasearch', 'mektep & kitap'));
+
+-- 27. ts_debug shows the dictionary used for each token
+SELECT alias, token, dictionaries, lexemes FROM ts_debug('kaasearch', 'Mektepke 2 bala keldi');
+
+-- 28. SQL functions
+SELECT kaa_stem('mektebimizde'), kaa_stem('Мектепке'), kaa_stem('ákeldi'), kaa_stem('');
+SELECT kaa_normalize('Мектепке BARDIQ, g''alaba! ÍDÍS');
+SELECT * FROM kaa_analyze('kelgenligin');
+SELECT * FROM kaa_analyze('maǵan');
+SELECT * FROM kaa_analyze('Londonnan');
+SELECT kaa_stem(NULL) IS NULL AS strict;
+
+-- 29. User lexicon: stems the built-in lexicon does not know
+SELECT to_tsvector('kaasearch', 'Londonǵa skanerledi');
+ALTER TEXT SEARCH DICTIONARY kaasearch_dict (StopWords = kaasearch, Lexicon = kaasearch_example);
+SELECT to_tsvector('kaasearch', 'Londonǵa skanerledi');
+ALTER TEXT SEARCH DICTIONARY kaasearch_dict (Lexicon);
+SELECT to_tsvector('kaasearch', 'Londonǵa skanerledi');
+
+-- 30. Dictionary option errors
+-- (the message has the install path, so only the error code is printed)
+DO $$
+BEGIN
+    ALTER TEXT SEARCH DICTIONARY kaasearch_dict (Lexicon = no_such_lexicon);
+EXCEPTION WHEN OTHERS THEN
+    RAISE NOTICE 'missing lexicon: %', SQLSTATE;
+END $$;
+CREATE TEXT SEARCH DICTIONARY kaa_bad (TEMPLATE = kaasearch_template, Foo = bar);
+CREATE TEXT SEARCH DICTIONARY kaa_nostop (TEMPLATE = kaasearch_template);
+SELECT ts_lexize('kaa_nostop', 'maǵan'), ts_lexize('kaasearch_dict', 'maǵan');
+DROP TEXT SEARCH DICTIONARY kaa_nostop;
+
 -- Clean up
+DROP TABLE docs;
 DROP EXTENSION kaasearch;

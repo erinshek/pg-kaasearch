@@ -43,6 +43,16 @@ typedef struct
     KaaSource   source;
 } KaaAnalysis;
 
+#include <stdbool.h>
+
+/* A user lexicon: extra stems on top of the built-in lexicon. */
+typedef struct KaaExtra KaaExtra;
+
+KaaExtra   *kaa_extra_new(void);
+/* kind: 'n' non-verb, 'v' verb stem. Returns 0, or -1 when out of memory. */
+int         kaa_extra_add(KaaExtra *x, const char *word, size_t len, char kind);
+void        kaa_extra_free(KaaExtra *x);
+
 /* Normalise one word (step 1): lower case, Cyrillic → Latin, apostrophe spelling → 2016 Latin.
  * Returns a malloc'd, null-terminated UTF-8 string, or NULL when out of memory. */
 char       *kaa_normalize(const char *word, size_t len);
@@ -50,11 +60,23 @@ char       *kaa_normalize(const char *word, size_t len);
 /* Analyse one word. Returns 0 on success, -1 when out of memory (out is then empty). */
 int         kaa_analyze(const char *word, size_t len, KaaAnalysis *out);
 
+/* The same with a user lexicon (NULL for none). The core keeps no state between calls except caches,
+ * but it is not reentrant: do not call it from two threads at once. */
+int         kaa_analyze_ex(const char *word, size_t len, const KaaExtra *extra, KaaAnalysis *out);
+
 /* Release what kaa_analyze() allocated. */
 void        kaa_analysis_free(KaaAnalysis *a);
 
 /* The stem of one word as a malloc'd string, or NULL when out of memory. */
 char       *kaa_stem_word(const char *word, size_t len);
+
+/* The same with a user lexicon; *verbal (if not NULL) tells whether the stem was found through a verb
+ * suffix chain (bardı → bar) rather than a nominal one or a list. */
+char       *kaa_stem_word_ex(const char *word, size_t len, const KaaExtra *extra, bool *verbal);
+
+/* Normalise a whole text word by word (Cyrillic → Latin, apostrophe spelling, lower case), keeping
+ * spaces and punctuation. Returns a malloc'd string, or NULL when out of memory. */
+char       *kaa_normalize_text(const char *text, size_t len);
 
 /* Name of a source as in kaastem: "list", "lexicon", "safe", "unchanged". */
 const char *kaa_source_name(KaaSource source);

@@ -498,6 +498,97 @@ set_has_utf8(const KaaWordSet *set, const char *k)
     return bsearch(&k, set->words, set->n, sizeof(char *), cmp_str) != NULL;
 }
 
+/* ------------------------------------------------------------------------ user lexicon */
+
+typedef struct
+{
+    char      **slots;          /* keyed words; NULL = empty */
+    uint32_t    mask;
+    size_t      n;
+} StrSet;
+
+struct KaaExtra
+{
+    StrSet      nom;
+    StrSet      verb;
+};
+
+/* The user lexicon of the call in progress (set by kaa_analyze_ex; the core is not reentrant). */
+static const KaaExtra *cur_extra;
+
+static bool
+strset_has(const StrSet *ss, const char *k)
+{
+    uint32_t    h;
+
+    if (!ss->slots)
+        return false;
+    h = fnv1a(k) & ss->mask;
+    while (ss->slots[h])
+    {
+        if (strcmp(ss->slots[h], k) == 0)
+            return true;
+        h = (h + 1) & ss->mask;
+    }
+    return false;
+}
+
+static int
+strset_add(StrSet *ss, const char *k)
+{
+    uint32_t    h;
+
+    if (strset_has(ss, k))
+        return 0;
+    if (!ss->slots || (ss->n + 1) * 2 > ss->mask + 1)
+    {
+        uint32_t    size = ss->slots ? (ss->mask + 1) * 2 : 64;
+        char      **slots = calloc(size, sizeof(char *));
+        uint32_t    i;
+
+        if (!slots)
+            return -1;
+        if (ss->slots)
+        {
+            for (i = 0; i <= ss->mask; i++)
+                if (ss->slots[i])
+                {
+                    h = fnv1a(ss->slots[i]) & (size - 1);
+                    while (slots[h])
+                        h = (h + 1) & (size - 1);
+                    slots[h] = ss->slots[i];
+                }
+            free(ss->slots);
+        }
+        ss->slots = slots;
+        ss->mask = size - 1;
+    }
+    h = fnv1a(k) & ss->mask;
+    while (ss->slots[h])
+        h = (h + 1) & ss->mask;
+    {
+        size_t      kl = strlen(k) + 1;
+
+        if (!(ss->slots[h] = malloc(kl)))
+            return -1;
+        memcpy(ss->slots[h], k, kl);
+    }
+    ss->n++;
+    return 0;
+}
+
+static void
+strset_free(StrSet *ss)
+{
+    uint32_t    i;
+
+    if (ss->slots)
+        for (i = 0; i <= ss->mask; i++)
+            free(ss->slots[i]);
+    free(ss->slots);
+    memset(ss, 0, sizeof(*ss));
+}
+
 /* k in set, with k = key(s) */
 static bool
 in_set(const KaaWordSet *set, const cp_t *s, int n)
@@ -506,6 +597,25 @@ in_set(const KaaWordSet *set, const cp_t *s, int n)
 
     key_utf8(s, n, buf);
     return set_has_utf8(set, buf);
+}
+
+/* the lexicon: built-in lists plus the user lexicon of the current call */
+static bool
+in_nom(const cp_t *s, int n)
+{
+    char        buf[KEY_BYTES];
+
+    key_utf8(s, n, buf);
+    return set_has_utf8(&kaa_nom, buf) || (cur_extra && strset_has(&cur_extra->nom, buf));
+}
+
+static bool
+in_verb(const cp_t *s, int n)
+{
+    char        buf[KEY_BYTES];
+
+    key_utf8(s, n, buf);
+    return set_has_utf8(&kaa_verb, buf) || (cur_extra && strset_has(&cur_extra->verb, buf));
 }
 
 static int
@@ -1054,7 +1164,7 @@ is_derived(const cp_t *s, int n, int depth)
 static int
 is_nom_d(const cp_t *s, int n, int depth)
 {
-    if (in_set(&kaa_nom, s, n) || in_set(&kaa_protected, s, n))
+    if (in_nom(s, n) || in_set(&kaa_protected, s, n))
         return 2;
     if (depth >= 2 || n < 4)
         return 0;
@@ -1184,7 +1294,7 @@ is_verb(const cp_t *s, int n)
 {
     KaaWord     base;
 
-    return in_set(&kaa_verb, s, n) || voice_base(s, n, &base);
+    return in_verb(s, n) || voice_base(s, n, &base);
 }
 
 /* Stemmer._voice_reduce */
@@ -1808,7 +1918,7 @@ analyze_simple(Ctx *ctx, const KaaWord *w, Result *r)
         c.stem = *w;
         c.kind = level ? 'N' : 'V';
         c.path.n = 0;
-        c.weak = level ? level == 1 : !in_set(&kaa_verb, w->c, w->n);
+        c.weak = level ? level == 1 : !in_verb(w->c, w->n);
         cands_push(ctx, &cl, &c);
     }
     /* ambiguous pair ("=" in prefer.tsv): if both stems fit, the word is left unchanged */
@@ -1992,7 +2102,7 @@ analyze_hyphen(Ctx *ctx, const KaaWord *w, Result *r)
             return;
         }
     }
-    if (in_set(&kaa_nom, w->c, w->n) || in_set(&kaa_protected, w->c, w->n) || in_set(&kaa_function, w->c, w->n))
+    if (in_nom(w->c, w->n) || in_set(&kaa_protected, w->c, w->n) || in_set(&kaa_function, w->c, w->n))
     {
         result_simple(r, w, KAA_SOURCE_LEXICON);   /* ata-ana */
         return;
@@ -2424,6 +2534,12 @@ kaa_analysis_free(KaaAnalysis *a)
 int
 kaa_analyze(const char *word, size_t len, KaaAnalysis *out)
 {
+    return kaa_analyze_ex(word, len, NULL, out);
+}
+
+int
+kaa_analyze_ex(const char *word, size_t len, const KaaExtra *extra, KaaAnalysis *out)
+{
     Ctx         ctx = {false};
     Result     *r;
     KaaWord     w;
@@ -2466,10 +2582,12 @@ kaa_analyze(const char *word, size_t len, KaaAnalysis *out)
     free(s);
     for (i = 0; i < w.n; i++)
         hyphen |= w.c[i] == '-';
+    cur_extra = extra;
     if (hyphen)
         analyze_hyphen(&ctx, &w, r);
     else
         analyze_token(&ctx, &w, r);
+    cur_extra = NULL;
     if (ctx.oom || !out->word)
     {
         free(r);
@@ -2513,6 +2631,8 @@ kaa_analyze(const char *word, size_t len, KaaAnalysis *out)
 typedef struct
 {
     unsigned char klen;         /* 0 = empty */
+    bool        verbal;
+    const KaaExtra *extra;
     char        key[CACHE_KEY];
     char        stem[CACHE_STEM];
 } CacheSlot;
@@ -2530,8 +2650,20 @@ hash_bytes(const char *p, size_t len)
     return h;
 }
 
+static bool
+analysis_verbal(const KaaAnalysis *a)
+{
+    return a->nclasses > 0 && (kaa_verb_first & KAA_BIT(a->classes[0])) != 0;
+}
+
 char *
 kaa_stem_word(const char *word, size_t len)
+{
+    return kaa_stem_word_ex(word, len, NULL, NULL);
+}
+
+char *
+kaa_stem_word_ex(const char *word, size_t len, const KaaExtra *extra, bool *verbal)
 {
     KaaAnalysis a;
     char       *stem;
@@ -2543,28 +2675,181 @@ kaa_stem_word(const char *word, size_t len)
             stem_cache = calloc(CACHE_SLOTS, sizeof(CacheSlot));
         if (stem_cache)
         {
-            slot = &stem_cache[hash_bytes(word, len) & (CACHE_SLOTS - 1)];
-            if (slot->klen == len && memcmp(slot->key, word, len) == 0)
+            slot = &stem_cache[(hash_bytes(word, len) ^ (uint32_t) (uintptr_t) extra) & (CACHE_SLOTS - 1)];
+            if (slot->klen == len && slot->extra == extra && memcmp(slot->key, word, len) == 0)
             {
                 size_t      n = strlen(slot->stem);
 
                 stem = malloc(n + 1);
                 if (stem)
                     memcpy(stem, slot->stem, n + 1);
+                if (verbal)
+                    *verbal = slot->verbal;
                 return stem;
             }
         }
     }
-    if (kaa_analyze(word, len, &a) != 0)
+    if (kaa_analyze_ex(word, len, extra, &a) != 0)
         return NULL;
+    if (verbal)
+        *verbal = analysis_verbal(&a);
     stem = a.stem;
     a.stem = NULL;
-    kaa_analysis_free(&a);
     if (slot && strlen(stem) < CACHE_STEM)
     {
         slot->klen = (unsigned char) len;
+        slot->extra = extra;
+        slot->verbal = analysis_verbal(&a);
         memcpy(slot->key, word, len);
         strcpy(slot->stem, stem);
     }
+    kaa_analysis_free(&a);
     return stem;
+}
+
+/* ------------------------------------------------------------------------ user lexicon API */
+
+KaaExtra *
+kaa_extra_new(void)
+{
+    return calloc(1, sizeof(KaaExtra));
+}
+
+void
+kaa_extra_free(KaaExtra *x)
+{
+    if (!x)
+        return;
+    strset_free(&x->nom);
+    strset_free(&x->verb);
+    free(x);
+}
+
+/*
+ * Add a stem: kind 'n' (non-verb) or 'v' (verb stem). The word is normalised like any input and
+ * stored by its key, as kaastem.lexicon.Data.load_lexicon does. As there, a negative form whose base
+ * is a known verb (qoyma = qoy + ma) is not taken as a verb stem.
+ */
+int
+kaa_extra_add(KaaExtra *x, const char *word, size_t len, char kind)
+{
+    int         n;
+    cp_t       *s;
+    char        buf[KEY_BYTES];
+
+    kaa_init();
+    s = decode_normalize(word, len, &n);
+    if (!s)
+        return -1;
+    if (n == 0 || n > KAA_MAX_WORD)
+    {
+        free(s);
+        return 0;
+    }
+    if (kind == 'v' && n > 3)
+    {
+        cp_t        a = s[n - 2],
+                    b = s[n - 1];
+        int         bn = n - 2;
+
+        if ((a == 'm' || a == 'b' || a == 'p') && (b == 'a' || b == 'e') && has_vowel(s, bn) &&
+            in_verb(s, bn) && (cp_t) mbp(sound_class(s, bn)) == a && is_back(s, bn) == (b == 'a'))
+        {
+            free(s);
+            return 0;
+        }
+    }
+    key_utf8(s, n, buf);
+    free(s);
+    return strset_add(kind == 'v' ? &x->verb : &x->nom, buf);
+}
+
+/* ------------------------------------------------------------------------ text normalisation */
+
+static bool
+is_word_cp(cp_t c)
+{
+    return is_alpha(c) || (c >= '0' && c <= '9') || (c >= 0x0300 && c <= 0x036F) || is_apostrophe(c) ||
+        c == '-' || (c >= 0x2010 && c <= 0x2013) || c == 0x00AD || c == 0x200B || c == 0x200C ||
+        c == 0x200D || c == 0x2060 || c == 0xFEFF;
+}
+
+char *
+kaa_normalize_text(const char *text, size_t len)
+{
+    const unsigned char *p = (const unsigned char *) text;
+    const unsigned char *end = p + len;
+    size_t      cap = len * 2 + 16,
+                pos = 0;
+    char       *out = malloc(cap);
+
+    if (!out)
+        return NULL;
+    kaa_init();
+    while (p < end)
+    {
+        const unsigned char *q = p;
+        cp_t        c;
+
+        /* a run of word characters is normalised as one word; everything else is copied */
+        while (q < end)
+        {
+            int         k = utf8_decode(q, end, &c);
+
+            if (!is_word_cp(c))
+                break;
+            q += k;
+        }
+        if (q > p)
+        {
+            char       *w = kaa_normalize((const char *) p, q - p);
+            size_t      wl;
+
+            if (!w)
+            {
+                free(out);
+                return NULL;
+            }
+            wl = strlen(w);
+            if (pos + wl + 1 > cap)
+            {
+                char       *o;
+
+                cap = (pos + wl + 1) * 2;
+                if (!(o = realloc(out, cap)))
+                {
+                    free(w);
+                    free(out);
+                    return NULL;
+                }
+                out = o;
+            }
+            memcpy(out + pos, w, wl);
+            pos += wl;
+            free(w);
+            p = q;
+            continue;
+        }
+        {
+            int         k = utf8_decode(p, end, &c);
+
+            if (pos + k + 1 > cap)
+            {
+                char       *o;
+
+                cap = (pos + k + 1) * 2;
+                if (!(o = realloc(out, cap)))
+                {
+                    free(out);
+                    return NULL;
+                }
+                out = o;
+            }
+            memcpy(out + pos, p, k);
+            pos += k;
+            p += k;
+        }
+    }
+    out[pos] = '\0';
+    return out;
 }
