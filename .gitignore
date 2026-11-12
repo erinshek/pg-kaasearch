@@ -18,3 +18,7 @@ output_iso/
 
 # Equivalence test driver (make check-core)
 test/core/kaacore_cli
+test/core/fuzz_kaacore
+crash-*
+leak-*
+timeout-*

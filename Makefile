@@ -34,3 +34,11 @@ check-core:
 	$(CC) -std=c99 -O1 -g -fsanitize=address,undefined -fno-omit-frame-pointer \
 		-Isrc test/core/kaacore_cli.c src/kaacore.c src/kaadata.c -o test/core/kaacore_cli
 	python3 test/core/compare.py test/core/kaacore_cli
+
+# Fuzz the C stemmer core (needs clang with libFuzzer); FUZZ_TIME is in seconds
+FUZZ_TIME ?= 60
+.PHONY: fuzz-core
+fuzz-core:
+	clang -g -O1 -fsanitize=fuzzer,address,undefined -fno-sanitize-recover=undefined \
+		-Isrc test/core/fuzz_kaacore.c src/kaacore.c src/kaadata.c -o test/core/fuzz_kaacore
+	test/core/fuzz_kaacore -max_total_time=$(FUZZ_TIME) -max_len=256 -timeout=5

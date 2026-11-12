@@ -66,3 +66,11 @@ jobs:
           cc -std=c99 -O1 -g -fsanitize=address,undefined -fno-omit-frame-pointer \
              -Isrc test/core/kaacore_cli.c src/kaacore.c src/kaadata.c -o kaacore_cli
           python test/core/compare.py ./kaacore_cli
+
+      - name: Fuzz the C core (60 s)
+        if: matrix.python == '3.13'
+        run: |
+          sudo apt-get update -q && sudo apt-get install -y -q clang-18 libclang-rt-18-dev
+          clang-18 -g -O1 -fsanitize=fuzzer,address,undefined -fno-sanitize-recover=undefined \
+             -Isrc test/core/fuzz_kaacore.c src/kaacore.c src/kaadata.c -o fuzz_kaacore
+          ./fuzz_kaacore -max_total_time=60 -max_len=256 -timeout=5
