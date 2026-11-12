@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  extension:
+    name: PostgreSQL ${{ matrix.pg }}
+    runs-on: ubuntu-latest
+    container: pgxn/pgxn-tools
+    continue-on-error: ${{ matrix.experimental }}
+    strategy:
+      fail-fast: false
+      matrix:
+        pg: [15, 16, 17]
+        experimental: [false]
+        include:
+          # Known failure: lowerstr_with_len() was removed in PostgreSQL 18.
+          # Make this a required job once the extension has its own lowercase function.
+          - pg: 18
+            experimental: true
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Start PostgreSQL ${{ matrix.pg }}
+        run: pg-start ${{ matrix.pg }}
+
+      - name: Build and install
+        run: |
+          make
+          make install
+
+      # Temporary: "make install" does not install the stop-word file yet.
+      # Remove this step once the Makefile installs it (DATA_TSEARCH).
+      - name: Install the stop-word file
+        run: cp data/kaasearch.stop "$(pg_config --sharedir)/tsearch_data/"
+
+      - name: Regression tests
+        run: make installcheck
+
+      - name: Show regression diffs
+        if: failure()
+        run: cat regression.diffs || true
+
+  kaastem:
+    name: kaastem (Python ${{ matrix.python }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.9", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Stemmer tests
+        working-directory: kaastem
+        run: python tests/run_tests.py
