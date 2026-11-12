@@ -23,7 +23,7 @@ CREATE TEXT SEARCH DICTIONARY kaasearch_dict (
     StopWords = kaasearch
 );
 
-/* Step 3: Create a text search configuration based on pg_catalog.simple parser */
+/* Step 3: Create a text search configuration based on the default parser */
 CREATE TEXT SEARCH CONFIGURATION kaasearch (
     PARSER = pg_catalog.default
 );
@@ -31,8 +31,14 @@ CREATE TEXT SEARCH CONFIGURATION kaasearch (
 COMMENT ON TEXT SEARCH CONFIGURATION kaasearch
     IS 'Configuration for Karakalpak language (Latin/Cyrillic)';
 
-/* Step 4: Map all token types to our dictionary */
+/* Step 4: Map word tokens to our dictionary (words with digits included: covid19, 5-mektepke) */
 ALTER TEXT SEARCH CONFIGURATION kaasearch
     ALTER MAPPING FOR asciiword, asciihword, hword_asciipart,
-                      word, hword, hword_part
+                      word, hword, hword_part,
+                      numword, numhword, hword_numpart
     WITH kaasearch_dict;
+
+/* Step 5: Index numbers as they are (2016, 3.14, 1.2.3) */
+ALTER TEXT SEARCH CONFIGURATION kaasearch
+    ALTER MAPPING FOR int, uint, float, sfloat, version
+    WITH simple;

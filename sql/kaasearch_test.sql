@@ -54,5 +54,9 @@ SELECT to_tsvector('kaasearch', 'ÍDÍS Ídıs ıdıs');
 SELECT to_tsvector('kaasearch', 'ÓZBEKSTAN ǴÁREZSIZLIK JAŃA');
 SELECT to_tsvector('kaasearch', 'Ídıs') @@ to_tsquery('kaasearch', 'ıdıs') AS dotless_match;
 
+-- 16. Numbers and words with digits are indexed
+SELECT to_tsvector('kaasearch', '1991-jılı 5-mektepke COVID19 2016 3.14 -7');
+SELECT to_tsvector('kaasearch', 'Ǵárezsizlik 1991-jılı') @@ to_tsquery('kaasearch', '1991') AS number_match;
+
 -- Clean up
 DROP EXTENSION kaasearch;
