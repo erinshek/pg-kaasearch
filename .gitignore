@@ -22,3 +22,6 @@ test/core/fuzz_kaacore
 crash-*
 leak-*
 timeout-*
+
+# Test corpora (downloaded, not tracked)
+corpus/
