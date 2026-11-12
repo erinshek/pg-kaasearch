@@ -11,7 +11,7 @@ DATA = kaasearch--1.0.sql
 DATA_TSEARCH = data/kaasearch.stop
 
 # C source files to compile
-OBJS = src/kaasearch.o src/lower.o src/translit.o src/stemmer.o
+OBJS = src/kaasearch.o src/lower.o src/translit.o src/stemmer.o src/kaadata.o
 
 # Regression test (runs sql/kaasearch_test.sql, compares with expected/)
 REGRESS = kaasearch_test
@@ -22,3 +22,8 @@ PG_CONFIG ?= pg_config
 # Include PostgreSQL Extension Build System (PGXS)
 PGXS := $(shell $(PG_CONFIG) --pgxs)
 include $(PGXS)
+
+# Regenerate src/kaadata.[ch] from kaastem after editing its rules or lists
+.PHONY: tables
+tables:
+	python3 tools/gen_tables.py

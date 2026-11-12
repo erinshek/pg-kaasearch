@@ -57,3 +57,6 @@ jobs:
       - name: Stemmer tests
         working-directory: kaastem
         run: python tests/run_tests.py
+
+      - name: C tables are up to date with kaastem
+        run: python tools/gen_tables.py --check
