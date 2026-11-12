@@ -28,6 +28,13 @@ jobs:
       - name: Regression tests
         run: make installcheck
 
+      - name: Non-UTF8 database is refused with a clear error
+        run: |
+          psql -d postgres -c "CREATE DATABASE kaa_ascii TEMPLATE template0 ENCODING 'SQL_ASCII' LC_COLLATE 'C' LC_CTYPE 'C'"
+          out=$(psql -d kaa_ascii -c 'CREATE EXTENSION kaasearch' 2>&1 || true)
+          echo "$out"
+          echo "$out" | grep -q 'kaasearch requires a UTF8 database'
+
       - name: Show regression diffs
         if: failure()
         run: cat regression.diffs || true
