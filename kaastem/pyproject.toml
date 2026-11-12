@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "kaastem"
+version = "0.1.2"
+description = "Rule-based stemmer for the Karakalpak language (light mode)"
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = []
+
+[project.scripts]
+kaastem = "kaastem.__main__:main"
+
+[tool.setuptools]
+packages = ["kaastem"]
+
+[tool.setuptools.package-data]
+kaastem = ["data/*.tsv", "data/*.txt"]

@@ -1,0 +1,109 @@
+# Protected words (step 2).
+# If the word, or what remains after stripping, is in this list, stripping stops.
+# One word per line; text after # is a comment.
+
+# --- Inflecting postpositions and auxiliary words (never stripped themselves, but they can take suffixes: sońǵı, basqalar) ---
+keyin
+soń
+burın
+aldın
+ilgeri
+tısqarı
+basqa
+ózge
+
+# --- From the exceptions list (confirmed by a native speaker) ---
+# independent nouns ending in -w
+soraw
+jalǵaw
+ataw
+taraw
+jaylaw
+ashıw
+boyaw
+baslawısh
+atawısh
+jasawshı
+arnawlı
+# -sha / -she
+neshe
+qansha
+sonsha
+onsha
+keshe
+aqsha
+sheshe
+ayrıqsha
+ózgeshe
+# -ǵı / -gi
+qarańǵı
+belgi
+eshki
+eski
+jılqı
+kúlki
+uyqı
+qayǵı
+arǵı
+# -day / -dey
+qanday
+sonday
+usınday
+birdey
+biyday
+jaǵday
+azǵantay
+# -jan
+marjan
+# pronoun
+olar
+
+# --- Reviewed by a native speaker (2026-11-12) ---
+# pronouns
+bular
+onday
+mınaday
+anaday
+# nouns and adjectives ending in -w
+jazlaw      # summer pasture
+aylaw
+tirew       # prop, support
+tatıw       # on good terms, in harmony
+demew       # patron, support (not de + me + w)
+# nouns ending in -raq/-rek (not the comparative degree)
+japıraq     # leaf (not jap + ıraq)
+topıraq     # soil (not top + ıraq)
+kókirek     # chest (not kók + irek)
+kekirek
+# independent words ending in -sha/-she
+erekshe     # special, distinctive
+baqsha      # garden
+shiyshe     # glass, bottle (not shiy + she)
+alasha      # woven rug
+arashaǵa    # the native speaker gave this very form
+# nouns ending in -ǵan/-gen (not participles)
+qorǵan      # fortress
+tuwısqan    # relative, kin
+sawısqan    # magpie
+quyısqan    # crupper (harness strap)
+bezergen    # merchant
+bezirgen
+terisken    # a plant name
+jaratqan    # the Creator (God)
+aǵarǵan     # dairy products
+qadaǵan     # prohibition
+boyjetken   # a girl of marriageable age
+
+# --- Added during implementation, not yet reviewed (no effect on the textbook and dictionary texts) ---
+solar       # like olar
+bunday      # like sonday
+bunsha      # like sonsha
+otaw        # yurt
+gúzlew      # autumn pasture
+qarınbaw    # belly band
+tamasha
+alsha       # a stone fruit (cherry plum)
+arasha
+boqsha      # cloth bundle
+tekshe      # wall niche, shelf
+gezegen

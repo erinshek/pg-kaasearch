@@ -1,0 +1,85 @@
+# Function words (step 2): postpositions, conjunctions, particles and modal words.
+# These words are not stripped and cannot be the stem of another word
+# (ushında = ush + ı + nda, not ushın + da).
+# Inflecting words (keyin, soń, basqa, ózge ...) are kept in protected.txt.
+
+# --- Postpositions (tirkewish) ---
+ushın
+sayın
+arqalı
+menen
+penen
+benen
+haqqında
+tuwralı
+jóninde
+boyınsha
+kibi
+sıyaqlı
+tárizli
+yańlı
+sebepli
+taman
+deyin
+sheyin
+shekem
+salım
+góri
+aslam
+
+# --- Conjunctions (dáneker) ---
+hám
+jáne
+taǵı
+biraq
+lekin
+ya
+yaki
+yamasa
+álle
+meyli
+gá
+gáhi
+gáde
+geyde
+birese
+birde
+bazda
+ári
+sebebi
+óytkeni
+sonlıqtan
+eger
+egerde      # eger de (written together)
+
+# --- Particles (janapay) ---
+ma
+me
+ba
+be
+pa
+pe
+she
+ǵoy
+ǵana
+emish
+
+# --- Modal words ---
+álbette
+bálkim
+qullası
+demek
+máselen
+mısalı
+múmkin
+itimal
+shınında
+durısında
+ırasında
+sózsiz
+shubhasız
+awa
+shaması
+qısqası
+aqırı
+sóytip

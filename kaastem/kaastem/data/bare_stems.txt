@@ -1,0 +1,10 @@
+# Stems that take person suffixes directly (atırman, edim, ekenbiz, emespen)
+atır
+otır
+tur
+júr
+kiyatır
+baratır
+edi
+eken
+emes

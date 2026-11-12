@@ -1,0 +1,201 @@
+n	group	word	stem	segmentation	note	textbook_freq	rejected
+1	A	adamlar	adam	adam-lar	plural	182	
+2	A	kósheler	kóshe	kóshe-ler	plural	6	
+3	A	balam	bala	bala-m	possessive, 1sg	82	
+4	A	qızım	qız	qız-ım	possessive, 1sg	13	
+5	A	balań	bala	bala-ń	possessive, 2sg	5	
+6	A	balası	bala	bala-sı	possessive, 3rd person	52	
+7	A	sózi	sóz	sóz-i	possessive, 3rd person	275	
+8	A	awılımız	awıl	awıl-ımız	possessive, 1pl	7	
+9	A	adamnıń	adam	adam-nıń	genitive; -nıń after m, n, ń	150	
+10	A	dáryanıń	dárya	dárya-nıń	genitive; -nıń after a vowel	42	
+11	A	sózdiń	sóz	sóz-diń	genitive; -diń after z	295	
+12	A	mekteptiń	mektep	mektep-tiń	genitive; -tiń after a voiceless consonant	65	
+13	A	awılǵa	awıl	awıl-ǵa	dative	70	
+14	A	mektepke	mektep	mektep-ke	dative; -ke after a voiceless consonant	74	
+15	A	balanı	bala	bala-nı	accusative; -nı after a vowel	17	
+16	A	adamdı	adam	adam-dı	accusative; -dı after m	47	
+17	A	kitaptı	kitap	kitap-tı	accusative; -tı after a voiceless consonant	44	
+18	A	qaladan	qala	qala-dan	ablative	25	
+19	A	adamnan	adam	adam-nan	ablative; -nan after m	20	
+20	A	sabaqtan	sabaq	sabaq-tan	ablative; -tan after a voiceless consonant	22	
+21	A	waqıtta	waqıt	waqıt-ta	locative; -ta after a voiceless consonant	138	
+22	B	qolına	qol	qol-ı-na	possessive 3rd person + dative (-na)	26	
+23	B	qolında	qol	qol-ı-nda	possessive 3rd person + locative (-nda)	23	
+24	B	ákesinen	áke	áke-si-nen	possessive 3rd person + ablative (-nen)	4	
+25	B	belgisin	belgi	belgi-si-n	possessive 3rd person + accusative (-n)	42	
+26	B	sóziniń	sóz	sóz-i-niń	possessive 3rd person + genitive	60	
+27	B	aǵama	aǵa	aǵa-m-a	possessive 1sg + dative (-a)	6	
+28	B	kózime	kóz	kóz-im-e	possessive 1sg + dative (-e)	3	
+29	B	basıńa	bas	bas-ıń-a	possessive 2sg + dative (-a)	4	
+30	B	sózińdi	sóz	sóz-iń-di	possessive 2sg + accusative	7	
+31	B	qolımnan	qol	qol-ım-nan	possessive 1sg + ablative	4	
+32	B	awılımızda	awıl	awıl-ımız-da	possessive 1pl + locative	7	
+33	B	dápterińizge	dápter	dápter-ińiz-ge	possessive 2nd person (polite) + dative	11	
+34	B	adamlardıń	adam	adam-lar-dıń	plural + genitive	88	
+35	B	seslerdi	ses	ses-ler-di	plural + accusative	56	
+36	B	balalarım	bala	bala-lar-ım	plural + possessive 1sg	22	
+37	B	kitaplarıń	kitap	kitap-lar-ıń	plural + possessive 2sg	3	
+38	B	aǵzalarınıń	aǵza	aǵza-lar-ı-nıń	plural + possessive 3rd person + genitive	59	
+39	B	úylerine	úy	úy-ler-i-ne	plural + possessive 3rd person + dative	14	
+40	C	kitabı	kitap	kitab-ı	p → b	12	
+41	C	mektebimizde	mektep	mekteb-imiz-de	p → b; suffix chain	15	
+42	C	júregi	júrek	júreg-i	k → g	26	
+43	C	qulaǵıma	qulaq	qulaǵ-ım-a	q → ǵ	2	
+44	C	shıǵıp	shıq	shıǵ-ıp	q → ǵ (in a verb)	170	
+45	C	tabadı	tap	tab-a-dı	p → b (in a verb)	17	
+46	C	tawıp	tap	taw-ıp	p → w (before -ıp)	500	
+47	C	kewip	kep	kew-ip	p → w (before -ip)	5	
+48	C	gápi	gáp	gáp-i	exception: p does not change	38	
+49	C	xalqım	xalıq	xalq-ım	short vowel dropped	18	
+50	C	ornına	orın	orn-ı-na	short vowel dropped	361	
+51	C	awzı	awız	awz-ı	short vowel dropped	15	
+52	C	waqtı	waqıt	waqt-ı	short vowel dropped	34	
+53	C	kewlińe	kewil	kewl-iń-e	short vowel dropped	3	
+54	C	xalqımızdıń	xalıq	xalq-ımız-dıń	vowel dropped; suffix chain	21	
+55	C	dostım	dos	dost-ım	dos ~ dost-	35	
+56	C	dostıńnıń	dos	dost-ıń-nıń	dos ~ dost-; suffix chain	5	
+57	C	klası	klass	klas-ı	double consonant shortened	1	
+58	C	klubqa	klub	klub-qa	loanword: -qa after b	3	
+59	C	zavodta	zavod	zavod-ta	loanword: -ta after d	5	
+60	D	meniń	men	≈ men + niń	one n is dropped	265	
+61	D	maǵan	men	≈ men + ǵa	irregular form	124	
+62	D	mennen	men	men-nen	ablative	19	
+63	D	saǵan	sen	≈ sen + ǵa	irregular form	81	
+64	D	onıń	ol	≈ ol + nıń	l is dropped	624	
+65	D	oǵan	ol	≈ ol + ǵa	irregular form	193	
+66	D	onı	ol	≈ ol + nı	l is dropped	250	
+67	D	bizlerdiń	biz	biz-ler-diń	plural + genitive	34	
+68	D	bunıń	bul	≈ bul + nıń	l is dropped	45	
+69	D	sonıń	sol	≈ sol + nıń	l is dropped	94	
+70	D	usınnan	usı	usı-n-nan	an n is inserted	7	
+71	D	kimnen	kim	kim-nen	ablative	30	
+72	D	neni	ne	ne-ni	accusative	64	
+73	D	ózime	óz	óz-im-e	possessive 1sg + dative	10	
+74	D	ózlerińiz	óz	óz-ler-ińiz	plural + possessive 2nd person (polite)	30	
+75	D	hámmesi	hámme	hámme-si	possessive, 3rd person	72	
+76	E	birinshi	bir	bir-inshi	ordinal numeral	202	
+77	E	ekinshi	eki	eki-nshi	ordinal numeral; -nshi after a vowel	268	
+78	E	altınshı	altı	altı-nshı	ordinal numeral	11	
+79	E	úshew	úsh	úsh-ew	collective numeral	17	
+80	E	altaw	altı	alt-aw	collective numeral; final ı is dropped	21	
+81	E	ekewi	eki	ek-ew-i	collective numeral + possessive; i is dropped	68	
+82	E	ekewimizdi	eki	ek-ew-imiz-di	collective numeral; suffix chain	3	
+83	E	onlaǵan	on	on-laǵan	approximate numeral	14	
+84	E	úshten	úsh	úsh-ten	ablative	20	
+85	E	jaqsıraq	jaqsı	jaqsı-raq	comparative degree	17	
+86	E	kóbirek	kóp	kób-irek	comparative degree; p → b	40	
+87	E	biyigirek	biyik	biyig-irek	comparative degree; k → g	2	
+88	E	suwıqlaw	suwıq	suwıq-law	degree: -law	5	
+89	E	kúshlirek	kúshli	kúshli-rek	degree suffix stripped, derivational -li kept	4	
+90	F	keldi	kel	kel-di	definite past tense	318	
+91	F	bardım	bar	bar-dı-m	past tense + 1sg	42	
+92	F	kettik	ket	ket-ti-k	past tense + 1pl	18	
+93	F	keledi	kel	kel-e-di	present-future tense, 3rd person	396	
+94	F	oqıydı	oqı	oqı-y-dı	present-future tense; -y after a vowel	99	
+95	F	baraman	bar	bar-a-man	1sg	33	
+96	F	barasań	bar	bar-a-sań	2sg	13	
+97	F	aytamız	ayt	ayt-a-mız	1pl	60	
+98	F	kelmedi	kel	kel-me-di	negation: -me	39	
+99	F	kónbedi	kón	kón-be-di	negation: -be after n	7	
+100	F	sezbedi	sez	sez-be-di	negation: -be after z	4	
+101	F	aytpadı	ayt	ayt-pa-dı	negation: -pa after a voiceless consonant	10	
+102	F	bolmaydı	bol	bol-ma-y-dı	negation + present-future tense	134	
+103	F	jazıń	jaz	jaz-ıń	imperative, 2nd person	1547	
+104	F	oqıń	oqı	oqı-ń	imperative, 2nd person; -ń after a vowel	962	
+105	F	kelińler	kel	kel-iń-ler	imperative + -ler	4	
+106	F	jazbań	jaz	jaz-ba-ń	negative imperative	2	
+107	F	bolsın	bol	bol-sın	imperative, 3rd person	100	
+108	F	aytayıq	ayt	ayt-ayıq	1pl (optative)	15	
+109	F	barsam	bar	bar-sa-m	conditional + 1sg	10	
+110	F	bilseń	bil	bil-se-ń	conditional + 2sg	12	
+111	F	kelmese	kel	kel-me-se	negation + conditional	6	
+112	F	oqımaqshı	oqı	oqı-maqshı	intentional mood	3	
+113	F	barajaqpan	bar	bar-ajaq-pan	future tense + 1sg	2	
+114	F	umıtpaspan	umıt	umıt-pas-pan	negative future tense + 1sg	1	
+115	F	qoyıppan	qoy	qoy-ıp-pan	converb (-ıp) + 1sg	8	
+116	F	atırman	atır	atır-man	positional verb + 1sg	16	
+117	F	kiyatırman	kiyatır	kiyatır-man	fused verb (kele atır); the stem is kiyatır	7	
+118	F	dedi	de	de-di	the verb de-	253	
+119	F	dep	de	de-p	the verb de-	975	
+120	F	edim	edi	edi-m	defective verb; edi is taken as the stem	101	
+121	F	ekenbiz	eken	eken-biz	eken + 1pl; -biz after n	5	
+122	F	emespen	emes	emes-pen	emes + 1sg	10	
+123	F	sawatsızban	sawatsız	sawatsız-ban	person suffix on a nominal; derivational -sız kept	1	
+124	F	ákeldi	alıp kel	≈ ákel + di	ákel = alıp kel (native speaker's decision)	16	
+125	G	alıw	al	al-ıw	verbal noun	83	
+126	G	alıwǵa	al	al-ıw-ǵa	verbal noun + dative	24	
+127	G	dewge	de	de-w-ge	verbal noun + dative	7	
+128	G	kelgen	kel	kel-gen	participle	310	
+129	G	shıqqan	shıq	shıq-qan	participle	70	
+130	G	kelgende	kel	kel-gen-de	participle + locative	152	
+131	G	kelgenin	kel	kel-gen-i-n	participle + possessive 3rd person + accusative	176	
+132	G	kelgenligin	kel	kel-gen-lig-i-n	participle + -lik + possessive + accusative	32	
+133	G	ekenligin	eken	eken-lig-i-n	eken + -lik + possessive + accusative	146	
+134	G	turatuǵın	tur	tur-atuǵın	participle	24	
+135	G	bolmaytuǵın	bol	bol-ma-ytuǵın	negative participle	16	
+136	G	bolatuǵınlıǵın	bol	bol-atuǵın-lıǵ-ı-n	suffix chain	4	
+137	G	qoyıp	qoy	qoy-ıp	converb	305	
+138	G	islep	isle	isle-p	converb; -p after a vowel	103	
+139	G	kelmey	kel	kel-me-y	negative converb	16	
+140	G	bolǵansha	bol	bol-ǵansha	converb	10	
+141	G	uyqılamastan	uyqıla	uyqıla-mastan	converb; derivational -la kept	3	
+142	G	turǵanday	tur	tur-ǵan-day	participle + -day	16	
+143	H	oqıwshılardıń	oqıwshı	oqıwshı-lar-dıń	derivational -shı kept	31	
+144	H	balıqshılardıń	balıqshı	balıqshı-lar-dıń	derivational -shı kept	5	
+145	H	doslıǵı	doslıq	doslıǵ-ı	derivational -lıq kept; q → ǵ	6	
+146	H	tazalıǵı	tazalıq	tazalıǵ-ı	derivational -lıq kept; q → ǵ	11	
+147	H	jaqsılıq	jaqsılıq	jaqsılıq	derivational -lıq kept	32	
+148	H	baspa	baspa	baspa	noun ("publishing house"); not bas + pa	34	
+149	H	shıǵarmalardan	shıǵarma	shıǵarma-lar-dan	derivational -ma kept	51	
+150	H	bilimli	bilimli	bilimli	derivational -li kept	23	
+151	H	suwsız	suwsız	suwsız	derivational -sız kept	5	
+152	H	basladı	basla	basla-dı	derivational -la kept	167	
+153	H	tazaladı	tazala	tazala-dı	derivational -la kept	3	
+154	H	kitapxanada	kitapxana	kitapxana-da	derivational -xana kept	3	
+155	H	miynetkeshler	miynetkesh	miynetkesh-ler	derivational -kesh kept	1	
+156	H	járdemlespedik	járdemles	járdemles-pe-di-k	derivational -les (forms verbs from nouns) kept	1	
+157	I	júzim	júzim	júzim	"grape"; not júz + im	24	
+158	I	kelin	kelin	kelin	not kel + in	4	
+159	I	altı	altı	altı	"six"; not al + tı	66	
+160	I	qattı	qattı	qattı	not qat + tı	101	
+161	I	teńge	teńge	teńge	not teń + ge	7	
+162	I	birge	birge	birge	adverb ("together"); not bir + ge	138	
+163	I	paxta	paxta	paxta	final -ta is not the locative	107	
+164	I	kitap	kitap	kitap	final -p is not a converb	208	
+165	I	hárip	hárip	hárip	final -ip is not a converb	325	
+166	I	úlken	úlken	úlken	final -ken is not a participle	268	
+167	I	nárse	nárse	nárse	final -se is not the conditional	117	
+168	I	eliw	eliw	eliw	"fifty"; final -w is not a verbal noun	13	
+169	I	kerek	kerek	kerek	final -rek is not the comparative degree	334	
+170	I	jaman	jaman	jaman	final -man is not a person suffix	94	
+171	I	alma	alma	alma	a fruit ("apple"); could also be al + ma (negative imperative)	74	
+172	I	jazba	jazba	jazba	"written" (jazba jumıs); could also be jaz + ba (negative imperative)	142	
+173	I	qanday	qanday	qanday	pronoun; final -day is not stripped	1212	
+174	I	haqqında	haqqında	haqqında	postposition; not haq + ı + nda	283	
+175	J1	jazıladı	jaz	jaz-ıl-a-dı	voice stripped: passive (-ıl)	258	jazıl
+176	J1	berilgen	ber	ber-il-gen	voice stripped: passive (-il)	709	beril
+177	J1	delinedi	de	de-l-in-e-di	voice stripped: passive (-l-in)	208	delin
+178	J1	kórinedi	kór	kór-in-e-di	voice stripped: reflexive (-in)	76	kórin
+179	J1	kiyindi	kiy	kiy-in-di	voice stripped: reflexive (-in)	10	kiyin
+180	J1	tazalandı	tazala	tazala-n-dı	voice (-n) stripped, derivational -la kept	5	tazalan
+181	J1	qollanıladı	qollan	qollan-ıl-a-dı	voice (-ıl) stripped; qollan is kept as it is (not reduced to qolla)	241	qollanıl
+182	J1	sóylesti	sóyle	sóyle-s-ti	voice stripped: reciprocal (-s)	8	sóyles
+183	J1	oqıtadı	oqı	oqı-t-a-dı	voice stripped: causative (-t)	8	oqıt
+184	J1	shıǵardı	shıq	shıǵ-ar-dı	voice stripped: causative (-ar); ǵ → q	13	shıǵar
+185	J1	kórsetedi	kór	kór-set-e-di	voice stripped: causative (-set)	46	kórset
+186	J1	bildiredi	bil	bil-dir-e-di	voice stripped: causative (-dir)	240	bildir
+187	J2	kitapsha	kitap	kitap-sha	diminutive -sha stripped	3	kitapsha
+188	J2	balajan	bala	bala-jan	affectionate -jan stripped	1	balajan
+189	J3	awıldaǵı	awıl	awıl-da-ǵı	suffix -daǵı stripped	8	awıldaǵı
+190	J3	quramındaǵı	quram	quram-ı-nda-ǵı	possessive + -ndaǵı stripped	79	quramındaǵı
+191	J3	tómendegiler	tómen	tómen-de-gi-ler	suffix -degi and the plural stripped	4	tómendegi
+192	J4	búgingi	búgin	búgin-gi	temporal adjective -gi stripped	44	búgingi
+193	J5	adamday	adam	adam-day	similative -day stripped	5	adamday
+194	J6	meniki	men	≈ men + niki	suffix -niki stripped	8	meniki
+195	J7	qaraqalpaqsha	qaraqalpaq	qaraqalpaq-sha	language, manner: -sha stripped	13	qaraqalpaqsha
+196	J8	shınıǵıw	shınıq	shınıǵ-ıw	verbal noun -ıw stripped; ǵ → q	2833	shınıǵıw
+197	J8	sorawlarǵa	soraw	soraw-lar-ǵa	soraw is an independent noun, -w is not stripped (exception)	214	sora
+198	J9	olardıń	olar	olar-dıń	olar is an independent pronoun, not reduced to ol (exception)	940	ol
+199	J9	aldı	al	al-dı	as a verb: al + dı	180	ald
+200	J9	ótken	ót	ót-ken	participle -ken stripped	112	ótken

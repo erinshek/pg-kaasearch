@@ -1,0 +1,47 @@
+# Voice stop list (step 6): these verbs are kept as they are (confirmed by a native speaker)
+túsin
+shaqır
+esit
+jiber
+juwır
+baqır
+kóshir
+salıstır
+baylanıs
+qatnas
+kelis
+aralas
+jaylas
+tanıs
+kiris
+eris
+jetis
+awır
+úyren
+úyret
+ajırat
+qáliples
+dóret
+ótker
+pitker
+qollan
+
+# --- Reviewed by a native speaker (2026-11-12) ---
+qızar       # to redden (not from qız-)
+aǵar        # to turn white (not from aq-)
+jarat       # to create (not from jara-); similar to dóret
+birles      # to unite; similar to qáliples
+gezles      # to meet (not from gezle-)
+xoshlas     # to say goodbye
+sırlas      # to confide in each other (not from sırla-)
+jabıs       # to stick, to adhere (not from jap-)
+jılıs       # to shift, to move over (not from jılı-)
+sıyın       # to worship (not from sıy-)
+ótin        # to plead, to request (not from ót-)
+baǵın       # to obey, to submit (not from baq-)
+shegin      # to retreat (not from shek-)
+semir       # to grow fat
+ılaqtır     # to throw, to hurl
+boldır      # to get tired (not from bol-)
+juwın       # to wash oneself (juwındım → juwın)
+tolǵan      # to writhe, to be agitated (tolǵan → tolǵan)

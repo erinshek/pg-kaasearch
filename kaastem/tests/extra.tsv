@@ -1,0 +1,47 @@
+n	group	word	stem	note
+1	spelling	мектепке	mektep	Cyrillic script
+2	spelling	shаqаp	shaqap	Cyrillic а inside a Latin word
+3	spelling	so'zlerdi	sóz	apostrophe orthography
+4	spelling	qi'zdi'n'	qız	apostrophe orthography
+5	spelling	wol	ol	2009–2016 orthography
+6	spelling	yertek	ertek	2009–2016 orthography
+7	spelling	QÍZÍL	qızıl	upper case: Í → ı
+8	spelling	sen-aq	sen	hyphenated particle
+9	spelling	kelseń-á	kel	hyphenated particle
+10	spelling	5-mektepke	5-mektep	digit and hyphen
+11	spelling	ata-anası	ata-ana	paired word
+12	lists	maǵan	men	ready form
+13	lists	ondaǵı	ol	ready form + continuation
+14	lists	menińshe	men	ready form + continuation
+15	lists	bizikine	biz	ready form + continuation
+16	lists	bárin	bári	ready form + continuation
+17	lists	ushında	ush	a function word cannot be a stem (not ushın + da)
+18	safe	Londonnan	london	not in the lexicon: a three-letter suffix is stripped
+19	safe	Londonǵa	londonǵa	not in the lexicon: a two-letter suffix is not stripped
+20	voice	kóbeytti	kóbey	-t after y
+21	voice	paydalandı	paydalan	there is no verb paydala
+22	voice	kórsetilgen	kór	two voice suffixes
+23	voice	baylanıstırdı	baylanıs	stop list
+24	voice	qurılǵan	qur	the pair qur / qurı
+25	selection	jazıń	jaz	imperative (not jazı + ń)
+26	selection	beriń	ber	imperative (not beri + ń)
+27	selection	baslar	bas	plural (not basla + r)
+28	selection	sózlerdi	sóz	plural (not sózle + r + di)
+29	selection	alasań	al	present-future tense (not alasa + ń)
+30	selection	alamız	al	present-future tense
+31	selection	atamız	ata	pair list: ata > at
+32	selection	aydaydı	ayda	present-future tense (not ayday + dı)
+33	selection	barmaqta	bar	progressive present (not barmaq + ta)
+34	selection	jumısına	jumıs	possessive + dative (not jumısın + a)
+35	selection	usınıń	usı	genitive (not usın + ıń)
+36	selection	dalanıń	dala	genitive (not dalan + ıń)
+37	selection	kimseń	kim	person suffix (not kimse + ń)
+38	selection	qoymadı	qoy	a negative form is not a stem
+39	selection	aǵashı	aǵash	not aǵa + shı
+40	selection	jılı	jıl	the word itself is a verb, but it is analysed as noun + suffix
+41	selection	oqı	oqı	pair list: oqı > oq
+42	selection	túsine	túsin	pair list: túsin > tús
+43	selection	dúzilisin	dúzilis	action noun: dúzil + is
+44	selection	birlesken	birles	a participle listed in the lexicon is stripped too
+45	selection	tariyxında	tariyx	back-vowel suffix after x
+46	selection	aldında	aldı	possessed headword: aldı + nda (corrected on 2026-11-12)

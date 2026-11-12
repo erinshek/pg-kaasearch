@@ -1,0 +1,101 @@
+n	list	word	stem	decision	note	textbook_freq	status
+1	voice	túsinip	túsin	keep	kept: túsin is an independent verb (not tús)	46	confirmed
+2	voice	shaqırıp	shaqır	keep	kept (not shaq)	21	confirmed
+3	voice	esitken	esit	keep	kept (not es)	15	confirmed
+4	voice	jiberdi	jiber	keep	kept	49	confirmed
+5	voice	juwırıp	juwır	keep	kept (not juw)	40	confirmed
+6	voice	baqırıp	baqır	keep	kept (not baq)	22	confirmed
+7	voice	kóshirip	kóshir	keep	kept: in the sense "to copy out" (not kósh)	930	confirmed
+8	voice	salıstırıń	salıstır	keep	kept (not salıs, sal)	52	confirmed
+9	voice	baylanısadı	baylanıs	keep	kept: baylanıs also exists as a noun	105	confirmed
+10	voice	baylanıstırıp	baylanıs	strip	only -tır is stripped, baylanıs is kept	55	confirmed
+11	voice	qatnasadı	qatnas	keep	kept: qatnas also exists as a noun	21	confirmed
+12	voice	kelisken	kelis	keep	kept (not kel)	13	confirmed
+13	voice	aralasıp	aralas	keep	kept (not arala)	8	confirmed
+14	voice	jaylasqan	jaylas	keep	kept (not jayla)	33	confirmed
+15	voice	tanısıp	tanıs	keep	kept: tanıs also exists as a noun and an adjective	5	confirmed
+16	voice	kiristi	kiris	keep	kept (not kir)	14	confirmed
+17	voice	eristi	eris	keep	kept (not er)	8	confirmed
+18	voice	jetispeydi	jetis	keep	kept (not jet)	7	confirmed
+19	voice	awırdı	awır	keep	kept (not aw)	6	confirmed
+20	voice	úyrenip	úyren	keep	kept: there is no base verb	21	confirmed
+21	voice	úyretedi	úyret	keep	kept: there is no base verb; not merged with úyren	22	confirmed
+22	voice	ajıratıp	ajırat	keep	kept: ajıra is not used on its own	76	confirmed
+23	voice	qáliplesken	qáliples	keep	kept	26	confirmed
+24	voice	ańlatadı	ańla	strip	stripped: -t (like bildiredi → bil)	77	confirmed
+25	voice	dóretken	dóret	keep	kept (not dóre)	7	corrected
+26	voice	ótkerdi	ótker	keep	kept (not ót)	12	corrected
+27	voice	pitkerdi	pitker	keep	kept (not pit)	12	corrected
+28	voice	arttıradı	art	strip	stripped: -tır	6	confirmed
+29	voice	ushırasadı	ushıra	strip	stripped: -s	52	confirmed
+30	voice	dizbeklesip	dizbek	override	exception: the stem is taken to be dizbek (a noun)	109	corrected
+31	voice	tuwılǵan	tuw	strip	stripped: -ıl	61	confirmed
+32	voice	jatır	jat	strip	positional verb: jat + ır	29	confirmed
+33	w-noun	jalǵawları	jalǵaw	keep	kept: independent noun (like soraw)	88	confirmed
+34	w-noun	ataw	ataw	keep	kept: independent noun	108	confirmed
+35	w-noun	tarawında	taraw	keep	kept: independent noun	18	confirmed
+36	w-noun	jaylawǵa	jaylaw	keep	kept: independent noun	8	confirmed
+37	w-noun	ashıw	ashıw	keep	kept: independent noun ("anger")	8	confirmed
+38	w-noun	boyaw	boyaw	keep	kept: independent noun	15	confirmed
+39	w-noun	sóylewdiń	sóyle	strip	stripped: verbal noun (like shınıǵıw)	69	confirmed
+40	w-noun	oqıwǵa	oqı	strip	stripped: verbal noun	48	confirmed
+41	w-noun	jazıwda	jaz	strip	stripped: verbal noun	67	confirmed
+42	w-noun	tákirarlaw	tákirar	override	exception: the stem is taken to be tákirar	115	corrected
+43	w-noun	tallaw	talla	strip	stripped: verbal noun	96	confirmed
+44	w-noun	úndew	únde	strip	stripped: verbal noun	92	confirmed
+45	w-noun	islew	isle	strip	stripped: verbal noun	23	confirmed
+46	w-noun	basqarıw	basqar	strip	stripped: verbal noun	19	confirmed
+47	w-noun	salıstırıw	salıstır	strip	stripped: verbal noun; salıstır is kept	33	confirmed
+48	w-noun	baslawısh	baslawısh	keep	kept: noun derived with -wısh	191	confirmed
+49	w-noun	atawısh	atawısh	keep	kept: noun derived with -wısh	152	confirmed
+50	w-noun	jasawshı	jasawshı	keep	kept: -wshı (like oqıwshı)	201	confirmed
+51	w-noun	arnawlı	arnawlı	keep	kept: adjective derived with -wlı	43	confirmed
+52	sha	neshe	neshe	keep	kept	229	confirmed
+53	sha	qansha	qansha	keep	kept (not qan)	128	confirmed
+54	sha	sonsha	sonsha	keep	kept	54	confirmed
+55	sha	onsha	onsha	keep	kept (not on)	38	confirmed
+56	sha	keshe	keshe	keep	kept	48	confirmed
+57	sha	aqsha	aqsha	keep	kept (not aq)	17	confirmed
+58	sha	sheshe	sheshe	keep	kept	11	confirmed
+59	sha	ayrıqsha	ayrıqsha	keep	kept: independent word	68	confirmed
+60	sha	ózgeshe	ózgeshe	keep	kept: independent word (not ózge)	19	confirmed
+61	sha	awızsha	awız	strip	stripped (like qaraqalpaqsha)	97	confirmed
+62	sha	sızıqsha	sızıq	strip	stripped (like kitapsha)	53	confirmed
+63	sha	tómendegishe	tómen	strip	stripped: -she, -gi, -de	50	confirmed
+64	sha	qısqasha	qısqa	strip	stripped	20	confirmed
+65	sha	menińshe	men	strip	stripped: -she and the genitive	17	confirmed
+66	sha	házirshe	házir	strip	stripped	15	confirmed
+67	ǵı	yaki	yaki	keep	kept: conjunction	115	confirmed
+68	ǵı	taǵı	taǵı	keep	kept: adverb	114	confirmed
+69	ǵı	qarańǵı	qarańǵı	keep	kept	31	confirmed
+70	ǵı	belgi	belgi	keep	kept (not bel)	31	confirmed
+71	ǵı	eshki	eshki	keep	kept	25	confirmed
+72	ǵı	eski	eski	keep	kept (not es)	18	confirmed
+73	ǵı	jılqı	jılqı	keep	kept (not jıl)	16	confirmed
+74	ǵı	kúlki	kúlki	keep	kept: derived noun	14	confirmed
+75	ǵı	uyqı	uyqı	keep	kept	11	confirmed
+76	ǵı	qayǵı	qayǵı	keep	kept	11	confirmed
+77	ǵı	hátteki	hátte	strip	stripped: hátte + ki	18	corrected
+78	ǵı	arǵı	arǵı	keep	kept (not ar)	15	confirmed
+79	ǵı	tiykarǵı	tiykar	strip	stripped (like búgingi)	161	confirmed
+80	ǵı	házirgi	házir	strip	stripped	132	confirmed
+81	ǵı	dáslepki	dáslep	strip	stripped	119	confirmed
+82	ǵı	sońǵı	soń	strip	stripped	93	confirmed
+83	ǵı	áyyemgi	áyyem	strip	stripped	22	confirmed
+84	ǵı	negizgi	negiz	strip	stripped	9	confirmed
+85	day	sonday	sonday	keep	kept: pronoun (like qanday)	122	confirmed
+86	day	usınday	usınday	keep	kept: pronoun	44	confirmed
+87	day	birdey	birdey	keep	kept: independent word (not bir)	45	confirmed
+88	day	biyday	biyday	keep	kept	30	confirmed
+89	day	jaǵday	jaǵday	keep	kept	21	confirmed
+90	day	azǵantay	azǵantay	keep	kept	7	confirmed
+91	day	teńdey	teń	strip	stripped (like adamday)	11	confirmed
+92	day	gúldey	gúl	strip	stripped	9	confirmed
+93	day	tómendegidey	tómen	strip	stripped: -dey, -gi, -de	9	confirmed
+94	jan	anajan	ana	strip	stripped (like balajan)	10	confirmed
+95	jan	marjan	marjan	keep	kept	4	confirmed
+96	daǵı	ondaǵı	ol	strip	stripped: ol + da + ǵı	46	confirmed
+97	daǵı	haqqındaǵı	haqqında	strip	only -ǵı is stripped; the postposition haqqında is kept	23	confirmed
+98	daǵı	ádettegi	ádet	strip	stripped	6	confirmed
+99	daǵı	aldaǵı	ald	strip	stripped: ald + a + ǵı (not al)	5	confirmed
+100	daǵı	ertegi	ertek	strip	possessive: ertek + i (not er + tegi)	4	confirmed

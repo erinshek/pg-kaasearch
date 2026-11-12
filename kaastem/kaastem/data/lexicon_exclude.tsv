@@ -1,0 +1,53 @@
+# Entries excluded from the lexicon: word <TAB> n|v <TAB> reason
+# Headwords of «Túsindirme sózlik» that are in fact inflected forms.
+# If they stayed in the lexicon, the rule "a word found in the lexicon is not stripped" would block the correct analysis.
+kóbi	n	kóp + i; if kept, kóbirek would become kóbi (test: kóbirek → kóp)
+ertegi	n	ertek + i (native speaker's decision: ertegi → ertek)
+# Inflected verb forms (given in the dictionary as adverbs or function words)
+alıp	n	al + ıp
+kelip	n	kel + ip
+edip	n	verb form
+jaqsılap	n	in the ready-forms list: jaqsılap → jaqsı
+tewip	n	tep + ip
+dedik	n	de + di + k
+ekesiz	n	verb form
+jılayman	n	jıla + y + man
+keteresiz	n	verb form
+aytajaq	n	ayt + ajaq
+aytatuǵın	n	ayt + atuǵın
+abaylamay	n	abayla + ma + y
+aǵarmay	n	aǵar + ma + y
+baspay	n	in the ready-forms list
+qaqpay	n	in the ready-forms list
+sıypalamay	n	sıypala + ma + y
+sungimey	n	verb form
+tırıspay	n	tırıs + pa + y
+keshpesin	n	in the ready-forms list
+kútilmegende	n	kút + il + me + gen + de
+kútpegende	n	kút + pe + gen + de
+arzıma	v	arzı + ma (negative form)
+# Forms with a possessive suffix (listed as headwords in the dictionary)
+túri	n	in the ready-forms list (possessed headword): forms such as túri, túrin, túrinde → túri
+stili	n	stil + i
+mánisi	n	mánis + i (native speaker: mánisi → mánis)
+aldı	n	in the ready-forms list: aldı → al, aldında → aldı
+aldında	n	aldı + nda (native speaker: aldında → aldı)
+aqırında	n	aqırı + nda (native speaker: aqırında → aqırı)
+sońında	n	soń + ı + nda
+astı	n	in the ready-forms list (possessed headword): forms such as astı, astın, astında → astı
+ústi	n	in the ready-forms list (possessed headword): forms such as ústi, ústin, ústinde → ústi
+janı	n	jan + ı
+ayı	n	ay + ı
+túsi	n	tús + i
+kimi	n	kim + i
+túbiri	n	túbir + i
+aǵası	n	aǵa + sı
+atam	n	ata + m
+maqtanıshı	n	maqtanısh + ı
+mudamı	n	mudam + ı
+keyni	n	in the ready-forms list (possessed headword): forms such as keyni, keynin, keyninde → keyni
+dayım	n	dayı + m
+keter	n	ket + er
+qar	v	doubtful stem (from the verb qarı-); if kept, the stem qarma- would be lost
+taws	v	doubtful stem (the verb tawıs- exists)
+bek	v	doubtful stem (the verb beki- exists)

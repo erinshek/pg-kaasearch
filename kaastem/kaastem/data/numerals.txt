@@ -1,0 +1,23 @@
+# Cardinal numerals: -ınshı, -aw/-ew, -laǵan, -lap are stripped only after these
+bir
+eki
+úsh
+tórt
+bes
+altı
+jeti
+segiz
+toǵız
+on
+jigirma
+otız
+qırq
+eliw
+alpıs
+jetpis
+seksen
+toqsan
+júz
+mıń
+million
+milliard

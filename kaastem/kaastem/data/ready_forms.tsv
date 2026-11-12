@@ -1,0 +1,64 @@
+# Ready forms (step 2): form <TAB> stem <TAB> state
+# The state tells which suffix the form ends in; the suffix chain may continue after it
+# (ondaǵı = onda + ǵı, menińshe = meniń + she, bizikine = biziki + ne).
+#   GEN, DAT, ACC, ABL, LOC, NIKI, GI — suffix classes from the table
+#   BARE — takes person suffixes directly (jatırman)
+#   PX   — possessed headword: a case suffix follows it (aldı-nda, bári-n)
+#   -    — no continuation, the word itself only
+# A form may appear on two lines: the first line is for the word itself (aldı → al),
+# the line with a state is for forms with a continuation (aldında → aldı).
+# --- pronouns ---
+meniń	men	GEN
+maǵan	men	DAT
+meni	men	ACC
+meniki	men	NIKI
+seniń	sen	GEN
+saǵan	sen	DAT
+seni	sen	ACC
+seniki	sen	NIKI
+onıń	ol	GEN
+oǵan	ol	DAT
+onı	ol	ACC
+onnan	ol	ABL
+onda	ol	LOC
+onıki	ol	NIKI
+bunıń	bul	GEN
+buǵan	bul	DAT
+bunı	bul	ACC
+bunnan	bul	ABL
+bunda	bul	LOC
+sonıń	sol	GEN
+soǵan	sol	DAT
+sonı	sol	ACC
+sonnan	sol	ABL
+sonda	sol	LOC
+biziń	biz	GEN
+biziki	biz	NIKI
+siziń	siz	GEN
+siziki	siz	NIKI
+usıǵan	usı	DAT
+usınnan	usı	ABL
+usında	usı	LOC
+mınaǵan	mına	DAT
+# --- forms confirmed in the test set and the exceptions list ---
+aldı	al	-
+ótken	ót	-
+jatır	jat	BARE
+hátteki	hátte	-
+aldaǵı	ald	GI
+haqqındaǵı	haqqında	GI
+bári	bári	PX
+sonıki	sol	NIKI
+bunıki	bul	NIKI
+# --- possessed headwords: the case suffix attaches to this form (aldında → aldı, ústinde → ústi) ---
+aldı	aldı	PX
+aqırı	aqırı	PX
+astı	astı	PX
+ústi	ústi	PX
+keyni	keyni	PX
+túri	túri	PX
+# --- forms given by a native speaker during review (2026-11-12) ---
+jaqsılap	jaqsı	-
+baspay	baspa	-
+qaqpay	qaqpa	-
+keshpesin	keshpe	-
