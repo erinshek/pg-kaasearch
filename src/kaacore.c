@@ -82,6 +82,43 @@ static bool inited = false;
 static KStr *morph_cp;                      /* kaa_morphs[i] as code points */
 static int  class_first[KAA_NCLASSES];      /* morph index range of each class */
 static int  class_last[KAA_NCLASSES];
+
+/*
+ * Morphs of each class grouped by their first letter, for parse(): only the morphs that start with
+ * the next letter of the word are tried. Within a group the table order is kept, so the analyses come
+ * out in the same order as in kaastem.
+ */
+typedef struct
+{
+    cp_t        first;
+    short       start;          /* into group_morphs */
+    short       count;
+} MorphGroup;
+
+/* Per-morph flags for class_ok(), precomputed from the literal lists of tables.class_ok. */
+enum
+{
+    MF_PX_SHORT = 1 << 0,       /* PX: m ń sı si mız miz ńız ńiz */
+    MF_MAN_HEAD = 1 << 1,       /* PRED/P1: starts with man men ban ben pan pen */
+    MF_MIZ_HEAD = 1 << 2,       /* PRED/P1: starts with mız miz bız biz pız piz */
+    MF_NA_NE = 1 << 3,          /* DATP: na ne */
+    MF_NSHI = 1 << 4,           /* NUM: nshı nshi */
+    MF_NUM_C = 1 << 5,          /* NUM: ınshı inshi aw ew */
+    MF_IMP_V = 1 << 6,          /* IMP: ń ńız ńiz yın yin yıq yik */
+    MF_SIN = 1 << 7             /* IMP: sın sin */
+};
+static unsigned short *morph_flags;
+
+/* Constant suffixes of stemmer.py as code points. */
+static KStr deriv_harm[16][2];
+static KStr deriv_fixed[16];
+static KStr deriv_verbal[16][2];
+static int  voice_class[32];    /* 1: dır dir ǵız giz, 2: tır tir qız kiz, 0: other */
+
+#define MAX_GROUPS 16
+static MorphGroup class_groups[KAA_NCLASSES][MAX_GROUPS];
+static int  class_ngroups[KAA_NCLASSES];
+static short *group_morphs;
 static bool *morph_voiced, *morph_unvoiced, *morph_gan;
 static KStr voice_cp[32];
 static KStr loan_cp[8];
@@ -168,6 +205,15 @@ kstr_eq(const KStr *a, const char *s)
     return a->n == b.n && memcmp(a->c, b.c, a->n * sizeof(cp_t)) == 0;
 }
 
+static bool
+in_list(const KStr *m, const char *const *lits)
+{
+    for (; *lits; lits++)
+        if (kstr_eq(m, *lits))
+            return true;
+    return false;
+}
+
 static void
 kaa_init(void)
 {
@@ -204,8 +250,96 @@ kaa_init(void)
         for (j = 0; j < kaa_gan.n; j++)
             morph_gan[i] |= strcmp(m, kaa_gan.words[j]) == 0;
     }
+    group_morphs = calloc(kaa_nmorphs, sizeof(short));
+    if (!group_morphs)
+        abort();
+    {
+        int         pos = 0,
+                    c;
+
+        for (c = 0; c < KAA_NCLASSES; c++)
+        {
+            int         mi;
+
+            class_ngroups[c] = 0;
+            for (mi = class_first[c]; mi >= 0 && mi <= class_last[c]; mi++)
+            {
+                cp_t        f = morph_cp[mi].c[0];
+                int         g,
+                            seen = 0;
+
+                for (g = 0; g < class_ngroups[c]; g++)
+                    if (class_groups[c][g].first == f)
+                        seen = 1;
+                if (seen)
+                    continue;
+                if (class_ngroups[c] == MAX_GROUPS)
+                    abort();                /* the generated table never has this many */
+                class_groups[c][class_ngroups[c]].first = f;
+                class_groups[c][class_ngroups[c]].start = (short) pos;
+                for (g = mi; g <= class_last[c]; g++)
+                    if (morph_cp[g].c[0] == f)
+                        group_morphs[pos++] = (short) g;
+                class_groups[c][class_ngroups[c]].count = (short) (pos - class_groups[c][class_ngroups[c]].start);
+                class_ngroups[c]++;
+            }
+        }
+    }
     for (i = 0; i < kaa_nvoice_suffixes && i < 32; i++)
+    {
         kstr_set(&voice_cp[i], kaa_voice_suffixes[i]);
+        voice_class[i] = (kstr_eq(&voice_cp[i], "d\304\261r") || kstr_eq(&voice_cp[i], "dir") ||
+                          kstr_eq(&voice_cp[i], "\307\265\304\261z") || kstr_eq(&voice_cp[i], "giz")) ? 1 :
+            (kstr_eq(&voice_cp[i], "t\304\261r") || kstr_eq(&voice_cp[i], "tir") ||
+             kstr_eq(&voice_cp[i], "q\304\261z") || kstr_eq(&voice_cp[i], "kiz")) ? 2 : 0;
+    }
+    if (kaa_nderiv_harmonic > 16 || kaa_deriv_fixed.n > 16 || kaa_nderiv_verbal > 16 || kaa_nvoice_suffixes > 32)
+        abort();                            /* the arrays above are sized for the generated tables */
+    for (i = 0; i < kaa_nderiv_harmonic; i++)
+    {
+        kstr_set(&deriv_harm[i][0], kaa_deriv_harmonic[i].back);
+        kstr_set(&deriv_harm[i][1], kaa_deriv_harmonic[i].front);
+    }
+    for (i = 0; i < kaa_deriv_fixed.n; i++)
+        kstr_set(&deriv_fixed[i], kaa_deriv_fixed.words[i]);
+    for (i = 0; i < kaa_nderiv_verbal; i++)
+    {
+        kstr_set(&deriv_verbal[i][0], kaa_deriv_verbal[i].back);
+        kstr_set(&deriv_verbal[i][1], kaa_deriv_verbal[i].front);
+    }
+    morph_flags = calloc(kaa_nmorphs, sizeof(unsigned short));
+    if (!morph_flags)
+        abort();
+    {
+        static const char *const px_short[] = {"m", "\305\204", "s\304\261", "si", "m\304\261z", "miz",
+        "\305\204\304\261z", "\305\204iz", NULL};
+        static const char *const man_heads[] = {"man", "men", "ban", "ben", "pan", "pen", NULL};
+        static const char *const miz_heads[] = {"m\304\261z", "miz", "b\304\261z", "biz", "p\304\261z", "piz", NULL};
+        static const char *const na_ne[] = {"na", "ne", NULL};
+        static const char *const nshi[] = {"nsh\304\261", "nshi", NULL};
+        static const char *const num_c[] = {"\304\261nsh\304\261", "inshi", "aw", "ew", NULL};
+        static const char *const imp_v[] = {"\305\204", "\305\204\304\261z", "\305\204iz", "y\304\261n", "yin",
+        "y\304\261q", "yik", NULL};
+        static const char *const sin[] = {"s\304\261n", "sin", NULL};
+
+        for (i = 0; i < kaa_nmorphs; i++)
+        {
+            KStr        head = morph_cp[i];
+            unsigned short f = 0;
+
+            if (head.n > 3)
+                head.n = 3;
+            f |= in_list(&morph_cp[i], px_short) ? MF_PX_SHORT : 0;
+            f |= in_list(&head, man_heads) ? MF_MAN_HEAD : 0;
+            f |= in_list(&head, miz_heads) ? MF_MIZ_HEAD : 0;
+            f |= in_list(&morph_cp[i], na_ne) ? MF_NA_NE : 0;
+            f |= in_list(&morph_cp[i], nshi) ? MF_NSHI : 0;
+            f |= in_list(&morph_cp[i], num_c) ? MF_NUM_C : 0;
+            f |= in_list(&morph_cp[i], imp_v) ? MF_IMP_V : 0;
+            f |= in_list(&morph_cp[i], sin) ? MF_SIN : 0;
+            morph_flags[i] = f;
+        }
+    }
     nloan = 0;
     for (i = 0; i < kaa_loan_clusters.n && i < 8; i++)
         kstr_set(&loan_cp[nloan++], kaa_loan_clusters.words[i]);
@@ -284,10 +418,84 @@ cmp_str(const void *a, const void *b)
     return strcmp(*(const char *const *) a, *(const char *const *) b);
 }
 
+/*
+ * Word sets are looked up through hash tables built on first use (open addressing, FNV-1a); the
+ * generated arrays stay the single source. Small sets keep using bsearch.
+ */
+typedef struct
+{
+    const KaaWordSet *set;
+    uint32_t   *slots;          /* index + 1 into set->words; 0 = empty */
+    uint32_t    mask;
+} SetHash;
+
+#define MAX_HASHED 16
+static SetHash set_hashes[MAX_HASHED];
+static int  nset_hashes;
+
+static uint32_t
+fnv1a(const char *k)
+{
+    uint32_t    h = 2166136261u;
+
+    for (; *k; k++)
+        h = (h ^ (unsigned char) *k) * 16777619u;
+    return h;
+}
+
+static SetHash *
+set_hash(const KaaWordSet *set)
+{
+    int         i;
+    SetHash    *sh;
+    uint32_t    size = 64;
+    size_t      w;
+
+    for (i = 0; i < nset_hashes; i++)
+        if (set_hashes[i].set == set)
+            return &set_hashes[i];
+    if (nset_hashes == MAX_HASHED)
+        return NULL;
+    while (size < set->n * 2)
+        size *= 2;
+    sh = &set_hashes[nset_hashes];
+    sh->slots = calloc(size, sizeof(uint32_t));
+    if (!sh->slots)
+        return NULL;                        /* fall back to bsearch */
+    sh->set = set;
+    sh->mask = size - 1;
+    for (w = 0; w < set->n; w++)
+    {
+        uint32_t    h = fnv1a(set->words[w]) & sh->mask;
+
+        while (sh->slots[h])
+            h = (h + 1) & sh->mask;
+        sh->slots[h] = (uint32_t) w + 1;
+    }
+    nset_hashes++;
+    return sh;
+}
+
 static bool
 set_has_utf8(const KaaWordSet *set, const char *k)
 {
-    return set->n && bsearch(&k, set->words, set->n, sizeof(char *), cmp_str) != NULL;
+    SetHash    *sh;
+
+    if (!set->n)
+        return false;
+    if (set->n >= 64 && (sh = set_hash(set)) != NULL)
+    {
+        uint32_t    h = fnv1a(k) & sh->mask;
+
+        while (sh->slots[h])
+        {
+            if (strcmp(set->words[sh->slots[h] - 1], k) == 0)
+                return true;
+            h = (h + 1) & sh->mask;
+        }
+        return false;
+    }
+    return bsearch(&k, set->words, set->n, sizeof(char *), cmp_str) != NULL;
 }
 
 /* k in set, with k = key(s) */
@@ -529,15 +737,6 @@ miz(char sc)                                /* _MIZ */
 }
 
 static bool
-in_list(const KStr *m, const char *const *lits)
-{
-    for (; *lits; lits++)
-        if (kstr_eq(m, *lits))
-            return true;
-    return false;
-}
-
-static bool
 is_qk(cp_t f)
 {
     return f == 'q' || f == 'k';
@@ -553,16 +752,6 @@ is_gg(cp_t f)
 static bool
 class_ok(const cp_t *prev, int pn, int mi, int cls, int prevcls)
 {
-    static const char *const px_short[] = {"m", "\305\204", "s\304\261", "si", "m\304\261z", "miz",
-    "\305\204\304\261z", "\305\204iz", NULL};
-    static const char *const man_heads[] = {"man", "men", "ban", "ben", "pan", "pen", NULL};
-    static const char *const miz_heads[] = {"m\304\261z", "miz", "b\304\261z", "biz", "p\304\261z", "piz", NULL};
-    static const char *const na_ne[] = {"na", "ne", NULL};
-    static const char *const nshi[] = {"nsh\304\261", "nshi", NULL};
-    static const char *const num_c[] = {"\304\261nsh\304\261", "inshi", "aw", "ew", NULL};
-    static const char *const imp_v[] = {"\305\204", "\305\204\304\261z", "\305\204iz", "y\304\261n", "yin",
-    "y\304\261q", "yik", NULL};
-    static const char *const sin[] = {"s\304\261n", "sin", NULL};
     const KStr *m = &morph_cp[mi];
     char        sc = sound_class(prev, pn);
     cp_t        f = m->c[0];
@@ -581,7 +770,7 @@ class_ok(const cp_t *prev, int pn, int mi, int cls, int prevcls)
         case KAA_NMLZ:
             return true;
         case KAA_PX:
-            return in_list(m, px_short) == (sc == 'V');
+            return ((morph_flags[mi] & MF_PX_SHORT) != 0) == (sc == 'V');
         case KAA_GEN:
             return f == (cp_t) ndt_gen(scd);
         case KAA_ACC:
@@ -599,7 +788,7 @@ class_ok(const cp_t *prev, int pn, int mi, int cls, int prevcls)
                 return f == 'n';
             return f == (cp_t) ndt_abl(scd);
         case KAA_DATP:
-            if (in_list(m, na_ne))
+            if (morph_flags[mi] & MF_NA_NE)
                 return after_px3;
             return prevcls == KAA_PX && (last == 'm' || last == CP_N_ACUTE);
         case KAA_ACCP:
@@ -607,17 +796,11 @@ class_ok(const cp_t *prev, int pn, int mi, int cls, int prevcls)
             return after_px3;
         case KAA_PRED:
         case KAA_P1:
-            {
-                KStr        head = *m;
-
-                if (head.n > 3)
-                    head.n = 3;
-                if (in_list(&head, man_heads))
-                    return f == (cp_t) man(sc);
-                if (in_list(&head, miz_heads))
-                    return f == (cp_t) miz(sc);
-                return true;
-            }
+            if (morph_flags[mi] & MF_MAN_HEAD)
+                return f == (cp_t) man(sc);
+            if (morph_flags[mi] & MF_MIZ_HEAD)
+                return f == (cp_t) miz(sc);
+            return true;
         case KAA_Q2:
             return f == (cp_t) mbp(sc);
         case KAA_GI:
@@ -637,9 +820,9 @@ class_ok(const cp_t *prev, int pn, int mi, int cls, int prevcls)
                 return sc != 'V';
             return true;
         case KAA_NUM:
-            if (in_list(m, nshi))
+            if (morph_flags[mi] & MF_NSHI)
                 return sc == 'V';
-            if (in_list(m, num_c))
+            if (morph_flags[mi] & MF_NUM_C)
                 return sc != 'V';
             return true;
         case KAA_NEG:
@@ -668,9 +851,9 @@ class_ok(const cp_t *prev, int pn, int mi, int cls, int prevcls)
         case KAA_OPT:
             return sc == 'T' ? is_qk(f) : is_gg(f);
         case KAA_IMP:
-            if (in_list(m, imp_v))
+            if (morph_flags[mi] & MF_IMP_V)
                 return sc == 'V';
-            if (in_list(m, sin))
+            if (morph_flags[mi] & MF_SIN)
                 return true;
             return sc != 'V';
         case KAA_NMSH:
@@ -707,6 +890,44 @@ paths_push(Ctx *ctx, PathList *pl, const Path *p)
     pl->items[pl->n++] = *p;
 }
 
+/* The position after morph mi at pos, or -1 when it does not fit there (tables.parse checks). */
+static int
+morph_fits(const KaaWord *w, int pos, int mi, int cls, int state)
+{
+    const KStr *m = &morph_cp[mi];
+    int         after = pos + m->n;
+    bool        vowel_next;
+    int         q;
+
+    if (after > w->n)
+        return -1;
+    for (q = 1; q < m->n && w->c[pos + q] == m->c[q]; q++)
+        ;
+    if (q < m->n)
+        return -1;
+    vowel_next = after < w->n && is_vowel(w->c[after]);
+    if (morph_voiced[mi] && !vowel_next)
+        return -1;
+    if (morph_unvoiced[mi] && vowel_next)
+        return -1;
+    if (!harmony_ok(w->c, pos, m, cls))
+        return -1;
+    if (!class_ok(w->c, pos, mi, cls, state))
+        return -1;
+    return after;
+}
+
+static const MorphGroup *
+find_group(int cls, cp_t first)
+{
+    int         g;
+
+    for (g = 0; g < class_ngroups[cls]; g++)
+        if (class_groups[cls][g].first == first)
+            return &class_groups[cls][g];
+    return NULL;
+}
+
 /* tables.parse: split w[pos:] into suffixes, starting from state; prev is always w[:pos]. */
 static void
 parse(Ctx *ctx, const KaaWord *w, int pos, int state, bool bare, Path *cur, PathList *out)
@@ -725,28 +946,21 @@ parse(Ctx *ctx, const KaaWord *w, int pos, int state, bool bare, Path *cur, Path
     for (k = 0; order[k] != KAA_NSTATES; k++)
     {
         int         cls = order[k];
-        int         mi;
+        const MorphGroup *grp;
+        int         gi;
 
         if (cls == KAA_END)
             continue;
         if (state == KAA_START && (kaa_bare_first & KAA_BIT(cls)) && !bare)
             continue;
-        for (mi = class_first[cls]; mi >= 0 && mi <= class_last[cls]; mi++)
+        if (!(grp = find_group(cls, w->c[pos])))
+            continue;
+        for (gi = grp->start; gi < grp->start + grp->count; gi++)
         {
-            const KStr *m = &morph_cp[mi];
-            int         after = pos + m->n;
-            bool        vowel_next;
+            int         mi = group_morphs[gi];
+            int         after = morph_fits(w, pos, mi, cls, state);
 
-            if (after > w->n || memcmp(w->c + pos, m->c, m->n * sizeof(cp_t)) != 0)
-                continue;
-            vowel_next = after < w->n && is_vowel(w->c[after]);
-            if (morph_voiced[mi] && !vowel_next)
-                continue;
-            if (morph_unvoiced[mi] && vowel_next)
-                continue;
-            if (!harmony_ok(w->c, pos, m, cls))
-                continue;
-            if (!class_ok(w->c, pos, mi, cls, state))
+            if (after < 0)
                 continue;
             cur->m[cur->n++] = (short) mi;
             parse(ctx, w, after, cls, false, cur, out);
@@ -784,51 +998,46 @@ is_derived(const cp_t *s, int n, int depth)
 #define BASE_OK(bn) ((bn) >= 2 && has_vowel(s, (bn)) && !in_set(&kaa_not_base, s, (bn)) && is_nom_d(s, (bn), depth + 1))
     for (i = 0; i < kaa_nderiv_harmonic; i++)
     {
-        const char *sufs[2] = {kaa_deriv_harmonic[i].back, kaa_deriv_harmonic[i].front};
         int         j;
 
         for (j = 0; j < 2; j++)
         {
-            KStr        suf;
+            const KStr *suf = &deriv_harm[i][j];
             int         bn;
 
-            kstr_set(&suf, sufs[j]);
-            if (!ends_with(s, n, &suf))
+            if (!ends_with(s, n, suf))
                 continue;
-            bn = n - suf.n;
+            bn = n - suf->n;
             if (bn > 0 && is_back(s, bn) == (j == 0) && BASE_OK(bn))
                 return true;
         }
     }
     for (i = 0; i < kaa_deriv_fixed.n; i++)
     {
-        KStr        suf;
+        const KStr *suf = &deriv_fixed[i];
 
-        kstr_set(&suf, kaa_deriv_fixed.words[i]);
-        if (ends_with(s, n, &suf) && BASE_OK(n - suf.n))
+        if (ends_with(s, n, suf) && BASE_OK(n - suf->n))
             return true;
     }
 #undef BASE_OK
     for (i = 0; i < kaa_nderiv_verbal; i++)
     {
-        const char *sufs[2] = {kaa_deriv_verbal[i].back, kaa_deriv_verbal[i].front};
         int         j;
 
         for (j = 0; j < 2; j++)
         {
-            KStr        suf;
+            const KStr *suf = &deriv_verbal[i][j];
             int         bn;
 
-            kstr_set(&suf, sufs[j]);
-            if (!ends_with(s, n, &suf))
+            if (!ends_with(s, n, suf))
                 continue;
-            bn = n - suf.n;
+            bn = n - suf->n;
             if (bn < 2 || !has_vowel(s, bn) || (is_vowel(s[bn - 1]) ? 1 : 0) != kaa_deriv_verbal[i].after_vowel ||
                 is_back(s, bn) != (j == 0))
                 continue;
             if (is_verb(s, bn))
                 return true;
-            if (is_vowel(suf.c[0]) && devoice(s[bn - 1]) && is_vowel(s[bn - 2]))
+            if (is_vowel(suf->c[0]) && devoice(s[bn - 1]) && is_vowel(s[bn - 2]))
             {
                 cp_t        tmp[WORD_CAP];
 
@@ -860,7 +1069,7 @@ is_nom(const cp_t *s, int n)
 
 /* Stemmer._voice_fit */
 static bool
-voice_fit(const cp_t *rem, int rn, const KStr *suf)
+voice_fit(const cp_t *rem, int rn, const KStr *suf, int vclass)
 {
     char        sc;
 
@@ -871,9 +1080,9 @@ voice_fit(const cp_t *rem, int rn, const KStr *suf)
         return sc == 'V' && vowel_count(rem, rn) >= 2;
     if (suf->n == 1 && suf->c[0] == 't')
         return (sc == 'V' || rem[rn - 1] == 'r' || rem[rn - 1] == 'y') && vowel_count(rem, rn) >= 2;
-    if (kstr_eq(suf, "d\304\261r") || kstr_eq(suf, "dir") || kstr_eq(suf, "\307\265\304\261z") || kstr_eq(suf, "giz"))
+    if (vclass == 1)
         return sc != 'T';
-    if (kstr_eq(suf, "t\304\261r") || kstr_eq(suf, "tir") || kstr_eq(suf, "q\304\261z") || kstr_eq(suf, "kiz"))
+    if (vclass == 2)
         return sc == 'T';
     return sc != 'V';
 }
@@ -900,7 +1109,7 @@ voice_base(const cp_t *s, int n, KaaWord *base)
 
         if (!ends_with(s, n, suf) || rn < 2)
             continue;
-        if (!has_vowel(s, rn) || !voice_fit(s, rn, suf))
+        if (!has_vowel(s, rn) || !voice_fit(s, rn, suf, voice_class[v]))
             continue;
         if (is_verb(s, rn))
         {
@@ -2292,16 +2501,70 @@ kaa_analyze(const char *word, size_t len, KaaAnalysis *out)
     return 0;
 }
 
+/*
+ * Cache of recent results of kaa_stem_word: real text repeats a small set of words, so most lookups
+ * hit. Direct-mapped by a hash of the input bytes; inputs and stems that do not fit are not cached.
+ * The stem depends only on the input bytes, so a hit gives exactly what kaa_analyze would.
+ */
+#define CACHE_SLOTS 4096
+#define CACHE_KEY   48
+#define CACHE_STEM  64
+
+typedef struct
+{
+    unsigned char klen;         /* 0 = empty */
+    char        key[CACHE_KEY];
+    char        stem[CACHE_STEM];
+} CacheSlot;
+
+static CacheSlot *stem_cache;
+
+static uint32_t
+hash_bytes(const char *p, size_t len)
+{
+    uint32_t    h = 2166136261u;
+    size_t      i;
+
+    for (i = 0; i < len; i++)
+        h = (h ^ (unsigned char) p[i]) * 16777619u;
+    return h;
+}
+
 char *
 kaa_stem_word(const char *word, size_t len)
 {
     KaaAnalysis a;
     char       *stem;
+    CacheSlot  *slot = NULL;
 
+    if (len > 0 && len < CACHE_KEY)
+    {
+        if (!stem_cache)
+            stem_cache = calloc(CACHE_SLOTS, sizeof(CacheSlot));
+        if (stem_cache)
+        {
+            slot = &stem_cache[hash_bytes(word, len) & (CACHE_SLOTS - 1)];
+            if (slot->klen == len && memcmp(slot->key, word, len) == 0)
+            {
+                size_t      n = strlen(slot->stem);
+
+                stem = malloc(n + 1);
+                if (stem)
+                    memcpy(stem, slot->stem, n + 1);
+                return stem;
+            }
+        }
+    }
     if (kaa_analyze(word, len, &a) != 0)
         return NULL;
     stem = a.stem;
     a.stem = NULL;
     kaa_analysis_free(&a);
+    if (slot && strlen(stem) < CACHE_STEM)
+    {
+        slot->klen = (unsigned char) len;
+        memcpy(slot->key, word, len);
+        strcpy(slot->stem, stem);
+    }
     return stem;
 }
