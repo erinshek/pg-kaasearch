@@ -25,9 +25,10 @@ typedef struct
 /* Sorted by codepoint for binary search */
 static const CyrLatinEntry cyr_to_lat[] = {
 
-    /* === Uppercase Cyrillic (U+0401, U+0410–U+042F) === */
+    /* === Uppercase Cyrillic (U+0401, U+040E, U+0410–U+042F) === */
 
     {0x0401, "yo"},             /* Ё */
+    {0x040E, "w"},              /* Ў (Karakalpak) */
     {0x0410, "a"},              /* А */
     {0x0411, "b"},              /* Б */
     {0x0412, "v"},              /* В */
@@ -61,7 +62,7 @@ static const CyrLatinEntry cyr_to_lat[] = {
     {0x042E, "yu"},             /* Ю */
     {0x042F, "ya"},             /* Я */
 
-    /* === Lowercase Cyrillic (U+0430–U+044F, U+0451) === */
+    /* === Lowercase Cyrillic (U+0430–U+044F, U+0451, U+045E) === */
 
     {0x0430, "a"},              /* а */
     {0x0431, "b"},              /* б */
@@ -96,6 +97,7 @@ static const CyrLatinEntry cyr_to_lat[] = {
     {0x044E, "yu"},             /* ю */
     {0x044F, "ya"},             /* я */
     {0x0451, "yo"},             /* ё */
+    {0x045E, "w"},              /* ў (Karakalpak) */
 
     /* === Extended Karakalpak Cyrillic (sorted by codepoint) === */
 
@@ -107,8 +109,6 @@ static const CyrLatinEntry cyr_to_lat[] = {
     {0x04A3, "\xC5\x84"},      /* ң → ń */
     {0x04AE, "\xC3\xBA"},      /* Ү → ú */
     {0x04AF, "\xC3\xBA"},      /* ү → ú */
-    {0x04B0, "w"},              /* Ў */
-    {0x04B1, "w"},              /* ў */
     {0x04B2, "h"},              /* Ҳ */
     {0x04B3, "h"},              /* ҳ */
     {0x04D8, "\xC3\xA1"},      /* Ә → á */

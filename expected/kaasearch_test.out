@@ -95,5 +95,19 @@ SELECT to_tsvector('kaasearch', 'Қарақалпақ тили')
  t
 (1 row)
 
+-- 14. Karakalpak ў (U+045E) and Ў (U+040E) → w
+SELECT to_tsvector('kaasearch', 'суў СУЎ таўлар');
+    to_tsvector    
+-------------------
+ 'suw':1,2 'taw':3
+(1 row)
+
+SELECT to_tsvector('kaasearch', 'суў')
+    @@ to_tsquery('kaasearch', 'suw') AS w_match;
+ w_match 
+---------
+ t
+(1 row)
+
 -- Clean up
 DROP EXTENSION kaasearch;
