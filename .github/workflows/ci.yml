@@ -25,11 +25,6 @@ jobs:
           make
           make install
 
-      # Temporary: "make install" does not install the stop-word file yet.
-      # Remove this step once the Makefile installs it (DATA_TSEARCH).
-      - name: Install the stop-word file
-        run: cp data/kaasearch.stop "$(pg_config --sharedir)/tsearch_data/"
-
       - name: Regression tests
         run: make installcheck
 

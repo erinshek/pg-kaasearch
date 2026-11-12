@@ -7,6 +7,9 @@ EXTENSION = kaasearch
 # SQL script executed on CREATE EXTENSION
 DATA = kaasearch--1.0.sql
 
+# Stop-word file, installed into $(sharedir)/tsearch_data/
+DATA_TSEARCH = data/kaasearch.stop
+
 # C source files to compile
 OBJS = src/kaasearch.o src/lower.o src/translit.o src/stemmer.o
 

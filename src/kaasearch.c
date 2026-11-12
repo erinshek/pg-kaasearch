@@ -6,6 +6,7 @@
 #include "commands/defrem.h"
 #include "tsearch/ts_public.h"
 #include "utils/builtins.h"
+#include "mb/pg_wchar.h"
 
 #include "lower.h"
 #include "translit.h"
@@ -34,6 +35,19 @@ kaasearch_init(PG_FUNCTION_ARGS)
     DictKaasearch *d;
     ListCell   *l;
     bool        stoploaded = false;
+
+    /*
+     * The transliteration, lowercase and stemmer code works on UTF-8 bytes,
+     * and the stop-word file is UTF-8. Refuse other encodings up front with
+     * a clear message instead of failing later on a decoding error.
+     */
+    if (GetDatabaseEncoding() != PG_UTF8)
+        ereport(ERROR,
+                (errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
+                 errmsg("kaasearch requires a UTF8 database"),
+                 errdetail("The current database encoding is %s.",
+                           GetDatabaseEncodingName()),
+                 errhint("Create the database with ENCODING 'UTF8'.")));
 
     d = (DictKaasearch *) palloc0(sizeof(DictKaasearch));
 
