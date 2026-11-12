@@ -49,5 +49,10 @@ SELECT to_tsvector('kaasearch', 'суў СУЎ таўлар');
 SELECT to_tsvector('kaasearch', 'суў')
     @@ to_tsquery('kaasearch', 'suw') AS w_match;
 
+-- 15. Lower case: Í → ı, I → i, Karakalpak capitals (locale independent)
+SELECT to_tsvector('kaasearch', 'ÍDÍS Ídıs ıdıs');
+SELECT to_tsvector('kaasearch', 'ÓZBEKSTAN ǴÁREZSIZLIK JAŃA');
+SELECT to_tsvector('kaasearch', 'Ídıs') @@ to_tsquery('kaasearch', 'ıdıs') AS dotless_match;
+
 -- Clean up
 DROP EXTENSION kaasearch;

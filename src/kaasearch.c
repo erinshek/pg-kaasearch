@@ -5,9 +5,9 @@
 /* Text search dictionary API */
 #include "commands/defrem.h"
 #include "tsearch/ts_public.h"
-#include "tsearch/ts_locale.h"
 #include "utils/builtins.h"
 
+#include "lower.h"
 #include "translit.h"
 #include "stemmer.h"
 
@@ -83,8 +83,8 @@ kaasearch_lexize(PG_FUNCTION_ARGS)
     char           *txt;
     TSLexeme       *res;
 
-    /* Step 1: lowercase (UTF-8 aware) */
-    txt = lowerstr_with_len(in, len);
+    /* Step 1: lowercase (Karakalpak rules, independent of the database locale) */
+    txt = kaa_lower(in, len);
 
     /* Step 2: transliterate Cyrillic to Latin if needed */
     if (contains_cyrillic(txt, strlen(txt)))

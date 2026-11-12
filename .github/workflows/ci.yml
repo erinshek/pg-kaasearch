@@ -10,17 +10,10 @@ jobs:
     name: PostgreSQL ${{ matrix.pg }}
     runs-on: ubuntu-latest
     container: pgxn/pgxn-tools
-    continue-on-error: ${{ matrix.experimental }}
     strategy:
       fail-fast: false
       matrix:
-        pg: [15, 16, 17]
-        experimental: [false]
-        include:
-          # Known failure: lowerstr_with_len() was removed in PostgreSQL 18.
-          # Make this a required job once the extension has its own lowercase function.
-          - pg: 18
-            experimental: true
+        pg: [15, 16, 17, 18]
     steps:
       - uses: actions/checkout@v4
 

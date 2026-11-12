@@ -8,7 +8,7 @@ EXTENSION = kaasearch
 DATA = kaasearch--1.0.sql
 
 # C source files to compile
-OBJS = src/kaasearch.o src/translit.o src/stemmer.o
+OBJS = src/kaasearch.o src/lower.o src/translit.o src/stemmer.o
 
 # Regression test (runs sql/kaasearch_test.sql, compares with expected/)
 REGRESS = kaasearch_test
