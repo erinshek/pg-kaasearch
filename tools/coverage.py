@@ -41,7 +41,9 @@ def count_tokens(path):
 
 
 def analyse(cli, words):
-    """Run the C core on the distinct word forms: {form: (normalised, stem, source)}."""
+    """Run the C core on the distinct word forms: {form: (stem, source)}.
+
+    kaacore_cli prints: word <TAB> stem <TAB> segments <TAB> classes <TAB> source."""
     out = subprocess.run([cli], input='\n'.join(words) + '\n', capture_output=True, text=True,
                          check=True).stdout.splitlines()
     if len(out) != len(words):
@@ -49,7 +51,7 @@ def analyse(cli, words):
     res = {}
     for w, line in zip(words, out):
         cols = line.split('\t')
-        res[w] = (cols[1], cols[2], cols[-1])
+        res[w] = (cols[1], cols[-1])
     return res
 
 
@@ -71,19 +73,19 @@ def main():
     for name, cnt in corpora:
         by = collections.Counter()
         for w, n in cnt.items():
-            norm, stem, src = res[w]
+            stem, src = res[w]
             by[src] += n
             if src in ('safe', 'unchanged'):
                 u = unknown[stem]
                 u[0] += n
                 u[1].add(name)
-                u[2][norm] += n
+                u[2][w] += n
         tot = sum(cnt.values())
         pct = {s: 100 * by[s] / tot for s in SOURCES}
         print(f'| {name} | {tot:,} | {len(cnt):,} | '
               + ' | '.join(f'{pct[s]:.1f}%' for s in SOURCES)
               + f' | {pct["safe"] + pct["unchanged"]:.1f}% |')
-    other = {res[w][2] for w in forms} - set(SOURCES)
+    other = {res[w][1] for w in forms} - set(SOURCES)
     if other:
         print(f'\nother sources: {sorted(other)}')
 
