@@ -2218,8 +2218,13 @@ lower_cp(cp_t c)
         return (c % 2 == 1) ? c + 1 : c;
     if (c == 0x0178)
         return 0x00FF;
-    if (c == 0x01F4)
-        return 0x01F5;
+    if (c >= 0x01CD && c <= 0x01DC)
+        return (c % 2 == 1) ? c + 1 : c;    /* Latin Extended-B: Ǎ ǎ ... */
+    if ((c >= 0x01DE && c <= 0x01EF) || (c >= 0x01F8 && c <= 0x021F) || (c >= 0x0222 && c <= 0x0233) ||
+        (c >= 0x0246 && c <= 0x024F) || c == 0x01F4)
+        return (c % 2 == 0) ? c + 1 : c;    /* Ǵ ǵ, Ȧ ȧ ... */
+    if (c == 0x018F)
+        return 0x0259;                      /* Ə → ə */
     if (c >= 0x0410 && c <= 0x042F)
         return c + 0x20;
     if (c >= 0x0400 && c <= 0x040F)

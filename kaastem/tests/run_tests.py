@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Runs the stemmer against four tables:
+"""Runs the stemmer against five tables:
 
     test_set.tsv    200 words, the test set verified by a native speaker
     exceptions.tsv  100 words, the exceptions list verified by a native speaker
     reviewed.tsv    118 words, entries added during implementation and reviewed by a native speaker (2026-11-12)
     extra.tsv       examples for spelling normalisation and for the rules added during implementation
+    news_sample.tsv random words from news, health and parallel-corpus texts, verified by a native speaker (2026-11-15)
 
     python tests/run_tests.py          # summary
     python tests/run_tests.py -v       # every word
@@ -18,7 +19,7 @@ sys.path.insert(0, os.path.dirname(HERE))
 
 from kaastem import Stemmer  # noqa: E402
 
-TABLES = ('test_set.tsv', 'exceptions.tsv', 'reviewed.tsv', 'extra.tsv')
+TABLES = ('test_set.tsv', 'exceptions.tsv', 'reviewed.tsv', 'extra.tsv', 'news_sample.tsv')
 
 
 def run(st, name, verbose):

@@ -114,3 +114,5 @@ tınısh      # calm, quiet (not tın + ısh)
 burısh      # corner, angle (not bur + ısh)
 qonısh      # boot shaft (not qon + ısh)
 úyish       # heap, pile (not úy + ish)
+# --- from the accuracy test on news texts, reviewed by a native speaker (2026-11-15) ---
+ishki

@@ -1,6 +1,6 @@
 /*
  * GENERATED FILE - DO NOT EDIT.
- * Source: kaastem 0.2.2 (kaastem/kaastem/tables.py, stemmer.py, data/).
+ * Source: kaastem 0.2.3 (kaastem/kaastem/tables.py, stemmer.py, data/).
  * Regenerate with: python3 tools/gen_tables.py
  */
 
@@ -24706,6 +24706,7 @@ static const char *const protected_words[] = {
     "gezegen",
     "g\303\272zlew",
     "ilgeri",
+    "ishki",
     "jal\307\265aw",
     "jap\304\261raq",
     "jaratqan",
@@ -24760,7 +24761,7 @@ static const char *const protected_words[] = {
     "\303\263zgeshe",
     "\303\272yish",
 };
-const KaaWordSet kaa_protected = {protected_words, 92};
+const KaaWordSet kaa_protected = {protected_words, 93};
 
 static const char *const function_words[] = {
     "aq\304\261r\304\261",
@@ -24999,6 +25000,7 @@ static const KaaPair ready_items[] = {
     {"alda\307\265\304\261", "ald"},
     {"ald\304\261", "al"},
     {"aq\304\261r\304\261", "aq\304\261r\304\261"},
+    {"aras\304\261", "aras\304\261"},
     {"ast\304\261", "ast\304\261"},
     {"baspay", "baspa"},
     {"biziki", "biz"},
@@ -25012,6 +25014,7 @@ static const KaaPair ready_items[] = {
     {"b\303\241ri", "b\303\241ri"},
     {"d\303\272zedi", "d\303\272zedi"},
     {"egedi", "egedi"},
+    {"ishi", "ishi"},
     {"jaqs\304\261lap", "jaqs\304\261"},
     {"jat\304\261r", "jat"},
     {"keshpesin", "keshpe"},
@@ -25051,12 +25054,13 @@ static const KaaPair ready_items[] = {
     {"\303\263tken", "\303\263t"},
     {"\303\272sti", "\303\272sti"},
 };
-const KaaPairMap kaa_ready = {ready_items, 54};
+const KaaPairMap kaa_ready = {ready_items, 56};
 
 const KaaReady kaa_ready_prefix[] = {
     {"alda\307\265\304\261", "ald", KAA_GI},
     {"ald\304\261", "ald\304\261", KAA_PX},
     {"aq\304\261r\304\261", "aq\304\261r\304\261", KAA_PX},
+    {"aras\304\261", "aras\304\261", KAA_PX},
     {"ast\304\261", "ast\304\261", KAA_PX},
     {"biziki", "biz", KAA_NIKI},
     {"bizi\305\204", "biz", KAA_GEN},
@@ -25067,6 +25071,7 @@ const KaaReady kaa_ready_prefix[] = {
     {"bun\304\261\305\204", "bul", KAA_GEN},
     {"bu\307\265an", "bul", KAA_DAT},
     {"b\303\241ri", "b\303\241ri", KAA_PX},
+    {"ishi", "ishi", KAA_PX},
     {"jat\304\261r", "jat", KAA_START},
     {"keyni", "keyni", KAA_PX},
     {"ma\307\265an", "men", KAA_DAT},
@@ -25099,7 +25104,7 @@ const KaaReady kaa_ready_prefix[] = {
     {"xaqq\304\261nda\307\265\304\261", "haqq\304\261nda", KAA_GI},
     {"\303\272sti", "\303\272sti", KAA_PX},
 };
-const size_t kaa_nready_prefix = 44;
+const size_t kaa_nready_prefix = 46;
 
 static const KaaPair overrides_items[] = {
     {"apar", "al\304\261p bar"},

@@ -25,7 +25,7 @@ python -m kaastem -f text.txt
 
 Python 3.8 or newer. No other libraries are needed. Install with `pip install .`
 
-## Test results (0.2.2)
+## Test results (0.2.3)
 
 | Table | Result |
 |---|---|
@@ -33,13 +33,15 @@ Python 3.8 or newer. No other libraries are needed. Install with `pip install .`
 | `tests/exceptions.tsv` — 100 words verified by a native speaker | 100 / 100 |
 | `tests/reviewed.tsv` — entries added during implementation and answers to open questions, 128 words reviewed by a native speaker | 128 / 128 |
 | `tests/extra.tsv` — spelling normalisation and rules added during implementation (not independently verified) | 56 / 56 |
+| `tests/news_sample.tsv` — 293 random words from news, health and parallel-corpus texts, verified by a native speaker | 293 / 293 |
 
 Run them with `python tests/run_tests.py` (`-v` shows every word).
 
 In the text of 11 school textbooks (261 thousand words) 95 percent of the words are analysed through
 a list or the lexicon; the remaining 5 percent are not in the lexicon (mostly personal names, surnames
 and word fragments from exercises). This is not a measure of accuracy: how many of the analysed words are
-stemmed correctly has been checked only on the 478 test words (428 of them verified by a native speaker).
+stemmed correctly was checked on the 478 test words (428 of them verified by a native speaker) and on 300
+random words from news, health and parallel-corpus texts: 290 of the 300 were stemmed correctly (96.7%).
 
 ## Layout
 

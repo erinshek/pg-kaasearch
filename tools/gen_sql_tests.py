@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Generate sql/kaasearch_words.sql from the kaastem test tables.
 
-The regression test stems every word of the four tables with kaa_stem() and through the
+The regression test stems every word of the five tables with kaa_stem() and through the
 text search configuration, and prints only the words whose stem differs from the expected one, so
 the expected output is an empty result.
 
@@ -15,7 +15,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 TESTS = ROOT / 'kaastem' / 'tests'
 OUT = ROOT / 'sql' / 'kaasearch_words.sql'
-TABLES = ['test_set', 'exceptions', 'reviewed', 'extra']
+TABLES = ['test_set', 'exceptions', 'reviewed', 'extra', 'news_sample']
 
 
 def rows():

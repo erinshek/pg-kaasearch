@@ -7,7 +7,7 @@
 from .normalize import normalize, tokenize
 from .stemmer import Analysis, Stemmer
 
-__version__ = '0.2.2'
+__version__ = '0.2.3'
 __all__ = ['Stemmer', 'Analysis', 'stem', 'analyze', 'normalize', 'tokenize']
 
 _default = None
