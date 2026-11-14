@@ -1,11 +1,11 @@
-# Shared library name (produces kaasearch.so / kaasearch.dylib)
-MODULE_big = kaasearch
+# Shared library name (produces pg_kaasearch.so / pg_kaasearch.dylib)
+MODULE_big = pg_kaasearch
 
 # Extension name for CREATE EXTENSION
-EXTENSION = kaasearch
+EXTENSION = pg_kaasearch
 
 # SQL script executed on CREATE EXTENSION
-DATA = kaasearch--1.0.sql
+DATA = pg_kaasearch--1.0.sql
 
 # Stop-word file, installed into $(sharedir)/tsearch_data/
 DATA_TSEARCH = data/kaasearch.stop data/kaasearch_example.kaalex

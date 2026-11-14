@@ -1,6 +1,6 @@
 /* kaasearch extension: full-text search for the Karakalpak language */
 
-\echo Use "CREATE EXTENSION kaasearch" to load this file. \quit
+\echo Use "CREATE EXTENSION pg_kaasearch" to load this file. \quit
 
 /* C functions of the text search template */
 CREATE FUNCTION kaasearch_init(internal)

@@ -5,7 +5,7 @@ comment = 'Full-text search support for Karakalpak language'
 default_version = '1.0'
 
 # Path to shared library ($libdir is resolved by PostgreSQL)
-module_pathname = '$libdir/kaasearch'
+module_pathname = '$libdir/pg_kaasearch'
 
 # Allow installing into any schema
 relocatable = true

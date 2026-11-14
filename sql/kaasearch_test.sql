@@ -1,5 +1,5 @@
 -- Load extension
-CREATE EXTENSION kaasearch;
+CREATE EXTENSION pg_kaasearch;
 
 -- 1. Basic Latin tokenization
 SELECT to_tsvector('kaasearch', 'Qaraqalpaqstan');
@@ -150,4 +150,4 @@ DROP TEXT SEARCH DICTIONARY kaa_nostop;
 
 -- Clean up
 DROP TABLE docs;
-DROP EXTENSION kaasearch;
+DROP EXTENSION pg_kaasearch;

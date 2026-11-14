@@ -43,7 +43,7 @@ check_encoding(void)
     if (GetDatabaseEncoding() != PG_UTF8)
         ereport(ERROR,
                 (errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
-                 errmsg("kaasearch requires a UTF8 database"),
+                 errmsg("pg_kaasearch requires a UTF8 database"),
                  errdetail("The current database encoding is %s.",
                            GetDatabaseEncodingName()),
                  errhint("Create the database with ENCODING 'UTF8'.")));
@@ -351,7 +351,7 @@ join_apostrophes(const char *in, int len, int *outlen)
 
 /*
  * Parser start function: the default parser on the text with the apostrophe spelling joined.
- * The other parser functions are the default parser's own (see kaasearch--1.0.sql).
+ * The other parser functions are the default parser's own (see pg_kaasearch--1.0.sql).
  */
 PG_FUNCTION_INFO_V1(kaasearch_prsd_start);
 
