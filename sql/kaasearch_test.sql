@@ -70,6 +70,10 @@ SELECT to_tsvector('kaasearch', 'g''alaba o''zbek');
 SELECT to_tsvector('kaasearch', kaa_normalize('g''alaba o''zbek')) = to_tsvector('kaasearch', 'ǵalaba ózbek') AS apostrophe_match;
 SELECT ts_lexize('kaasearch_dict', 'o''zbekstanda');
 
+-- 19b. Letters that old fonts use in place of Karakalpak letters: ѳ → ө, ӊ → ң, ӯ ӳ ӱ → ў, ӽ → ҳ
+SELECT to_tsvector('kaasearch', 'Нѳкис оқытыўшыныӊ қорғаӯ ӼАЯЛЛАР');
+SELECT to_tsvector('kaasearch', 'Нѳкис оқытыўшыныӊ') = to_tsvector('kaasearch', 'Нөкис оқытыўшының') AS old_font_match;
+
 -- 20. Verb forms: tense, person, negation and voice suffixes are stripped
 SELECT to_tsvector('kaasearch', 'jazıladı barmadım keleseń oqıp otır');
 

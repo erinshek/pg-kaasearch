@@ -481,7 +481,13 @@ INSERT INTO words VALUES
     ('extra', 'qılıshtan', 'qılısh'),
     ('extra', 'tıp-tınısh', 'tıp-tınısh'),
     ('extra', 'maqtanadı', 'maqtan'),
-    ('extra', 'baspay', 'baspa');
+    ('extra', 'baspay', 'baspa'),
+    ('extra', 'оқытыўшыныӊ', 'oqıtıwshı'),
+    ('extra', 'Ѳткен', 'ót'),
+    ('extra', 'ислеӳден', 'isle'),
+    ('extra', 'таңлаӱының', 'tańla'),
+    ('extra', 'қорғаӯ', 'qorǵa'),
+    ('extra', 'ӼАЯЛЛАР', 'hayal');
 
 SELECT count(*) AS words FROM words;
 

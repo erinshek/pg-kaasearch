@@ -2285,6 +2285,23 @@ cyr_latin(cp_t c)                           /* _CYR */
     }
 }
 
+static cp_t
+cyr_variant(cp_t c)                         /* _CYR_VARIANT */
+{
+    switch (c)
+    {
+        case 0x0473: return 0x04E9;         /* ѳ → ө */
+        case 0x0472: return 0x04E8;
+        case 0x04CA: return 0x04A3;         /* ӊ → ң */
+        case 0x04C9: return 0x04A2;
+        case 0x04EF: case 0x04F3: case 0x04F1: return 0x045E;     /* ӯ ӳ ӱ → ў */
+        case 0x04EE: case 0x04F2: case 0x04F0: return 0x040E;
+        case 0x04FD: return 0x04B3;         /* ӽ → ҳ */
+        case 0x04FC: return 0x04B2;
+        default: return c;
+    }
+}
+
 static bool
 is_apostrophe(cp_t c)                       /* APOSTROPHES */
 {
@@ -2366,7 +2383,7 @@ normalize_cps(cp_t *s, int n, int cap)
             continue;                       /* _INVISIBLE */
         if (c >= 0x2010 && c <= 0x2013)
             c = '-';                        /* _DASHES */
-        s[k++] = c;
+        s[k++] = cyr_variant(c);
     }
     n = k;
     while (n > 0 && is_space(s[n - 1]))

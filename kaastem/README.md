@@ -25,14 +25,14 @@ python -m kaastem -f text.txt
 
 Python 3.8 or newer. No other libraries are needed. Install with `pip install .`
 
-## Test results (0.2.1)
+## Test results (0.2.2)
 
 | Table | Result |
 |---|---|
 | `tests/test_set.tsv` — 200 words verified by a native speaker | 200 / 200 |
 | `tests/exceptions.tsv` — 100 words verified by a native speaker | 100 / 100 |
 | `tests/reviewed.tsv` — entries added during implementation and answers to open questions, 128 words reviewed by a native speaker | 128 / 128 |
-| `tests/extra.tsv` — spelling normalisation and rules added during implementation (not independently verified) | 50 / 50 |
+| `tests/extra.tsv` — spelling normalisation and rules added during implementation (not independently verified) | 56 / 56 |
 
 Run them with `python tests/run_tests.py` (`-v` shows every word).
 

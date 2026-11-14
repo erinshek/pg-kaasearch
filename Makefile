@@ -36,6 +36,13 @@ check-core:
 		-Isrc test/core/kaacore_cli.c src/kaacore.c src/kaadata.c -o test/core/kaacore_cli
 	python3 test/core/compare.py test/core/kaacore_cli
 
+# Lexicon coverage on the text corpora in corpus/ (not in the repository); writes corpus/unknown.tsv
+CORPUS ?= $(wildcard corpus/*.txt)
+.PHONY: coverage
+coverage:
+	$(CC) -std=c99 -O2 -Isrc test/core/kaacore_cli.c src/kaacore.c src/kaadata.c -o test/core/kaacore_cli
+	python3 tools/coverage.py test/core/kaacore_cli $(CORPUS) --unknown corpus/unknown.tsv
+
 # Fuzz the C stemmer core (needs clang with libFuzzer); FUZZ_TIME is in seconds
 FUZZ_TIME ?= 60
 .PHONY: fuzz-core

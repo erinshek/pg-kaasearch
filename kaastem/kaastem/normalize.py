@@ -21,6 +21,11 @@ _HOMOGLYPH = str.maketrans({
     'А': 'A', 'В': 'B', 'Е': 'E', 'К': 'K', 'М': 'M', 'Н': 'H', 'О': 'O', 'Р': 'P', 'С': 'C', 'Т': 'T',
     'Х': 'X', 'У': 'Y', 'І': 'I',
 })
+# letters that old fonts put in place of Karakalpak letters: ѳ → ө, ӊ → ң, ӯ ӳ ӱ → ў, ӽ → ҳ
+_CYR_VARIANT = str.maketrans({
+    'ѳ': 'ө', 'Ѳ': 'Ө', 'ӊ': 'ң', 'Ӊ': 'Ң', 'ӯ': 'ў', 'Ӯ': 'Ў', 'ӳ': 'ў', 'Ӳ': 'Ў', 'ӱ': 'ў', 'Ӱ': 'Ў',
+    'ӽ': 'ҳ', 'Ӽ': 'Ҳ',
+})
 APOSTROPHES = "'’‘ʻʼ`′´"
 _APO_LETTERS = {'a': 'á', 'g': 'ǵ', 'i': 'ı', 'n': 'ń', 'o': 'ó', 'u': 'ú'}
 _INVISIBLE = dict.fromkeys(map(ord, '­​‌‍⁠﻿'))
@@ -52,7 +57,7 @@ def cyr_to_lat(word):
 
 def normalize(word):
     """Bring one word (token) to the uniform spelling."""
-    w = unicodedata.normalize('NFC', word).translate(_INVISIBLE).translate(_DASHES).strip()
+    w = unicodedata.normalize('NFC', word).translate(_INVISIBLE).translate(_DASHES).translate(_CYR_VARIANT).strip()
     if _CYR_RE.search(w) and _LAT_RE.search(w):
         w = w.translate(_HOMOGLYPH)                              # shаqаp (Cyrillic а) → shaqap
     w = lower(w)

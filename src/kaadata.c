@@ -1,6 +1,6 @@
 /*
  * GENERATED FILE - DO NOT EDIT.
- * Source: kaastem 0.2.1 (kaastem/kaastem/tables.py, stemmer.py, data/).
+ * Source: kaastem 0.2.2 (kaastem/kaastem/tables.py, stemmer.py, data/).
  * Regenerate with: python3 tools/gen_tables.py
  */
 

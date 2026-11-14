@@ -49,3 +49,9 @@ n	group	word	stem	note
 48	selection	tıp-tınısh	tıp-tınısh	protected: calm, not tın + ısh
 49	voice	maqtanadı	maqtan	stop list: maqtan (follows maqtanısh → maqtan)
 50	selection	baspay	baspa	reviewed exception kept (answer 4); compare kelmey → kel
+51	normalize	оқытыўшыныӊ	oqıtıwshı	old-font letter: ӊ (U+04CA) read as ң
+52	normalize	Ѳткен	ót	old-font letter: Ѳ (U+0472) read as Ө
+53	normalize	ислеӳден	isle	old-font letter: ӳ (U+04F3) read as ў
+54	normalize	таңлаӱының	tańla	old-font letter: ӱ (U+04F1) read as ў
+55	normalize	қорғаӯ	qorǵa	old-font letter: ӯ (U+04EF) read as ў
+56	normalize	ӼАЯЛЛАР	hayal	old-font letter: Ӽ (U+04FC) read as Ҳ
