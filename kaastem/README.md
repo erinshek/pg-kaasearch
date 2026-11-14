@@ -64,7 +64,7 @@ In every file the text after `#` is a comment. A list can be changed without tou
 | File | Contents | Entries |
 |---|---|---|
 | `lexicon.tsv` | headwords of «Túsindirme sózlik»: non-verbs (n) and verb stems (v) | 16 829 + 5 898 |
-| `lexicon_extra.tsv` | stems missing from the dictionary headword list: added by hand and induced from text | 752 |
+| `lexicon_extra.tsv` | stems missing from the dictionary headword list: added by hand and induced from text | 1538 |
 | `lexicon_exclude.tsv` | entries removed from the lexicon (headwords that are inflected forms) | 48 |
 | `protected.txt` | protected words (soraw, belgi, qanday, olar ...) | 92 |
 | `function_words.txt` | postpositions, conjunctions, particles, modal words | 73 |
@@ -94,6 +94,8 @@ That list is incomplete: of 370 basic words that were checked, about 110 are mis
 - `manual` — 225 stems added by hand: pronouns, two-letter stems, words frequent in school textbooks;
 - `corpus` — 527 stems induced from the word forms in school textbooks and the dictionary text. Each of
   them occurs with several different suffixes; the list was looked through and the errors were removed.
+- `news` — 786 stems induced the same way from news, health and parallel-corpus texts (kknews.uz, shipaker.uz,
+  the Dilmash corpus; 12.5 million words) and reviewed by a native speaker: 1150 candidates; 355 rejected by the reviewer, 3 removed because they break verified test words (ústin, ustin, taw as a verb).
 
 If the complete headword list of the dictionary becomes available, the lexicon can be rebuilt:
 
@@ -140,7 +142,7 @@ Other changes:
 ## Limitations
 
 - From a word that is not in the lexicon only nominal suffixes of three or more letters are stripped
-  (*Londonnan → london*, *Londonǵa* is left unchanged). This gets rarer as the lexicon grows.
+  (*Lissabonnan → lissabon*, *Lissabonǵa* is left unchanged). This gets rarer as the lexicon grows.
 - Words that are spelled the same get one answer (*alma* is always a noun, *aldı* is always a verb).
 - Case forms that the dictionary lists as adverbs are not stripped (*tómende, birden, keshte*).
 - Stripping a voice suffix can move the meaning away from the original; such verbs are added to `voice_stop.txt`.

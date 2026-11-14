@@ -16,8 +16,8 @@ n	group	word	stem	note
 15	lists	bizikine	biz	ready form + continuation
 16	lists	bárin	bári	ready form + continuation
 17	lists	ushında	ush	a function word cannot be a stem (not ushın + da)
-18	safe	Londonnan	london	not in the lexicon: a three-letter suffix is stripped
-19	safe	Londonǵa	londonǵa	not in the lexicon: a two-letter suffix is not stripped
+18	safe	Lissabonnan	lissabon	not in the lexicon: a three-letter suffix is stripped
+19	safe	Lissabonǵa	lissabonǵa	not in the lexicon: a two-letter suffix is not stripped
 20	voice	kóbeytti	kóbey	-t after y
 21	voice	paydalandı	paydalan	there is no verb paydala
 22	voice	kórsetilgen	kór	two voice suffixes

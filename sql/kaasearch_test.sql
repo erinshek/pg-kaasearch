@@ -119,15 +119,15 @@ SELECT kaa_stem('mektebimizde'), kaa_stem('Мектепке'), kaa_stem('ákeldi
 SELECT kaa_normalize('Мектепке BARDIQ, g''alaba! ÍDÍS');
 SELECT * FROM kaa_analyze('kelgenligin');
 SELECT * FROM kaa_analyze('maǵan');
-SELECT * FROM kaa_analyze('Londonnan');
+SELECT * FROM kaa_analyze('Lissabonnan');
 SELECT kaa_stem(NULL) IS NULL AS strict;
 
 -- 29. User lexicon: stems the built-in lexicon does not know
-SELECT to_tsvector('kaasearch', 'Londonǵa skanerledi');
+SELECT to_tsvector('kaasearch', 'Lissabonǵa skanerledi');
 ALTER TEXT SEARCH DICTIONARY kaasearch_dict (StopWords = kaasearch, Lexicon = kaasearch_example);
-SELECT to_tsvector('kaasearch', 'Londonǵa skanerledi');
+SELECT to_tsvector('kaasearch', 'Lissabonǵa skanerledi');
 ALTER TEXT SEARCH DICTIONARY kaasearch_dict (Lexicon);
-SELECT to_tsvector('kaasearch', 'Londonǵa skanerledi');
+SELECT to_tsvector('kaasearch', 'Lissabonǵa skanerledi');
 
 -- 30. Dictionary option errors
 -- (the message has the install path, so only the error code is printed)

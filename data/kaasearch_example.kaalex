@@ -2,6 +2,6 @@
 # Stems the built-in lexicon does not know: one per line, "word<TAB>n" (non-verb) or "word<TAB>v" (verb stem).
 # Use it with:  ALTER TEXT SEARCH DICTIONARY kaasearch_dict (Lexicon = kaasearch_example);
 # For your own words, copy it to $SHAREDIR/tsearch_data/<name>.kaalex and use Lexicon = <name>.
-london	n
+lissabon	n
 blokcheyn	n
 skanerle	v

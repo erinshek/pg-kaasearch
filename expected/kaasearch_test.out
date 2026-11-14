@@ -325,10 +325,10 @@ SELECT * FROM kaa_analyze('maǵan');
  maǵan | men  | {maǵan}  | {}      | list
 (1 row)
 
-SELECT * FROM kaa_analyze('Londonnan');
-   word    |  stem  |   segments   | classes | source 
------------+--------+--------------+---------+--------
- londonnan | london | {london,nan} | {ABL}   | safe
+SELECT * FROM kaa_analyze('Lissabonnan');
+    word     |   stem   |    segments    | classes | source 
+-------------+----------+----------------+---------+--------
+ lissabonnan | lissabon | {lissabon,nan} | {ABL}   | safe
 (1 row)
 
 SELECT kaa_stem(NULL) IS NULL AS strict;
@@ -338,24 +338,24 @@ SELECT kaa_stem(NULL) IS NULL AS strict;
 (1 row)
 
 -- 29. User lexicon: stems the built-in lexicon does not know
-SELECT to_tsvector('kaasearch', 'Londonǵa skanerledi');
-         to_tsvector         
------------------------------
- 'londonǵa':1 'skanerledi':2
+SELECT to_tsvector('kaasearch', 'Lissabonǵa skanerledi');
+          to_tsvector          
+-------------------------------
+ 'lissabonǵa':1 'skanerledi':2
 (1 row)
 
 ALTER TEXT SEARCH DICTIONARY kaasearch_dict (StopWords = kaasearch, Lexicon = kaasearch_example);
-SELECT to_tsvector('kaasearch', 'Londonǵa skanerledi');
-       to_tsvector       
--------------------------
- 'london':1 'skanerle':2
+SELECT to_tsvector('kaasearch', 'Lissabonǵa skanerledi');
+        to_tsvector        
+---------------------------
+ 'lissabon':1 'skanerle':2
 (1 row)
 
 ALTER TEXT SEARCH DICTIONARY kaasearch_dict (Lexicon);
-SELECT to_tsvector('kaasearch', 'Londonǵa skanerledi');
-         to_tsvector         
------------------------------
- 'londonǵa':1 'skanerledi':2
+SELECT to_tsvector('kaasearch', 'Lissabonǵa skanerledi');
+          to_tsvector          
+-------------------------------
+ 'lissabonǵa':1 'skanerledi':2
 (1 row)
 
 -- 30. Dictionary option errors
