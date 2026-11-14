@@ -46,3 +46,67 @@ boldır      # to get tired (not from bol-)
 juwın       # to wash oneself (juwındım → juwın)
 tolǵan      # to writhe, to be agitated (tolǵan → tolǵan)
 maqtan      # to boast (maqtanısh → maqtan, not maqta)
+# --- causative and reciprocal verbs whose meaning moved away from the base (native speaker, 2026-11-15) ---
+kórset
+shıǵar
+ushıras
+qarat
+# --- frequent causative and reciprocal verbs in news texts, reviewed by a native speaker (2026-11-15) ---
+asır
+isles
+shólkemlestir
+rawajlandır
+arttır
+bilimlendir
+sóyles
+bildir
+jetilis
+qáliplestir
+saplastır
+saplas
+jetistir
+shamalas
+oqıt
+aylandır
+túsir
+jaylastır
+sáwlelendir
+túsindir
+birlestir
+ózlestir
+qaytar
+tanıstır
+qızıqtır
+qamsızlandır
+ózgert
+toqtat
+abadanlastır
+biriktir
+baylanıstır
+pikirles
+jaqınlas
+eslet
+beyimlestir
+qanaatlandır
+tolıqtır
+tuwdır
+túsinis
+jaqınlastır
+joqarılat
+keshiktir
+esittir
+tanıt
+teńlestir
+tamshılat
+tezlestir
+dúzet
+quwandır
+jaqtılandır
+turaqlas
+soras
+ulıwmalas
+sozdır
+joybarlas
+ósir
+ulıwmalastır
+sorastır

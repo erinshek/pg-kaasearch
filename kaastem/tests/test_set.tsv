@@ -180,11 +180,11 @@ n	group	word	stem	segmentation	note	textbook_freq	rejected
 179	J1	kiyindi	kiy	kiy-in-di	voice stripped: reflexive (-in)	10	kiyin
 180	J1	tazalandı	tazala	tazala-n-dı	voice (-n) stripped, derivational -la kept	5	tazalan
 181	J1	qollanıladı	qollan	qollan-ıl-a-dı	voice (-ıl) stripped; qollan is kept as it is (not reduced to qolla)	241	qollanıl
-182	J1	sóylesti	sóyle	sóyle-s-ti	voice stripped: reciprocal (-s)	8	sóyles
-183	J1	oqıtadı	oqı	oqı-t-a-dı	voice stripped: causative (-t)	8	oqıt
-184	J1	shıǵardı	shıq	shıǵ-ar-dı	voice stripped: causative (-ar); ǵ → q	13	shıǵar
-185	J1	kórsetedi	kór	kór-set-e-di	voice stripped: causative (-set)	46	kórset
-186	J1	bildiredi	bil	bil-dir-e-di	voice stripped: causative (-dir)	240	bildir
+182	J1	sóylesti	sóyles	sóyle-s-ti	voice kept (native speaker, 2026-11-15)	8	sóyle
+183	J1	oqıtadı	oqıt	oqı-t-a-dı	voice kept (native speaker, 2026-11-15)	8	oqı
+184	J1	shıǵardı	shıǵar	shıǵ-ar-dı	voice kept: the causative changed the meaning (native speaker, 2026-11-15)	13	shıq
+185	J1	kórsetedi	kórset	kór-set-e-di	voice kept: the causative changed the meaning (native speaker, 2026-11-15)	46	kór
+186	J1	bildiredi	bildir	bil-dir-e-di	voice kept (native speaker, 2026-11-15)	240	bil
 187	J2	kitapsha	kitap	kitap-sha	diminutive -sha stripped	3	kitapsha
 188	J2	balajan	bala	bala-jan	affectionate -jan stripped	1	balajan
 189	J3	awıldaǵı	awıl	awıl-da-ǵı	suffix -daǵı stripped	8	awıldaǵı

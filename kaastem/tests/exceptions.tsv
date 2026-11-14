@@ -8,7 +8,7 @@ n	list	word	stem	decision	note	textbook_freq	status
 7	voice	kóshirip	kóshir	keep	kept: in the sense "to copy out" (not kósh)	930	confirmed
 8	voice	salıstırıń	salıstır	keep	kept (not salıs, sal)	52	confirmed
 9	voice	baylanısadı	baylanıs	keep	kept: baylanıs also exists as a noun	105	confirmed
-10	voice	baylanıstırıp	baylanıs	strip	only -tır is stripped, baylanıs is kept	55	confirmed
+10	voice	baylanıstırıp	baylanıstır	keep	voice kept (native speaker, 2026-11-15)	55	confirmed
 11	voice	qatnasadı	qatnas	keep	kept: qatnas also exists as a noun	21	confirmed
 12	voice	kelisken	kelis	keep	kept (not kel)	13	confirmed
 13	voice	aralasıp	aralas	keep	kept (not arala)	8	confirmed
@@ -26,8 +26,8 @@ n	list	word	stem	decision	note	textbook_freq	status
 25	voice	dóretken	dóret	keep	kept (not dóre)	7	corrected
 26	voice	ótkerdi	ótker	keep	kept (not ót)	12	corrected
 27	voice	pitkerdi	pitker	keep	kept (not pit)	12	corrected
-28	voice	arttıradı	art	strip	stripped: -tır	6	confirmed
-29	voice	ushırasadı	ushıra	strip	stripped: -s	52	confirmed
+28	voice	arttıradı	arttır	keep	voice kept (native speaker, 2026-11-15)	6	confirmed
+29	voice	ushırasadı	ushıras	keep	kept: -s changed the meaning (native speaker, 2026-11-15)	52	confirmed
 30	voice	dizbeklesip	dizbek	override	exception: the stem is taken to be dizbek (a noun)	109	corrected
 31	voice	tuwılǵan	tuw	strip	stripped: -ıl	61	confirmed
 32	voice	jatır	jat	strip	positional verb: jat + ır	29	confirmed

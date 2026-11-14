@@ -20,8 +20,8 @@ n	group	word	stem	note
 19	safe	Lissabonǵa	lissabonǵa	not in the lexicon: a two-letter suffix is not stripped
 20	voice	kóbeytti	kóbey	-t after y
 21	voice	paydalandı	paydalan	there is no verb paydala
-22	voice	kórsetilgen	kór	two voice suffixes
-23	voice	baylanıstırdı	baylanıs	stop list
+22	voice	kórsetilgen	kórset	voice kept: kórset is a verb of its own; the passive -il is stripped
+23	voice	baylanıstırdı	baylanıstır	voice kept (native speaker, 2026-11-15)
 24	voice	qurılǵan	qur	the pair qur / qurı
 25	selection	jazıń	jaz	imperative (not jazı + ń)
 26	selection	beriń	ber	imperative (not beri + ń)

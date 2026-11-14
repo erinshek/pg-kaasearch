@@ -9,7 +9,7 @@ n	source	word	stem	note
 8	kknews	patshalıqqa	patshalıq	
 9	kknews	qosımshalar	qosımsha	
 10	kknews	iske	is	
-11	kknews	qanaatlandırıwda	qanaatlan	
+11	kknews	qanaatlandırıwda	qanaatlandır	voice kept (native speaker, 2026-11-15)
 12	kknews	deydi	deydi	
 13	kknews	basshılıǵındaǵı	basshılıq	
 14	kknews	Iordaniyanıń	iordaniya	
@@ -23,6 +23,7 @@ n	source	word	stem	note
 22	kknews	ishki	ishki	fixed after review
 23	kknews	prezident	prezident	
 24	kknews	óner	óner	
+25	kknews	qaratılǵan	qarat	voice kept (native speaker, 2026-11-15)
 26	kknews	Kilauea	kilauea	
 27	kknews	awıl-aymaqlarda	awıl-aymaq	
 28	kknews	byudjet	byudjet	
@@ -51,6 +52,7 @@ n	source	word	stem	note
 51	kknews	ǵa	ǵa	
 52	kknews	mádeniy	mádeniy	
 53	kknews	izbe-iz	izbe-iz	
+54	kknews	shıǵarıwdı	shıǵar	voice kept (native speaker, 2026-11-15)
 55	kknews	al	al	
 56	kknews	rayon	rayon	
 57	kknews	paydalanıwdı	paydalan	
@@ -110,6 +112,7 @@ n	source	word	stem	note
 111	kknews	shıraqta	shıraq	
 112	kknews	tili	til	
 113	kknews	erisiw	eris	
+114	kknews	ushırasıwında	ushıras	voice kept (native speaker, 2026-11-15)
 115	kknews	saylandı	saylandı	
 116	kknews	kartoshka	kartoshka	
 117	kknews	ilajda	ilaj	
@@ -152,7 +155,7 @@ n	source	word	stem	note
 154	kknews	жумыслар	jumıs	
 155	kknews	даўамында	dawam	
 156	kknews	толық	tolıq	
-157	kknews	Ушырасыў	ushıra	
+157	kknews	Ушырасыў	ushıras	voice kept: ushıras (native speaker, 2026-11-15)
 158	kknews	ӨзА	óza	
 159	kknews	Адилбай	adilbay	
 160	kknews	Жерасты	jerastı	
@@ -180,13 +183,13 @@ n	source	word	stem	note
 182	kknews	айының	ay	
 183	kknews	тиклейди	tikle	
 184	kknews	латвиялы	latviyalı	marked wrong, resolved by the 2026-11-15 decisions (derivational suffixes kept, -ıw stripped)
-185	kknews	қызықтырған	qızıq	
+185	kknews	қызықтырған	qızıqtır	voice kept (native speaker, 2026-11-15)
 186	kknews	лаўазымына	lawazım	
-187	kknews	ислесиўди	isle	
+187	kknews	ислесиўди	isles	voice kept (native speaker, 2026-11-15)
 188	kknews	Панкин	pankin	
 189	kknews	тоқтап	toqta	
 190	kknews	додалады	dodala	
-191	kknews	билимлендириўи	bilimlen	
+191	kknews	билимлендириўи	bilimlendir	voice kept (native speaker, 2026-11-15)
 192	kknews	Сафоев	safoev	
 193	kknews	халқымыздың	xalıq	
 194	kknews	инвестициялардың	investiciya	
@@ -195,6 +198,7 @@ n	source	word	stem	note
 197	kknews	қәдемлеринен	qádem	
 198	kknews	дүньяға	dúnya	
 199	kknews	жумыссыз	jumıssız	
+200	kknews	көрсетилди	kórset	voice kept (native speaker, 2026-11-15)
 201	shipaker	Тақыятас	taqıyatas	
 202	shipaker	арыз	arız	
 203	shipaker	infekciyalar	infekciya	
@@ -236,7 +240,7 @@ n	source	word	stem	note
 241	shipaker	болса	bol	marked wrong, resolved by the 2026-11-15 decisions (derivational suffixes kept, -ıw stripped)
 242	shipaker	бузғыншы	buzǵınshı	
 243	shipaker	Ингаляция	ingalyaciya	
-244	shipaker	қәлиплестиреди	qáliples	
+244	shipaker	қәлиплестиреди	qáliplestir	voice kept (native speaker, 2026-11-15)
 245	shipaker	төменлейди	tómenleydi	
 246	shipaker	рационында	racion	
 247	shipaker	шуғылланатуғын	shuǵıllan	

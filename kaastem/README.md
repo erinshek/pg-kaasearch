@@ -33,7 +33,7 @@ Python 3.8 or newer. No other libraries are needed. Install with `pip install .`
 | `tests/exceptions.tsv` — 100 words verified by a native speaker | 100 / 100 |
 | `tests/reviewed.tsv` — entries added during implementation and answers to open questions, 128 words reviewed by a native speaker | 128 / 128 |
 | `tests/extra.tsv` — spelling normalisation and rules added during implementation (not independently verified) | 56 / 56 |
-| `tests/news_sample.tsv` — 293 random words from news, health and parallel-corpus texts, verified by a native speaker | 293 / 293 |
+| `tests/news_sample.tsv` — 297 random words from news, health and parallel-corpus texts, verified by a native speaker | 297 / 297 |
 
 Run them with `python tests/run_tests.py` (`-v` shows every word).
 
@@ -72,8 +72,8 @@ In every file the text after `#` is a comment. A list can be changed without tou
 | `function_words.txt` | postpositions, conjunctions, particles, modal words | 73 |
 | `ready_forms.tsv` | ready forms (maǵan → men, aldı → al, aldında → aldı ...) | 55 |
 | `overrides.tsv` | stem overrides (ákel → alıp kel ...) | 5 |
-| `voice_stop.txt` | verbs whose voice suffix is not stripped | 45 |
-| `voice_explicit.tsv` | explicitly listed voice forms (kórset → kór ...) | 3 |
+| `voice_stop.txt` | verbs whose voice suffix is not stripped | 107 |
+| `voice_explicit.tsv` | explicitly listed voice forms (delin → de ...) | 2 |
 | `prefer.tsv` | what to do when two stems compete (al / ald, ata / at, qur / qurı ...) | 27 |
 | `gi_bases.txt`, `kinship.txt`, `numerals.txt` | bases after which -ǵı, -jan and the numeral suffixes are stripped | 28, 7, 22 |
 | `bare_stems.txt` | stems that take person suffixes directly (atır, edi, eken ...) | 9 |
