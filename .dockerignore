@@ -1,0 +1,9 @@
+.git
+corpus
+kaastem
+test
+tools
+results
+*.o
+*.so
+*.bc

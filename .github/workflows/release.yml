@@ -1,0 +1,177 @@
+name: Release
+
+# Runs when a version tag is pushed: git tag v1.0.0 && git push origin v1.0.0
+# A tag with a suffix (v1.0.0-rc1) is published as a pre-release.
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write   # create the GitHub release
+  packages: write   # push the Docker images to ghcr.io
+
+jobs:
+  version:
+    name: Check the version
+    runs-on: ubuntu-24.04
+    outputs:
+      version: ${{ steps.v.outputs.version }}
+      deb: ${{ steps.v.outputs.deb }}
+      prerelease: ${{ steps.v.outputs.prerelease }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: v
+        name: Read the version from the tag
+        run: |
+          version=${GITHUB_REF_NAME#v}
+          case "$version" in *-*) pre=true ;; *) pre=false ;; esac
+          # the extension version in the control file must be MAJOR.MINOR of the tag (1.0 for v1.0.0)
+          ext=$(sed -n "s/^default_version = '\(.*\)'/\1/p" pg_kaasearch.control)
+          mm=$(echo "${version%%-*}" | cut -d. -f1,2)
+          if [ "$mm" != "$ext" ]; then
+            echo "::error::tag $GITHUB_REF_NAME does not match default_version '$ext' in pg_kaasearch.control"
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "deb=$(echo "$version" | tr - '~')" >> "$GITHUB_OUTPUT"
+          echo "prerelease=$pre" >> "$GITHUB_OUTPUT"
+
+  deb:
+    name: .deb ${{ matrix.os.id }} ${{ matrix.arch.id }} PostgreSQL ${{ matrix.pg }}
+    needs: version
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - { id: jammy, image: 'ubuntu:22.04' }
+          - { id: noble, image: 'ubuntu:24.04' }
+          - { id: bookworm, image: 'debian:12' }
+        arch:
+          - { id: amd64, runner: ubuntu-24.04 }
+          - { id: arm64, runner: ubuntu-24.04-arm }
+        pg: [15, 16, 17, 18]
+    runs-on: ${{ matrix.arch.runner }}
+    container: ${{ matrix.os.image }}
+    env:
+      DEBIAN_FRONTEND: noninteractive
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build tools and PostgreSQL ${{ matrix.pg }} from apt.postgresql.org
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends ca-certificates curl gnupg postgresql-common \
+            make gcc libc6-dev binutils
+          /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y
+          mkdir -p /etc/postgresql-common/createcluster.d
+          echo 'create_main_cluster = false' > /etc/postgresql-common/createcluster.d/no-main.conf
+          apt-get install -y --no-install-recommends postgresql-${{ matrix.pg }} postgresql-server-dev-${{ matrix.pg }}
+
+      - name: Build the package
+        run: sh packaging/build-deb.sh ${{ matrix.pg }} ${{ needs.version.outputs.deb }} dist
+
+      - name: Install the package and run the tests against it
+        run: |
+          dpkg -i dist/*.deb
+          rm -f pg_kaasearch.so src/*.o
+          pg_createcluster -e UTF8 --locale C.UTF-8 ${{ matrix.pg }} test --start
+          chown -R postgres .
+          su postgres -c "make installcheck PG_CONFIG=/usr/lib/postgresql/${{ matrix.pg }}/bin/pg_config" \
+            || { cat regression.diffs; exit 1; }
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: deb-${{ matrix.os.id }}-${{ matrix.arch.id }}-pg${{ matrix.pg }}
+          path: dist/*.deb
+          if-no-files-found: error
+
+  docker:
+    name: Docker PostgreSQL ${{ matrix.pg }}
+    needs: version
+    strategy:
+      fail-fast: false
+      matrix:
+        pg: [15, 16, 17, 18]
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Image name and tags
+        id: tags
+        run: |
+          image=ghcr.io/$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')/pg_kaasearch
+          tags="$image:${{ needs.version.outputs.version }}-pg${{ matrix.pg }}"
+          if [ "${{ needs.version.outputs.prerelease }}" = false ]; then
+            tags="$tags,$image:pg${{ matrix.pg }}"
+            if [ "${{ matrix.pg }}" = 18 ]; then tags="$tags,$image:latest"; fi
+          fi
+          echo "tags=$tags" >> "$GITHUB_OUTPUT"
+
+      - uses: docker/setup-qemu-action@v3
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Build for testing
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: packaging/Dockerfile
+          build-args: PG_MAJOR=${{ matrix.pg }}
+          load: true
+          tags: pg_kaasearch:test
+          cache-from: type=gha,scope=pg${{ matrix.pg }}
+          cache-to: type=gha,mode=max,scope=pg${{ matrix.pg }}
+
+      - name: Test the image
+        run: |
+          docker run -d --name kaa -e POSTGRES_PASSWORD=test pg_kaasearch:test
+          # retry until the init script has run and the server answers
+          want="'mektep':2,3 'ózbekstan':1"
+          for i in $(seq 1 30); do
+            sleep 2
+            out=$(docker exec kaa psql -U postgres -tAc \
+              "SELECT to_tsvector('kaasearch', 'O''zbekstan mektebimizde Мектепке')" 2>/dev/null || true)
+            [ "$out" = "$want" ] && break
+          done
+          docker logs kaa | tail -20
+          echo "got: $out"
+          [ "$out" = "$want" ]
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push (amd64, arm64)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: packaging/Dockerfile
+          build-args: PG_MAJOR=${{ matrix.pg }}
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.tags.outputs.tags }}
+          cache-from: type=gha,scope=pg${{ matrix.pg }}
+
+  release:
+    name: GitHub release
+    needs: [version, deb, docker]
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: deb-*
+          merge-multiple: true
+          path: dist
+
+      - name: Create the release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          pre=""
+          if [ "${{ needs.version.outputs.prerelease }}" = true ]; then pre="--prerelease"; fi
+          gh release create "$GITHUB_REF_NAME" dist/*.deb \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "pg_kaasearch ${{ needs.version.outputs.version }}" \
+            --generate-notes $pre
