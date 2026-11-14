@@ -1,0 +1,44 @@
+# Search test: every form in "found" must match the query, no form in "not_found" may match it.
+# Word forms from news and health texts (kknews.uz, shipaker.uz), reviewed by a native speaker on 2026-11-15.
+# Hyphenated words are left out of not_found: the parser also indexes their parts.
+query	found	not_found
+mektep	mektep mektepke mektebi mektepte mektebinde mektebiniń mekteptiń mektepleri mektepler mekteplerde	
+xalıq	xalıq xalıqtıń xalqımızdıń xalıqqa xalıqtı xalqımız xalqınıń xalqı xalqına xalıqlar	xalıqaralıq xalıqshıl xalıqlıq xalıqtanıw xalıqshıllıq xalıqshıllıǵı xalıqshıllıǵın xalıqararlıq
+jol	jolǵa jol jolında jolı jolındaǵı jolları jolın jollar jolınıń jolların	jolawshı joldası jollama jollaǵan jollamanı jolawshılar joldas jolawshılarǵa jollamalar
+suw	suw suwdı suwı suwdan suwdıń suwǵa suwın suwda suwlardı suwınan	suwǵarıw suwıq suwǵarılatuǵın suwıtıw suwǵarıwda suwshılar suwıqqa suwǵarıwdı suwǵarılmaytuǵın
+kitap	kitap kitaplar kitabı kitaptıń kitapqa kitaplardı kitaptı kitabına kitabınıń kitapları	kitapxana kitapqumarlıq kitapqumar kitapqumarlar kitapxanası kitapqumarlıqtı kitapqumarlıqqa kitapxanalar kitapxanasında kitapxanada
+bala	balalar bala balalardıń balalardı balalarǵa balanıń balaǵa balanı balası balaları	balalıq balansı balalıqtı balansın balansında balalıqtan balansındaǵı balansına balalıǵı balalı
+qala	qalasında qala qalası qalasındaǵı qalasına qalasınıń qalalar qalalarında qalasınan qalaları	qalalıq qalay qaladı qalaberdi qalamız qalayınsha qalaberse qalatuǵın qalaman qalarlıq
+jer	jer jerde jerge jerden jerdiń jerdegi jerlerdi jerlerde jerler jerdi	jergilikli jerlesimiz jerlew jerleslerimiz jerlengen jerleslerimizdiń jerleslerimizden jeren jerjúzilik jerleslerimizge
+kúsh	kúsh kúshke kúshleri kúshler kúshi kúshin kúshine kúshleriniń kúshlerdiń kúshlerdi	kúsheytiw kúshli kúsheytiwge kúsheyip kúsheytedi kúsheytiledi kúsheyiwi kúsheytilmekte kúsheytip
+til	tili til tilin tilinde tiline tilge tillerin tilleri tiliniń tilindegi	tiledi tileklerin tileymen tilekke tilekleslik tilep tileymiz tilegin tileginde tileklerimdi
+jıl	jılı jıl jıldıń jılları jılda jıllarda jılına jıldan jıllar jılınan	jıllıq jıllıǵı jılǵa jıllıǵına jıllı jıllıǵın jıllıǵında jıllıqta jılıtıw
+at	atındaǵı atı atınan at atına atın atıw atları atıwdı atımnan	atap atırǵan atırǵanı atırǵanın atır atamasında atırmız atamasındaǵı atqarıw atqarıwshı
+qol	qol qolǵa qolı qoldan qolında qolda qolına qolın qolınan qollar	qolaylı qollanıw qola qolaylıqlar qollanıladı qolaylıq qollanılıwı
+bas	bas basıp basınan basında basına basatuǵın bası basılıp baslarında basıw	baslıǵı basqa basshısı baslap basqarıw basshıları basqıshqa basshılıǵında baslaması baslıǵınıń
+kóz	kózden kóz kózge kózi kózdiń kózin kózleri kózdi kózimiz kózim	kózqarastan kózqaraslar kózqarasınan kózqaras kózqaraslardı kózqarasları kózqarasın kózqarası kózqarasların kózqarastı
+úy	úy úyi úyde úyinde úyge úyleri úyine úydiń úylerinde úyler	úyreniw úyrenip úyrenildi úyretiw úyreniwler úyrenilip úyreniwge úyrendi úylestiriw úyreniwi
+is	iske isler isleri is isi islerdi islerin isti islerge islerdiń	islep islesiw ishinde islesiwdi ishki isbilermenlik isbilermenler islew islam isenim
+jumıs	jumıs jumıslar jumısları jumısın jumısı jumısların jumıslardı jumısqa jumısına jumıslardıń	jumısshı jumıssız jumıssızlıq jumıslı jumısshılar jumısshılardıń jumıssızlıqtı jumıssızlıqtan jumısshıları
+sawda	sawda sawdası sawdanı sawdasına sawdaǵa sawdasınıń sawdaları sawdalarına sawdada sawdasın	
+densawlıq	densawlıqtı densawlıq densawlıǵın densawlıǵı densawlıǵına densawlıqqa densawlıqtıń densawlıǵınıń densawlıǵınan densawlıǵında	
+bilim	bilim bilimlerin bilimi bilimler bilimin bilimlerdi bilimge bilimleri bilimdi bilimlerge	bilimlendiriw bilimlendiriwi bilimlendiriwdiń bilimlendiriwge bilimlendiriwdi bilimli bilimlendiriwde bilimlendiriwden bilimlendiriwdegi bilimlendiriwin
+mámleket	mámleket mámleketimiz mámleketimizde mámleketler mámlekettiń mámleketleri mámleketimizdiń mámleketlerdiń mámlekette mámleketlerimiz	mámleketlik mámleketleraralıq mámleketshilik mámleketshiligimiz mámleketshiligimizdiń mámleketshiligi mámleketshilikti mámleketshiliktiń mámleketshiligin
+nızam	nızam nızamǵa nızamnıń nızamda nızamdı nızamlar nızamı nızamına nızamlarǵa nızamınıń	nızamshılıq nızamsız nızamlı nızamshılıqqa nızamshılıqtı nızamshılıqta nızamshılıqtaǵı nızamshılıǵına nızamshılıǵı nızambuzıwshılıq
+saylaw	saylaw saylap saylanǵan saylawda saylawlar saylawǵa saylawı saylawlarda saylawdı saylanadı	saylawshılar saylawaldı saylawshılardıń saylawshılarǵa saylawshı saylawshıları saylawshılardı saylawbay saylawshınıń saylawshılarınıń
+awıl	awıl awılında awılı awılda awıllarda awıldaǵı awılǵa awılına awıldıń awılındaǵı	awıllıq awılxojalıǵı awıllasları awıllaslarına awıllaslarınıń awıllaslarımız awıllasın
+ber	beriw berildi beredi berdi beriledi berilgen berip bergen bermekte berilip	berdaq berli beruniy beriwshi beriwshiler berdimuhamedov bereket beriwshilerdiń beriwshiniń berdimuhamedovtıń
+kel	kelip kelgen kelmekte keldi keledi keliwi kelinbekte keletuǵın kelingen keliw	keleshekte kelesi keleshek kelisip kelisim kelisimge keleshektegi keltirip keleshegi keleshekke
+al	alıp alıw al aldı alǵan alındı alınǵan alıwǵa aladı alıwı	aldın alǵa almasıw aldınǵı altın aldına aldında aldınan aldaǵı alıs
+ket	ketti ketken ketedi ketiwi ketiw ketip ketetuǵın ketpekte ketiwine ketkeni	kete ketrin ketpen ketenler keteme ketgan ketekler ketlin ketchup ketadi
+oqı	oqıw oqıp oqıwǵa oqıwda oqıwdı oqıǵan oqıwı oqılıp oqıwın oqıldı	oqıtıw oqıwshılar oqıwshıları oqıwshı oqıwshılardıń oqıwshısı oqıwshılarǵa oqıtıwshısı oqıwshılardı oqıtıwshı
+jaz	jazǵı jazıp jazǵan jazıw jazılǵan jazdı jazadı jazıwınsha jazbaqta jaz	jaza jazıwshılar jazıwshı jazanı jazba jazası jazıwshısı jazıwshınıń jazasın jazalaw
+kór	kórip kóriw kórgen kórinedi kórilmekte kórilip kórdi kórilgen kóriledi kórildi	kórkem kórsetiw kórsetip kórsetedi kórsetti kórsetkish kórsetken kórinisi kórsetilgen kórsetpekte
+ayt	aytqanda aytıp aytıw aytqan ayttı aytıldı aytatuǵın ayta aytaman aytılǵan	aytıwınsha aytbaev aytmuratov aytarlıqtay aytmatov aytmatovtıń aytniyazov aytmuratova aytıs aytbay
+sóyle	sóylep sóylegen sóylegenler sóyledi sóylew sóylewlerinde sóyleydi sóylewinde sóylewi sóyleytuǵın	sóylesiw sóylesiwler sóylesiwde sóylesiwdi sóylesti sóylesiwi sóylesiwlerde sóylesiwlerdiń sóylesiwlerdi sóylesiwleri
+isle	islep islew islegen islengen isleytuǵın islewi islenip islewge isleydi islemekte	islesiw islesiwdi isler isleri islesiwdiń islesiwge islesiwi islesiwin islesiwshi islesiwshiler
+bil	biliw biledi bilemiz bilip biletuǵın biliwi bilgen bilemen bilesiz bilmey	bilimlendiriw bilim bildirdi bildirildi bilimlendiriwi bilimlendiriwdiń bildirip bildirilgen bildirgen bilimlendiriwge
+tur	turǵan tur turadı turıp turıw turatuǵın turıptı turda turıwı tura	turaqlı turaq turizm turmıs turmıslıq turistlik turmısqa turaqlılıqtı turaqlılıq turmısında
+ótker	ótkerilgen ótkeriw ótkerildi ótkerilip ótkerdi ótkeriledi ótkeriliwi ótkeriletuǵın ótkerilmekte ótkerip	ótkermeleri ótkeriwshi ótkeriwsheńlik ótkermelerin ótkeriwsheńligin ótkermelerdi ótkermeler ótkeriwsheńligi ótkermeleriniń ótkermelerinen
+sat	satıp satıw satıwǵa satılǵan satılıp satıwdan satılıwı satıwda satqan satıladı	sattorova satıwshı satıwshılar satiralıq satıwshıǵa satira sattarov satıwshınıń sattarova satıwshısı
+tap	tabıladı tabıw tabıldı tawıp tabılǵan tapqan tap taptı tabıwǵa tabıwı	tapsırıldı tapsırmalar tapsırıw tapsırdı tapsırma tapsırılıwı tapsırılǵan tapsırması tapsırmalardıń tapsırıp

@@ -14,7 +14,7 @@ DATA_TSEARCH = data/kaasearch.stop data/kaasearch_example.kaalex
 OBJS = src/kaasearch.o src/kaadata.o src/kaacore.o
 
 # Regression test (runs sql/kaasearch_test.sql, compares with expected/)
-REGRESS = kaasearch_test kaasearch_words
+REGRESS = kaasearch_test kaasearch_words kaasearch_search
 
 # Path to pg_config (override with PG_CONFIG=/path/to/pg_config)
 PG_CONFIG ?= pg_config
