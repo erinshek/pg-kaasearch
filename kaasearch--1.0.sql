@@ -27,27 +27,45 @@ CREATE TEXT SEARCH DICTIONARY kaasearch_dict (
     StopWords = kaasearch
 );
 
-/* Step 3: the text search configuration, based on the default parser */
+/* Step 3: the parser: the default parser, with the apostrophe spelling joined first
+   (o'zbek → ózbek; the default parser would end the word at the apostrophe) */
+CREATE FUNCTION kaasearch_prsd_start(internal, integer)
+    RETURNS internal
+    AS 'MODULE_PATHNAME'
+    LANGUAGE C STRICT;
+
+CREATE TEXT SEARCH PARSER kaasearch_parser (
+    START    = kaasearch_prsd_start,
+    GETTOKEN = pg_catalog.prsd_nexttoken,
+    END      = pg_catalog.prsd_end,
+    HEADLINE = pg_catalog.prsd_headline,
+    LEXTYPES = pg_catalog.prsd_lextype
+);
+
+COMMENT ON TEXT SEARCH PARSER kaasearch_parser
+    IS 'Default parser that reads the Karakalpak apostrophe spelling (o''zbek) as one word';
+
+/* Step 4: the text search configuration */
 CREATE TEXT SEARCH CONFIGURATION kaasearch (
-    PARSER = pg_catalog.default
+    PARSER = kaasearch_parser
 );
 
 COMMENT ON TEXT SEARCH CONFIGURATION kaasearch
     IS 'Configuration for Karakalpak language (Latin/Cyrillic)';
 
-/* Step 4: map word tokens to our dictionary (words with digits included: covid19, 5-mektepke) */
+/* Step 5: map word tokens to our dictionary (words with digits included: covid19, 5-mektepke) */
 ALTER TEXT SEARCH CONFIGURATION kaasearch
     ALTER MAPPING FOR asciiword, asciihword, hword_asciipart,
                       word, hword, hword_part,
                       numword, numhword, hword_numpart
     WITH kaasearch_dict;
 
-/* Step 5: index numbers as they are (2016, 3.14, 1.2.3) */
+/* Step 6: index numbers as they are (2016, 3.14, 1.2.3) */
 ALTER TEXT SEARCH CONFIGURATION kaasearch
     ALTER MAPPING FOR int, uint, float, sfloat, version
     WITH simple;
 
-/* Step 6: functions for working with the stemmer directly */
+/* Step 7: functions for working with the stemmer directly */
 CREATE FUNCTION kaa_stem(word text)
     RETURNS text
     AS 'MODULE_PATHNAME', 'kaa_stem_pg'

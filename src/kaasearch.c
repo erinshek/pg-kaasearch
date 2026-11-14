@@ -239,6 +239,135 @@ kaasearch_lexize(PG_FUNCTION_ARGS)
     PG_RETURN_POINTER(res);
 }
 
+/* ------------------------------------------------------------------------ parser */
+
+/* An apostrophe sign of the apostrophe spelling (normalize.APOSTROPHES) */
+static bool
+is_apostrophe_cp(pg_wchar c)
+{
+    return c == '\'' || c == '`' || c == 0x2019 || c == 0x2018 || c == 0x02BB || c == 0x02BC ||
+        c == 0x2032 || c == 0x00B4;
+}
+
+/* A letter: Latin (with Latin-1, Extended-A/B and Extended Additional) or Cyrillic */
+static bool
+is_letter_cp(pg_wchar c)
+{
+    return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
+        (c >= 0x00C0 && c <= 0x024F && c != 0x00D7 && c != 0x00F7) ||
+        (c >= 0x0400 && c <= 0x052F) || (c >= 0x1E00 && c <= 0x1EFF);
+}
+
+/* The 2016 letter for a letter of the apostrophe spelling: o' → ó, I' → Í, i' → ı */
+static const char *
+apostrophe_letter(pg_wchar c)
+{
+    switch (c)
+    {
+        case 'a': return "\303\241";        /* á */
+        case 'A': return "\303\201";        /* Á */
+        case 'g': return "\307\265";        /* ǵ */
+        case 'G': return "\307\264";        /* Ǵ */
+        case 'i': return "\304\261";        /* ı */
+        case 'I': return "\303\215";        /* Í */
+        case 'n': return "\305\204";        /* ń */
+        case 'N': return "\305\203";        /* Ń */
+        case 'o': return "\303\263";        /* ó */
+        case 'O': return "\303\223";        /* Ó */
+        case 'u': return "\303\272";        /* ú */
+        case 'U': return "\303\232";        /* Ú */
+        default: return NULL;
+    }
+}
+
+/*
+ * Write the apostrophe spelling in 2016 letters, so that the default parser, which ends a word at
+ * an apostrophe, sees o'zbek as one word: ózbek. A letter + apostrophe is joined when a letter
+ * follows (o'zbek, qi'z), and n' also at the end of a word (qi'zdi'n'), unless the word opened with
+ * an apostrophe, which is then a quotation mark ('Qazan'). Case is kept, and the result is never
+ * longer than the input.
+ */
+static char *
+join_apostrophes(const char *in, int len, int *outlen)
+{
+    pg_wchar   *cp = palloc((len + 1) * sizeof(pg_wchar));
+    int        *off = palloc((len + 2) * sizeof(int));
+    char       *out = palloc(len + 1);
+    int         n = 0,
+                pos = 0,
+                k = 0,
+                i;
+
+    /* decode, keeping the byte offset of every character */
+    while (pos < len)
+    {
+        int         l = pg_utf_mblen((const unsigned char *) in + pos);
+
+        if (l < 1 || pos + l > len)
+            l = 1;
+        off[n] = pos;
+        cp[n] = (l == 1) ? (unsigned char) in[pos] : utf8_to_unicode((const unsigned char *) in + pos);
+        n++;
+        pos += l;
+    }
+    off[n] = len;
+
+    for (i = 0; i < n; i++)
+    {
+        const char *rep = (i + 1 < n && is_apostrophe_cp(cp[i + 1])) ? apostrophe_letter(cp[i]) : NULL;
+
+        if (rep)
+        {
+            bool        next_letter = i + 2 < n && is_letter_cp(cp[i + 2]);
+            bool        quoted = false;
+
+            if (!next_letter && (cp[i] == 'n' || cp[i] == 'N'))
+            {
+                /* find the start of the word, stepping over joined pairs (qi'z), and look before it */
+                int         j = i;
+
+                while (j > 0 && (is_letter_cp(cp[j - 1]) ||
+                                 (j > 1 && is_apostrophe_cp(cp[j - 1]) && apostrophe_letter(cp[j - 2]))))
+                    j -= is_letter_cp(cp[j - 1]) ? 1 : 2;
+                quoted = j > 0 && is_apostrophe_cp(cp[j - 1]);
+            }
+            if (next_letter || ((cp[i] == 'n' || cp[i] == 'N') && !quoted))
+            {
+                out[k++] = rep[0];
+                out[k++] = rep[1];
+                i++;                        /* the apostrophe */
+                continue;
+            }
+        }
+        memcpy(out + k, in + off[i], off[i + 1] - off[i]);
+        k += off[i + 1] - off[i];
+    }
+    out[k] = '\0';
+    *outlen = k;
+    pfree(cp);
+    pfree(off);
+    return out;
+}
+
+/*
+ * Parser start function: the default parser on the text with the apostrophe spelling joined.
+ * The other parser functions are the default parser's own (see kaasearch--1.0.sql).
+ */
+PG_FUNCTION_INFO_V1(kaasearch_prsd_start);
+
+Datum
+kaasearch_prsd_start(PG_FUNCTION_ARGS)
+{
+    char       *in = (char *) PG_GETARG_POINTER(0);
+    int         len = PG_GETARG_INT32(1);
+    int         outlen;
+    char       *text;
+
+    check_encoding();
+    text = join_apostrophes(in, len, &outlen);
+    return DirectFunctionCall2(prsd_start, PointerGetDatum(text), Int32GetDatum(outlen));
+}
+
 /* ------------------------------------------------------------------------ SQL functions */
 
 /* kaa_stem(word text) → text: the stem of one word (built-in lexicon) */

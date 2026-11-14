@@ -64,11 +64,17 @@ SELECT to_tsvector('kaasearch', 'tar kóshe, ter shıqtı');
 -- 18. Soft sign before е → ye
 SELECT to_tsvector('kaasearch', 'пьеса');
 
--- 19. Apostrophe spelling (o', g', n'): the parser splits a word at an apostrophe, so such text is
---     passed through kaa_normalize() first; a single token is normalised by the dictionary itself
-SELECT to_tsvector('kaasearch', 'g''alaba o''zbek');
-SELECT to_tsvector('kaasearch', kaa_normalize('g''alaba o''zbek')) = to_tsvector('kaasearch', 'ǵalaba ózbek') AS apostrophe_match;
+-- 19. Apostrophe spelling (a' i' g' o' n' u'): the parser joins a letter and its apostrophe, so
+--     o'zbek is one word, ózbek; all apostrophe signs are read alike; a word in quotation marks
+--     keeps its last n ('Qazan'); kaa_normalize() gives the same text
+SELECT to_tsvector('kaasearch', 'O''zbekstan qi''zdi''n'' g''alaba U''YDE A''DEBIYAT');
+SELECT to_tsvector('kaasearch', 'g''alaba o''zbek') = to_tsvector('kaasearch', 'ǵalaba ózbek') AS apostrophe_match;
+SELECT to_tsvector('kaasearch', 'so‘z soʻz so’z so`z');
+SELECT to_tsvector('kaasearch', '''Qazan'' qalası, ten'' huqıq');
+SELECT to_tsvector('kaasearch', kaa_normalize('g''alaba o''zbek')) = to_tsvector('kaasearch', 'ǵalaba ózbek') AS normalize_match;
 SELECT ts_lexize('kaasearch_dict', 'o''zbekstanda');
+SELECT ts_headline('kaasearch', 'Bizler O''zbekstan mektebinde oqıdıq.', to_tsquery('kaasearch', 'ózbekstan & mektep'));
+SELECT alias, token, lexemes FROM ts_debug('kaasearch', 'o''zbek tili');
 
 -- 19b. Letters that old fonts use in place of Karakalpak letters: ѳ → ө, ӊ → ң, ӯ ӳ ӱ → ў, ӽ → ҳ
 SELECT to_tsvector('kaasearch', 'Нѳкис оқытыўшыныӊ қорғаӯ ӼАЯЛЛАР');

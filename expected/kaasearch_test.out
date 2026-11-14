@@ -155,17 +155,36 @@ SELECT to_tsvector('kaasearch', 'пьеса');
  'pyesa':1
 (1 row)
 
--- 19. Apostrophe spelling (o', g', n'): the parser splits a word at an apostrophe, so such text is
---     passed through kaa_normalize() first; a single token is normalised by the dictionary itself
-SELECT to_tsvector('kaasearch', 'g''alaba o''zbek');
-          to_tsvector           
---------------------------------
- 'alaba':2 'g':1 'o':3 'zbek':4
+-- 19. Apostrophe spelling (a' i' g' o' n' u'): the parser joins a letter and its apostrophe, so
+--     o'zbek is one word, ózbek; all apostrophe signs are read alike; a word in quotation marks
+--     keeps its last n ('Qazan'); kaa_normalize() gives the same text
+SELECT to_tsvector('kaasearch', 'O''zbekstan qi''zdi''n'' g''alaba U''YDE A''DEBIYAT');
+                     to_tsvector                      
+------------------------------------------------------
+ 'qız':2 'ádebiyat':5 'ózbekstan':1 'úy':4 'ǵalaba':3
 (1 row)
 
-SELECT to_tsvector('kaasearch', kaa_normalize('g''alaba o''zbek')) = to_tsvector('kaasearch', 'ǵalaba ózbek') AS apostrophe_match;
+SELECT to_tsvector('kaasearch', 'g''alaba o''zbek') = to_tsvector('kaasearch', 'ǵalaba ózbek') AS apostrophe_match;
  apostrophe_match 
 ------------------
+ t
+(1 row)
+
+SELECT to_tsvector('kaasearch', 'so‘z soʻz so’z so`z');
+  to_tsvector  
+---------------
+ 'sóz':1,2,3,4
+(1 row)
+
+SELECT to_tsvector('kaasearch', '''Qazan'' qalası, ten'' huqıq');
+             to_tsvector              
+--------------------------------------
+ 'huqıq':4 'qala':2 'qazan':1 'teń':3
+(1 row)
+
+SELECT to_tsvector('kaasearch', kaa_normalize('g''alaba o''zbek')) = to_tsvector('kaasearch', 'ǵalaba ózbek') AS normalize_match;
+ normalize_match 
+-----------------
  t
 (1 row)
 
@@ -174,6 +193,20 @@ SELECT ts_lexize('kaasearch_dict', 'o''zbekstanda');
 -------------
  {ózbekstan}
 (1 row)
+
+SELECT ts_headline('kaasearch', 'Bizler O''zbekstan mektebinde oqıdıq.', to_tsquery('kaasearch', 'ózbekstan & mektep'));
+                    ts_headline                    
+---------------------------------------------------
+ Bizler <b>Ózbekstan</b> <b>mektebinde</b> oqıdıq.
+(1 row)
+
+SELECT alias, token, lexemes FROM ts_debug('kaasearch', 'o''zbek tili');
+   alias   | token | lexemes 
+-----------+-------+---------
+ word      | ózbek | {ózbek}
+ blank     |       | 
+ asciiword | tili  | {til}
+(3 rows)
 
 -- 19b. Letters that old fonts use in place of Karakalpak letters: ѳ → ө, ӊ → ң, ӯ ӳ ӱ → ў, ӽ → ҳ
 SELECT to_tsvector('kaasearch', 'Нѳкис оқытыўшыныӊ қорғаӯ ӼАЯЛЛАР');
