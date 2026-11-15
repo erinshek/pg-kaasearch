@@ -19,17 +19,28 @@ SELECT to_tsvector('kaasearch', 'Мектепке барған балалар к
 
 ## Install
 
-Requirements: PostgreSQL 15–18 with its development files, a C compiler and `make`. The database must
-use the UTF8 encoding.
+**Docker** (PostgreSQL 15–18, the extension is already enabled):
+
+```sh
+docker run -e POSTGRES_PASSWORD=secret -p 5432:5432 ghcr.io/erinshek/pg_kaasearch:pg18
+```
+
+**Ubuntu / Debian:** download the package for your system and PostgreSQL version from
+[Releases](https://github.com/erinshek/pg-kaasearch/releases), then:
+
+```sh
+sudo apt install ./postgresql-18-kaasearch_1.0.0-1.noble_amd64.deb
+```
+
+**From source** (needs the PostgreSQL development files, a C compiler and `make`):
 
 ```sh
 git clone https://github.com/erinshek/pg-kaasearch.git
 cd pg-kaasearch
-make
-sudo make install
+make && sudo make install
 ```
 
-Then, in your database:
+Then enable it in your database (it must use the UTF8 encoding):
 
 ```sql
 CREATE EXTENSION pg_kaasearch;
@@ -37,25 +48,13 @@ CREATE EXTENSION pg_kaasearch;
 
 ## Usage
 
-Index a column and search it:
-
 ```sql
-CREATE INDEX articles_fts ON articles USING gin (to_tsvector('kaasearch', body));
+-- index a text column once
+CREATE INDEX ON articles USING gin (to_tsvector('kaasearch', body));
 
-SELECT title
-FROM articles
-WHERE to_tsvector('kaasearch', body) @@ websearch_to_tsquery('kaasearch', 'mektep kitap');
-```
-
-Rank the results and highlight the words found:
-
-```sql
-SELECT title,
-       ts_rank(to_tsvector('kaasearch', body), q) AS rank,
-       ts_headline('kaasearch', body, q) AS snippet
-FROM articles, websearch_to_tsquery('kaasearch', 'mektep kitap') AS q
-WHERE to_tsvector('kaasearch', body) @@ q
-ORDER BY rank DESC;
+-- search it: finds mektebimizde, mektepke, Мектепке ...
+SELECT title FROM articles
+WHERE to_tsvector('kaasearch', body) @@ websearch_to_tsquery('kaasearch', 'mektep');
 ```
 
 ## License
