@@ -127,3 +127,4 @@ n	list	word	stem	proposed	status	note
 126	tables.py	quwanıshqa	quwan	quwanısh	corrected	answer 5: the action noun -ısh/-ish is stripped
 127	tables.py	ókinish	ókin	ókinish	corrected	answer 5
 128	normalize.py	пьеса	pyesa	pyesa	confirmed	answer 6: ь + е → ye
+129	protected.txt	ortasha	ortasha	ortasha	confirmed	native speaker, 2026-11-15: ortasha (average) is not orta + sha

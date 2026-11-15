@@ -432,6 +432,7 @@ INSERT INTO words VALUES
     ('reviewed', 'quwanıshqa', 'quwan'),
     ('reviewed', 'ókinish', 'ókin'),
     ('reviewed', 'пьеса', 'pyesa'),
+    ('reviewed', 'ortasha', 'ortasha'),
     ('extra', 'мектепке', 'mektep'),
     ('extra', 'shаqаp', 'shaqap'),
     ('extra', 'so''zlerdi', 'sóz'),

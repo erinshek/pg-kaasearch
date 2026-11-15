@@ -31,7 +31,7 @@ Python 3.10 or newer. No other libraries are needed. Install with `pip install .
 |---|---|
 | `tests/test_set.tsv` — 200 words verified by a native speaker | 200 / 200 |
 | `tests/exceptions.tsv` — 100 words verified by a native speaker | 100 / 100 |
-| `tests/reviewed.tsv` — entries added during implementation and answers to open questions, 128 words reviewed by a native speaker | 128 / 128 |
+| `tests/reviewed.tsv` — entries added during implementation and answers to open questions, 129 words reviewed by a native speaker | 129 / 129 |
 | `tests/extra.tsv` — spelling normalisation and rules added during implementation (not independently verified) | 56 / 56 |
 | `tests/news_sample.tsv` — 297 random words from news, health and parallel-corpus texts, verified by a native speaker | 297 / 297 |
 
@@ -68,7 +68,7 @@ In every file the text after `#` is a comment. A list can be changed without tou
 | `lexicon.tsv` | headwords of «Túsindirme sózlik»: non-verbs (n) and verb stems (v) | 16 829 + 5 898 |
 | `lexicon_extra.tsv` | stems missing from the dictionary headword list: added by hand and induced from text | 1538 |
 | `lexicon_exclude.tsv` | entries removed from the lexicon (headwords that are inflected forms) | 48 |
-| `protected.txt` | protected words (soraw, belgi, qanday, olar ...) | 92 |
+| `protected.txt` | protected words (soraw, belgi, qanday, olar ...) | 94 |
 | `function_words.txt` | postpositions, conjunctions, particles, modal words | 73 |
 | `ready_forms.tsv` | ready forms (maǵan → men, aldı → al, aldında → aldı ...) | 55 |
 | `overrides.tsv` | stem overrides (ákel → alıp kel ...) | 5 |

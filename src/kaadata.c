@@ -24728,6 +24728,7 @@ static const char *const protected_words[] = {
     "olar",
     "onday",
     "onsha",
+    "ortasha",
     "otaw",
     "qada\307\265an",
     "qanday",
@@ -24763,7 +24764,7 @@ static const char *const protected_words[] = {
     "\303\263zgeshe",
     "\303\272yish",
 };
-const KaaWordSet kaa_protected = {protected_words, 93};
+const KaaWordSet kaa_protected = {protected_words, 94};
 
 static const char *const function_words[] = {
     "aq\304\261r\304\261",
