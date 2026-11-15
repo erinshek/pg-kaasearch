@@ -25,7 +25,7 @@ python -m kaastem -f text.txt
 
 Python 3.10 or newer. No other libraries are needed. Install with `pip install .`
 
-## Test results (0.2.3)
+## Test results (0.2.4)
 
 | Table | Result |
 |---|---|
@@ -34,6 +34,7 @@ Python 3.10 or newer. No other libraries are needed. Install with `pip install .
 | `tests/reviewed.tsv` — entries added during implementation and answers to open questions, 129 words reviewed by a native speaker | 129 / 129 |
 | `tests/extra.tsv` — spelling normalisation and rules added during implementation (not independently verified) | 56 / 56 |
 | `tests/news_sample.tsv` — 297 random words from news, health and parallel-corpus texts, verified by a native speaker | 297 / 297 |
+| Idempotence: `stem(stem(w)) == stem(w)` for the words above, the lexicon headwords and `tests/idempotence_forms.txt`; known exceptions in `tests/idempotence_exceptions.tsv` (39 homographs and misspellings) | 25,693 / 25,693 |
 
 Run them with `python tests/run_tests.py` (`-v` shows every word).
 

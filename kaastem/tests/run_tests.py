@@ -7,6 +7,9 @@
     extra.tsv       examples for spelling normalisation and for the rules added during implementation
     news_sample.tsv random words from news, health and parallel-corpus texts, verified by a native speaker (2026-11-15)
 
+and checks that every stem is stable: stem(stem(w)) == stem(w) for the words of these tables, the lexicon
+headwords and idempotence_forms.txt. The known exceptions are listed in idempotence_exceptions.tsv.
+
     python tests/run_tests.py          # summary
     python tests/run_tests.py -v       # every word
 """
@@ -40,10 +43,46 @@ def run(st, name, verbose):
     return len(bad)
 
 
+def read_words(name, column=0):
+    out = []
+    for line in open(os.path.join(HERE, name), encoding='utf-8'):
+        if line.strip() and not line.startswith('#'):
+            out.append(line.rstrip('\n').split('\t')[column])
+    return out
+
+
+def idempotence(st):
+    """stem(stem(w)) == stem(w), except for the stems listed in idempotence_exceptions.tsv."""
+    exc = {r['stem']: r['stem_of_stem'] for r in csv.DictReader(
+        (line for line in open(os.path.join(HERE, 'idempotence_exceptions.tsv'), encoding='utf-8')
+         if not line.startswith('#')), delimiter='\t', quoting=csv.QUOTE_NONE)}
+    words = read_words('idempotence_forms.txt')
+    for name in TABLES:
+        words += [r['word'] for r in csv.DictReader(open(os.path.join(HERE, name), encoding='utf-8'),
+                                                     delimiter='\t', quoting=csv.QUOTE_NONE)]
+    for name in ('lexicon.tsv', 'lexicon_extra.tsv'):
+        words += read_words(os.path.join('..', 'kaastem', 'data', name))
+    bad = {}
+    for w in words:
+        s1 = st.stem(w)
+        s2 = st.stem(s1)
+        if s2 != s1 and exc.get(s1) != s2:
+            bad.setdefault((s1, s2), w)
+    # an exception that no longer happens is removed from the list
+    stale = [s for s, s2 in exc.items() if st.stem(s) != s2]
+    print(f"idempotence: {len(words) - len(bad)} / {len(words)} words stable, {len(exc)} known exceptions")
+    for (s1, s2), w in sorted(bad.items()):
+        print(f"   FAIL {w} → {s1} → {s2}")
+    for s in stale:
+        print(f"   STALE exception {s}: stem is now {st.stem(s)}")
+    return len(bad) + len(stale)
+
+
 def main():
     verbose = '-v' in sys.argv
     st = Stemmer()
     errors = sum(run(st, name, verbose) for name in TABLES)
+    errors += idempotence(st)
     return 1 if errors else 0
 
 

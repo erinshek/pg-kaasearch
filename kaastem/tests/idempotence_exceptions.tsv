@@ -1,0 +1,43 @@
+# Stems that are not stable: stem(stem(w)) differs from stem(w). Reviewed by a native speaker (2026-11-16).
+#   homograph   — the stem alone is read another way (jılıtıw → jılı, but jılı alone is jıl + ı)
+#   misspelling — the stem comes from a misspelt form (bolalar for balalar)
+stem	stem_of_stem	kind	note
+aldı	al	homograph	aldı (front) / al + dı (took)
+tası	tas	homograph	tası (overflow) / tas + ı
+eri	er	homograph	eri (melt) / er + i
+ayda	ay	homograph	ayda (drive) / ay + da
+jılı	jıl	homograph	jılı (warm) / jıl + ı (1991-jılı)
+suwı	suw	homograph	suwı (cool) / suw + ı
+jasar	jasa	homograph	jasar (grow young) / jasa + r
+ulı	ul	homograph	ulı (great) / ul + ı (son)
+baǵın	baǵ	homograph	baǵın (obey) / baǵ + ı + n
+sonı	sol	homograph	son + ı / sol (that)
+onı	ol	homograph	on + ı / ol (him)
+bunnan	bul	homograph	colloquial bunnanda / bul + nan
+buǵan	bul	homograph	colloquial buǵanı / bul + ǵan
+ústin	ústi	homograph	ústinler / úst + i + n
+esabın	esap	homograph	esabınnan / esap + ı + n
+tárepin	tárep	homograph	tárepinnen / tárep + i + n
+ayttı	ayt	homograph	ayttılar / ayt + tı
+óz-aldı	óz-al	homograph	óz-aldına / óz-al + dı
+niyetinde	niyet	homograph	niyetindemiz / niyet + i + nde
+tol-tası	tol-tas	homograph	tolıp-tasıp: each part is stemmed alone
+ekenlik	eken	homograph	ekenliklerin: eken is a stop word
+ısı-suwı	ısı-suw	homograph	ısıtıw-suwıtıw: each part is stemmed alone
+siń	si	misspelling	
+bola	bol	misspelling	
+jana	jan	misspelling	
+kayta	kayt	misspelling	
+qorgan	qorga	misspelling	
+búrme	búr	misspelling	
+jumsı	jumıs	misspelling	
+preziden	prezi	misspelling	
+shanaraq	shana	misspelling	
+katnas	katna	misspelling	
+minisir	min	misspelling	
+otırın	otır	misspelling	
+riteyler	ritey	misspelling	
+qaran	qara	misspelling	
+kural	kura	misspelling	
+sınama	sına	misspelling	
+nige	ni	misspelling	

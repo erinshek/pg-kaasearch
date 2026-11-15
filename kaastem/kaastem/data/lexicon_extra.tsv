@@ -3,6 +3,7 @@
 #   manual — added by hand (pronouns, function words, two-letter stems, place names)
 #   corpus — induced from word forms in school textbooks and the dictionary text (tools/induce_lexicon.py), reviewed
 #   news   — induced from news, health and parallel-corpus texts (kknews, shipaker, dilmash; tools/induce_lexicon.py), reviewed by a native speaker on 2026-11-15
+#   idem   — stems found by the idempotence check (stem(stem(w)) = stem(w)), reviewed by a native speaker on 2026-11-16
 ald	n	manual
 alfavit	n	manual
 anaw	n	manual
@@ -1541,3 +1542,53 @@ ziyalılar	n	news
 ǵálle	n	news
 ǵázep	n	news
 ȧmel	n	news
+ázzi	n	idem
+kútilme	n	idem
+óspe	n	idem
+grajdan	n	idem
+sham	n	idem
+ajıratpa	n	idem
+esletpe	n	idem
+qoyılma	n	idem
+tegin	n	idem
+tarqatpa	n	idem
+jayılma	n	idem
+tóselme	n	idem
+sazlama	n	idem
+súrtpe	n	idem
+buǵa	n	idem
+tańlanba	n	idem
+anıqlama	n	idem
+tıyın	n	idem
+jalǵan	n	idem
+jóneltpe	n	idem
+shekpe	n	idem
+shaxta	n	idem
+shókpe	n	idem
+kárim	n	idem
+túrme	n	idem
+shógindi	n	idem
+uzatpa	n	idem
+duzlama	n	idem
+tutpa	n	idem
+shıģarma	n	idem
+nayman	n	idem
+shirindi	n	idem
+arttırma	n	idem
+integraciyala	v	idem
+modernizaciyala	v	idem
+reformala	v	idem
+transformaciyala	v	idem
+rekonstrukciyala	v	idem
+shekle	v	idem
+prognozla	v	idem
+tómenle	v	idem
+subsidiyala	v	idem
+kodla	v	idem
+kalibrle	v	idem
+kepille	v	idem
+kreditle	v	idem
+ulıs	n	idem
+keshpe	n	idem
+xoshametlew	n	idem
+reabilitaciyalaw	n	idem

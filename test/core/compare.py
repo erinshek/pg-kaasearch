@@ -68,9 +68,13 @@ def build_words(n_target, seed):
     d = Data()
     words = []
     for name in sorted(os.listdir(os.path.join(ROOT, 'kaastem', 'tests'))):
+        lines = [line for line in open(os.path.join(ROOT, 'kaastem', 'tests', name), encoding='utf-8')
+                 if line.strip() and not line.startswith('#')]
         if name.endswith('.tsv'):
-            text = open(os.path.join(ROOT, 'kaastem', 'tests', name), encoding='utf-8').read()
-            words += [r['word'] for r in csv.DictReader(io.StringIO(text), delimiter='\t', quoting=csv.QUOTE_NONE)]
+            words += [r.get('word') or r['stem'] for r in csv.DictReader(io.StringIO(''.join(lines)),
+                                                                         delimiter='\t', quoting=csv.QUOTE_NONE)]
+        elif name.endswith('.txt'):
+            words += [line.strip() for line in lines]
     stems = sorted(d.nom | d.verb | d.protected | d.function | set(d.ready) | set(d.ready_prefix))
     words += stems
     # inflected forms

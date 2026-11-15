@@ -117,3 +117,26 @@ qonısh      # boot shaft (not qon + ısh)
 # --- from the accuracy test on news texts, reviewed by a native speaker (2026-11-15) ---
 ishki
 ortasha     # average (not orta + sha)
+# --- verb stems that are also noun + suffix (toqta ≠ toq + ta); from the idempotence check, reviewed by a native speaker (2026-11-16) ---
+toqta
+súye
+óte
+jalǵa
+tanı
+qozǵa
+ısı
+sharsha
+maqta
+toqı
+saǵın
+dúze
+únde
+shegin
+sıyın
+tiye
+ege
+renji
+ashı
+iyiske
+shoqın
+bılshılda

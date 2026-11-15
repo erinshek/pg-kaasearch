@@ -730,7 +730,7 @@ INSERT INTO words VALUES
     ('news_sample', 'бузғыншы', 'buzǵınshı'),
     ('news_sample', 'Ингаляция', 'ingalyaciya'),
     ('news_sample', 'қәлиплестиреди', 'qáliplestir'),
-    ('news_sample', 'төменлейди', 'tómenleydi'),
+    ('news_sample', 'төменлейди', 'tómenle'),
     ('news_sample', 'рационында', 'racion'),
     ('news_sample', 'шуғылланатуғын', 'shuǵıllan'),
     ('news_sample', 'пайыз', 'payız'),
