@@ -1,6 +1,6 @@
 /*
  * GENERATED FILE - DO NOT EDIT.
- * Source: kaastem 0.2.3 (kaastem/kaastem/tables.py, stemmer.py, data/).
+ * Source: kaastem 0.2.4 (kaastem/kaastem/tables.py, stemmer.py, data/).
  * Regenerate with: python3 tools/gen_tables.py
  */
 
@@ -10,7 +10,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#define KAA_KAASTEM_VERSION "0.2.3"
+#define KAA_KAASTEM_VERSION "0.2.4"
 
 /* Suffix classes, then the two pseudo-states START and END (bit positions in KaaMask). */
 typedef enum
