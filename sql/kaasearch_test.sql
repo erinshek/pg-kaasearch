@@ -71,6 +71,11 @@ SELECT to_tsvector('kaasearch', 'O''zbekstan qi''zdi''n'' g''alaba U''YDE A''DEB
 SELECT to_tsvector('kaasearch', 'g''alaba o''zbek') = to_tsvector('kaasearch', 'ǵalaba ózbek') AS apostrophe_match;
 SELECT to_tsvector('kaasearch', 'so‘z soʻz so’z so`z');
 SELECT to_tsvector('kaasearch', '''Qazan'' qalası, ten'' huqıq');
+-- a letter with its apostrophe at the end of a word (bardi' = bardı), and a quotation of several
+-- words whose closing mark follows n ('Jańa Ózbekstan' stays ózbekstan)
+SELECT to_tsvector('kaasearch', 'bardi'' kitabi'' xalqi''');
+SELECT to_tsvector('kaasearch', '''Jańa Ózbekstan'' gazetası, ''O''zbekstan'' kitabi''');
+SELECT kaa_normalize('''Jańa Ózbekstan'' gazetası, bardi'' ''Qazan''');
 SELECT to_tsvector('kaasearch', kaa_normalize('g''alaba o''zbek')) = to_tsvector('kaasearch', 'ǵalaba ózbek') AS normalize_match;
 SELECT ts_lexize('kaasearch_dict', 'o''zbekstanda');
 SELECT ts_headline('kaasearch', 'Bizler O''zbekstan mektebinde oqıdıq.', to_tsquery('kaasearch', 'ózbekstan & mektep'));
@@ -83,9 +88,10 @@ SELECT to_tsvector('kaasearch', 'Нѳкис оқытыўшыныӊ') = to_tsvect
 -- 20. Verb forms: tense, person, negation and voice suffixes are stripped
 SELECT to_tsvector('kaasearch', 'jazıladı barmadım keleseń oqıp otır');
 
--- 21. A stem that is a stop word is dropped (maǵan → men), a verb found through its suffixes is kept
-SELECT to_tsvector('kaasearch', 'maǵan onıń bizlerdiń');
-SELECT to_tsvector('kaasearch', 'bardıq barǵan');
+-- 21. A stem that is a stop word is dropped, whatever its suffixes (eken, ekenin); other words are
+--     kept in every form (bardı, bardıq, barǵan → bar)
+SELECT to_tsvector('kaasearch', 'eken ekenin mektep');
+SELECT to_tsvector('kaasearch', 'bardı bardıq barǵan bolǵan bolıp');
 
 -- 22. A stem of two words gives one lexeme per word
 SELECT to_tsvector('kaasearch', 'ákeldi');

@@ -78,6 +78,12 @@ char       *kaa_stem_word_ex(const char *word, size_t len, const KaaExtra *extra
  * spaces and punctuation. Returns a malloc'd string, or NULL when out of memory. */
 char       *kaa_normalize_text(const char *text, size_t len);
 
+/* Write the apostrophe spelling of a text in 2016 letters (O'zbekstan → Ózbekstan, bardi' → bardı),
+ * keeping case and everything else; an apostrophe that closes a quotation ('Jańa Ózbekstan') is
+ * kept. Returns a malloc'd string, never longer than the input, or NULL when out of memory;
+ * *outlen (if not NULL) is its length. */
+char       *kaa_join_apostrophes(const char *text, size_t len, size_t *outlen);
+
 /* Name of a source as in kaastem: "list", "lexicon", "safe", "unchanged". */
 const char *kaa_source_name(KaaSource source);
 

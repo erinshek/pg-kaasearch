@@ -25,3 +25,6 @@ timeout-*
 
 # Test corpora (downloaded, not tracked)
 corpus/
+
+# Packages built by packaging/build-deb.sh
+dist/

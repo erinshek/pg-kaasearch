@@ -23,7 +23,7 @@ python -m kaastem -t "Bizler mektepke bardıq."
 python -m kaastem -f text.txt
 ```
 
-Python 3.8 or newer. No other libraries are needed. Install with `pip install .`
+Python 3.10 or newer. No other libraries are needed. Install with `pip install .`
 
 ## Test results (0.2.3)
 

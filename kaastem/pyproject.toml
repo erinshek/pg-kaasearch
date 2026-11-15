@@ -7,7 +7,7 @@ name = "kaastem"
 version = "0.2.3"
 description = "Rule-based stemmer for the Karakalpak language (light mode)"
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 license = {text = "MIT"}
 dependencies = []
 

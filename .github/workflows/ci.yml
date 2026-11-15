@@ -77,3 +77,44 @@ jobs:
           clang-18 -g -O1 -fsanitize=fuzzer,address,undefined -fno-sanitize-recover=undefined \
              -Isrc test/core/fuzz_kaacore.c src/kaacore.c src/kaadata.c -o fuzz_kaacore
           ./fuzz_kaacore -max_total_time=60 -max_len=256 -timeout=5
+
+  packaging:
+    name: Packaging (.deb and Docker, PostgreSQL 17)
+    # Builds what the release workflow publishes, so a broken package shows up before a tag is pushed.
+    # Nothing is published here.
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build the .deb package and run the tests against it
+        run: |
+          docker run --rm -v "$PWD:/src" -w /src -e DEBIAN_FRONTEND=noninteractive ubuntu:24.04 sh -ec '
+            apt-get update -q
+            apt-get install -y -q --no-install-recommends ca-certificates curl gnupg postgresql-common \
+              make gcc libc6-dev binutils
+            /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y
+            mkdir -p /etc/postgresql-common/createcluster.d
+            echo "create_main_cluster = false" > /etc/postgresql-common/createcluster.d/no-main.conf
+            apt-get install -y -q --no-install-recommends postgresql-17 postgresql-server-dev-17
+            sh packaging/build-deb.sh 17 0.0.0~ci dist
+            dpkg -i dist/*.deb
+            rm -f pg_kaasearch.so src/*.o
+            pg_createcluster -e UTF8 --locale C.UTF-8 17 test --start
+            chown -R postgres .
+            su postgres -c "make installcheck PG_CONFIG=/usr/lib/postgresql/17/bin/pg_config" \
+              || { cat regression.diffs; exit 1; }'
+
+      - name: Build the Docker image and test it
+        run: |
+          docker build -f packaging/Dockerfile --build-arg PG_MAJOR=17 -t pg_kaasearch:ci .
+          docker run -d --name kaa -e POSTGRES_PASSWORD=test pg_kaasearch:ci
+          want="'mektep':2,3 'ózbekstan':1"
+          for i in $(seq 1 30); do
+            sleep 2
+            out=$(docker exec kaa psql -U postgres -tAc \
+              "SELECT to_tsvector('kaasearch', 'O''zbekstan mektebimizde Мектепке')" 2>/dev/null || true)
+            [ "$out" = "$want" ] && break
+          done
+          docker logs kaa | tail -20
+          echo "got: $out"
+          [ "$out" = "$want" ]

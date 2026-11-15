@@ -511,7 +511,11 @@ struct KaaExtra
 {
     StrSet      nom;
     StrSet      verb;
+    uint64_t    id;             /* changes with every word added: the result cache is keyed by it */
 };
+
+/* Ids of user lexicons, never reused (a freed lexicon's address can be, so it cannot key the cache) */
+static uint64_t extra_ids;
 
 /* The user lexicon of the call in progress (set by kaa_analyze_ex; the core is not reentrant). */
 static const KaaExtra *cur_extra;
@@ -2654,7 +2658,7 @@ typedef struct
 {
     unsigned char klen;         /* 0 = empty */
     bool        verbal;
-    const KaaExtra *extra;
+    uint64_t    extra;          /* id of the user lexicon, 0 for none */
     char        key[CACHE_KEY];
     char        stem[CACHE_STEM];
 } CacheSlot;
@@ -2690,6 +2694,7 @@ kaa_stem_word_ex(const char *word, size_t len, const KaaExtra *extra, bool *verb
     KaaAnalysis a;
     char       *stem;
     CacheSlot  *slot = NULL;
+    uint64_t    xid = extra ? extra->id : 0;
 
     if (len > 0 && len < CACHE_KEY)
     {
@@ -2697,8 +2702,8 @@ kaa_stem_word_ex(const char *word, size_t len, const KaaExtra *extra, bool *verb
             stem_cache = calloc(CACHE_SLOTS, sizeof(CacheSlot));
         if (stem_cache)
         {
-            slot = &stem_cache[(hash_bytes(word, len) ^ (uint32_t) (uintptr_t) extra) & (CACHE_SLOTS - 1)];
-            if (slot->klen == len && slot->extra == extra && memcmp(slot->key, word, len) == 0)
+            slot = &stem_cache[(hash_bytes(word, len) ^ (uint32_t) xid) & (CACHE_SLOTS - 1)];
+            if (slot->klen == len && slot->extra == xid && memcmp(slot->key, word, len) == 0)
             {
                 size_t      n = strlen(slot->stem);
 
@@ -2720,7 +2725,7 @@ kaa_stem_word_ex(const char *word, size_t len, const KaaExtra *extra, bool *verb
     if (slot && strlen(stem) < CACHE_STEM)
     {
         slot->klen = (unsigned char) len;
-        slot->extra = extra;
+        slot->extra = xid;
         slot->verbal = analysis_verbal(&a);
         memcpy(slot->key, word, len);
         strcpy(slot->stem, stem);
@@ -2734,7 +2739,11 @@ kaa_stem_word_ex(const char *word, size_t len, const KaaExtra *extra, bool *verb
 KaaExtra *
 kaa_extra_new(void)
 {
-    return calloc(1, sizeof(KaaExtra));
+    KaaExtra   *x = calloc(1, sizeof(KaaExtra));
+
+    if (x)
+        x->id = ++extra_ids;
+    return x;
 }
 
 void
@@ -2783,10 +2792,110 @@ kaa_extra_add(KaaExtra *x, const char *word, size_t len, char kind)
     }
     key_utf8(s, n, buf);
     free(s);
+    x->id = ++extra_ids;            /* results cached for the lexicon as it was are no longer valid */
     return strset_add(kind == 'v' ? &x->verb : &x->nom, buf);
 }
 
 /* ------------------------------------------------------------------------ text normalisation */
+
+/* The 2016 letter for a letter of the apostrophe spelling (normalize._APO_LETTERS), case kept */
+static const char *
+apostrophe_letter(cp_t c)
+{
+    switch (c)
+    {
+        case 'a': return "\303\241";        /* á */
+        case 'A': return "\303\201";        /* Á */
+        case 'g': return "\307\265";        /* ǵ */
+        case 'G': return "\307\264";        /* Ǵ */
+        case 'i': return "\304\261";        /* ı */
+        case 'I': return "\303\215";        /* Í */
+        case 'n': return "\305\204";        /* ń */
+        case 'N': return "\305\203";        /* Ń */
+        case 'o': return "\303\263";        /* ó */
+        case 'O': return "\303\223";        /* Ó */
+        case 'u': return "\303\272";        /* ú */
+        case 'U': return "\303\232";        /* Ú */
+        default: return NULL;
+    }
+}
+
+/*
+ * Write the apostrophe spelling of a text in 2016 letters, keeping everything else as it is:
+ * O'zbekstan → Ózbekstan, qi'zdi'n' → qızdıń, bardi' → bardı.
+ *
+ * An apostrophe after a letter that has an apostrophe form is joined to it, inside a word or at its
+ * end, unless it closes a quotation: an apostrophe before a word that is not after a letter opens
+ * one ('Jańa Ózbekstan'), and the next apostrophe at the end of a word closes it and is kept. An
+ * open quotation ends at a line break or at . ! ?, so a stray opening mark does not reach far.
+ * The result is never longer than the input.
+ */
+char *
+kaa_join_apostrophes(const char *text, size_t len, size_t *outlen)
+{
+    const unsigned char *p = (const unsigned char *) text;
+    const unsigned char *end = p + len;
+    char       *out = malloc(len + 1);
+    size_t      k = 0;
+    bool        quoted = false;     /* an opening apostrophe is waiting for its closing one */
+    bool        prev_letter = false;
+
+    if (!out)
+        return NULL;
+    while (p < end)
+    {
+        cp_t        c,
+                    a = 0,
+                    next = 0;
+        int         cl = utf8_decode(p, end, &c),
+                    al = 0;
+        const char *rep = apostrophe_letter(c);
+
+        if (p + cl < end)
+            al = utf8_decode(p + cl, end, &a);
+        if (rep && al > 0 && is_apostrophe(a))
+        {
+            bool        next_letter = false;
+
+            if (p + cl + al < end)
+            {
+                utf8_decode(p + cl + al, end, &next);
+                next_letter = is_alpha(next);
+            }
+            if (next_letter || !quoted)
+            {
+                /* o'zbek, bardi': the letter and its apostrophe are one letter */
+                out[k++] = rep[0];
+                out[k++] = rep[1];
+                p += cl + al;
+                prev_letter = true;
+                continue;
+            }
+            /* 'Jańa Ózbekstan': the apostrophe closes the quotation; copy the letter alone */
+        }
+        if (is_apostrophe(c))
+        {
+            cp_t        n2 = 0;
+
+            if (p + cl < end)
+                utf8_decode(p + cl, end, &n2);
+            if (!prev_letter && p + cl < end && is_alpha(n2))
+                quoted = true;              /* opening quotation mark */
+            else if (prev_letter && !(p + cl < end && is_alpha(n2)))
+                quoted = false;             /* closing quotation mark */
+        }
+        else if (c == '\n' || c == '\r' || c == '.' || c == '!' || c == '?')
+            quoted = false;
+        prev_letter = is_alpha(c);
+        memcpy(out + k, p, cl);
+        k += cl;
+        p += cl;
+    }
+    out[k] = '\0';
+    if (outlen)
+        *outlen = k;
+    return out;
+}
 
 static bool
 is_word_cp(cp_t c)
@@ -2799,27 +2908,44 @@ is_word_cp(cp_t c)
 char *
 kaa_normalize_text(const char *text, size_t len)
 {
-    const unsigned char *p = (const unsigned char *) text;
-    const unsigned char *end = p + len;
-    size_t      cap = len * 2 + 16,
+    size_t      jlen;
+    char       *joined = kaa_join_apostrophes(text, len, &jlen);
+    const unsigned char *p = (const unsigned char *) joined;
+    const unsigned char *end = p + jlen;
+    size_t      cap = jlen * 2 + 16,
                 pos = 0;
-    char       *out = malloc(cap);
+    char       *out = joined ? malloc(cap) : NULL;
 
     if (!out)
+    {
+        free(joined);
         return NULL;
+    }
     kaa_init();
     while (p < end)
     {
         const unsigned char *q = p;
         cp_t        c;
 
-        /* a run of word characters is normalised as one word; everything else is copied */
+        /* a run of word characters is normalised as one word; everything else is copied. The
+         * apostrophe spelling is joined already, so an apostrophe left over belongs to the word only
+         * between two letters: a quotation mark around it stays outside ('Qazan') */
         while (q < end)
         {
             int         k = utf8_decode(q, end, &c);
 
             if (!is_word_cp(c))
                 break;
+            if (is_apostrophe(c))
+            {
+                cp_t        n2 = 0;
+
+                if (q == p || q + k >= end)
+                    break;
+                utf8_decode(q + k, end, &n2);
+                if (!is_alpha(n2))
+                    break;
+            }
             q += k;
         }
         if (q > p)
@@ -2830,6 +2956,7 @@ kaa_normalize_text(const char *text, size_t len)
             if (!w)
             {
                 free(out);
+                free(joined);
                 return NULL;
             }
             wl = strlen(w);
@@ -2842,6 +2969,7 @@ kaa_normalize_text(const char *text, size_t len)
                 {
                     free(w);
                     free(out);
+                    free(joined);
                     return NULL;
                 }
                 out = o;
@@ -2863,6 +2991,7 @@ kaa_normalize_text(const char *text, size_t len)
                 if (!(o = realloc(out, cap)))
                 {
                     free(out);
+                    free(joined);
                     return NULL;
                 }
                 out = o;
@@ -2873,5 +3002,6 @@ kaa_normalize_text(const char *text, size_t len)
         }
     }
     out[pos] = '\0';
+    free(joined);
     return out;
 }
