@@ -1,0 +1,127 @@
+{
+  "generated": "2026-11-16",
+  "postgres": "16.15 (Ubuntu 16.15-0ubuntu0.24.04.1)",
+  "machine": "x86_64, 2 CPU",
+  "runs": 30,
+  "corpus": {
+    "documents": 262582,
+    "words": 12968707,
+    "megabytes": 160.9
+  },
+  "indexing": {
+    "simple": {
+      "tsvector_s": 13.3,
+      "gin_s": 10.2,
+      "total_s": 23.5
+    },
+    "kaasearch": {
+      "tsvector_s": 77.0,
+      "gin_s": 5.5,
+      "total_s": 82.5
+    }
+  },
+  "search": [
+    {
+      "query": "mektep",
+      "simple": {
+        "documents": 1703,
+        "median_ms": 2.89
+      },
+      "kaasearch": {
+        "documents": 7524,
+        "median_ms": 12.07
+      }
+    },
+    {
+      "query": "kitap",
+      "simple": {
+        "documents": 775,
+        "median_ms": 2.31
+      },
+      "kaasearch": {
+        "documents": 2501,
+        "median_ms": 6.74
+      }
+    },
+    {
+      "query": "bala",
+      "simple": {
+        "documents": 1033,
+        "median_ms": 3.15
+      },
+      "kaasearch": {
+        "documents": 7706,
+        "median_ms": 13.5
+      }
+    },
+    {
+      "query": "xalıq",
+      "simple": {
+        "documents": 4960,
+        "median_ms": 9.32
+      },
+      "kaasearch": {
+        "documents": 21378,
+        "median_ms": 22.48
+      }
+    },
+    {
+      "query": "jumıs",
+      "simple": {
+        "documents": 6308,
+        "median_ms": 10.87
+      },
+      "kaasearch": {
+        "documents": 29598,
+        "median_ms": 26.31
+      }
+    },
+    {
+      "query": "densawlıq",
+      "simple": {
+        "documents": 327,
+        "median_ms": 1.87
+      },
+      "kaasearch": {
+        "documents": 4078,
+        "median_ms": 9.58
+      }
+    },
+    {
+      "query": "oqı",
+      "simple": {
+        "documents": 11,
+        "median_ms": 1.03
+      },
+      "kaasearch": {
+        "documents": 8505,
+        "median_ms": 13.55
+      }
+    },
+    {
+      "query": "jaz",
+      "simple": {
+        "documents": 85,
+        "median_ms": 1.15
+      },
+      "kaasearch": {
+        "documents": 4823,
+        "median_ms": 10.6
+      }
+    }
+  ],
+  "accuracy": {
+    "news": {
+      "words": 300,
+      "correct": 290,
+      "percent": 96.7,
+      "note": "random words from news, health and parallel-corpus texts; first check, before the fixes it led to"
+    },
+    "tables": {
+      "words": 782,
+      "correct": 782,
+      "percent": 100.0,
+      "note": "kaastem/tests/*.tsv"
+    }
+  }
+}
