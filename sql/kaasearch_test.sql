@@ -85,6 +85,11 @@ SELECT alias, token, lexemes FROM ts_debug('kaasearch', 'o''zbek tili');
 SELECT to_tsvector('kaasearch', 'Нѳкис оқытыўшыныӊ қорғаӯ ӼАЯЛЛАР');
 SELECT to_tsvector('kaasearch', 'Нѳкис оқытыўшыныӊ') = to_tsvector('kaasearch', 'Нөкис оқытыўшының') AS old_font_match;
 
+-- 19c. Punctuation around a word is left out: in a database with the C locale the default parser
+--      gives «Mektep» or “Мектеп” as one token
+SELECT ts_lexize('kaasearch_dict', '«Mektep»'), ts_lexize('kaasearch_dict', '“Мектепке”'),
+       ts_lexize('kaasearch_dict', '—'), ts_lexize('kaasearch_dict', '…');
+
 -- 20. Verb forms: tense, person, negation and voice suffixes are stripped
 SELECT to_tsvector('kaasearch', 'jazıladı barmadım keleseń oqıp otır');
 

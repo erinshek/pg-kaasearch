@@ -49,6 +49,9 @@ LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
     free(s);
     s = kaa_normalize_text(in, size);
     free(s);
+    n = kaa_word_span(in, size, &start);
+    if (start + n > size)
+        abort();
 
     /* a user lexicon made of the input's lines, alternately non-verbs and verb stems */
     x = kaa_extra_new();

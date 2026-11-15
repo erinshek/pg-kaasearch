@@ -84,6 +84,11 @@ char       *kaa_normalize_text(const char *text, size_t len);
  * *outlen (if not NULL) is its length. */
 char       *kaa_join_apostrophes(const char *text, size_t len, size_t *outlen);
 
+/* The part of a token from its first to its last letter or digit: punctuation around a word
+ * («Mektep», “Мектеп”, Ózbekstan’) is left out. Returns its length (0 if the token has no letter or
+ * digit) and sets *off (if not NULL) to where it starts. */
+size_t      kaa_word_span(const char *word, size_t len, size_t *off);
+
 /* Name of a source as in kaastem: "list", "lexicon", "safe", "unchanged". */
 const char *kaa_source_name(KaaSource source);
 

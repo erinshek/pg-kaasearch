@@ -241,6 +241,15 @@ SELECT to_tsvector('kaasearch', 'Нѳкис оқытыўшыныӊ') = to_tsvect
  t
 (1 row)
 
+-- 19c. Punctuation around a word is left out: in a database with the C locale the default parser
+--      gives «Mektep» or “Мектеп” as one token
+SELECT ts_lexize('kaasearch_dict', '«Mektep»'), ts_lexize('kaasearch_dict', '“Мектепке”'),
+       ts_lexize('kaasearch_dict', '—'), ts_lexize('kaasearch_dict', '…');
+ ts_lexize | ts_lexize | ts_lexize | ts_lexize 
+-----------+-----------+-----------+-----------
+ {mektep}  | {mektep}  | {}        | {}
+(1 row)
+
 -- 20. Verb forms: tense, person, negation and voice suffixes are stripped
 SELECT to_tsvector('kaasearch', 'jazıladı barmadım keleseń oqıp otır');
                to_tsvector                

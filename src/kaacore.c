@@ -2905,6 +2905,39 @@ is_word_cp(cp_t c)
         c == 0x200D || c == 0x2060 || c == 0xFEFF;
 }
 
+/* A character that can start or end a word: a letter, a digit or a combining mark */
+static bool
+is_word_edge(cp_t c)
+{
+    return is_alpha(c) || (c >= '0' && c <= '9') || (c >= 0x0300 && c <= 0x036F);
+}
+
+size_t
+kaa_word_span(const char *word, size_t len, size_t *off)
+{
+    const unsigned char *p = (const unsigned char *) word;
+    const unsigned char *end = p + len;
+    const unsigned char *first = NULL;
+    const unsigned char *last = NULL;      /* end of the last word character */
+
+    while (p < end)
+    {
+        cp_t        c;
+        int         k = utf8_decode(p, end, &c);
+
+        if (is_word_edge(c))
+        {
+            if (!first)
+                first = p;
+            last = p + k;
+        }
+        p += k;
+    }
+    if (off)
+        *off = first ? (size_t) (first - (const unsigned char *) word) : 0;
+    return first ? (size_t) (last - first) : 0;
+}
+
 char *
 kaa_normalize_text(const char *text, size_t len)
 {

@@ -185,6 +185,7 @@ is_stop(DictKaasearch *d, const char *word)
 /*
  * Dictionary lexize function, called for each token.
  *
+ *   0. leave out punctuation around the word («Mektep» → Mektep)
  *   1. normalise the token (lower case, Cyrillic → Latin, apostrophe spelling)
  *   2. a stop word is dropped
  *   3. stem it (kaacore)
@@ -198,12 +199,22 @@ kaasearch_lexize(PG_FUNCTION_ARGS)
     DictKaasearch *d = (DictKaasearch *) PG_GETARG_POINTER(0);
     char       *in = (char *) PG_GETARG_POINTER(1);
     int32       len = PG_GETARG_INT32(2);
+    size_t      off;
     char       *norm;
     char       *stem;
     bool        verbal = false;
     TSLexeme   *res;
     int         nlex = 0;
     char       *p;
+
+    /*
+     * Leave out punctuation around the word. In a database with the C locale the default parser takes
+     * every non-ASCII character for a letter, so «Mektep» or “Мектеп” comes as one token.
+     */
+    len = (int32) kaa_word_span(in, len, &off);
+    in += off;
+    if (len == 0)
+        PG_RETURN_POINTER(palloc0(sizeof(TSLexeme)));
 
     /* the surface form is checked against the stop list (only a dictionary with one needs it) */
     if (d->stoplist.len > 0)
