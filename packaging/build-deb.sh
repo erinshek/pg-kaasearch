@@ -6,6 +6,10 @@
 #
 # Needs postgresql-server-dev-PG_MAJOR, make, a C compiler and dpkg-deb. The package is named
 # postgresql-PG_MAJOR-kaasearch and depends on postgresql-PG_MAJOR.
+#
+# The package version keeps the "~" of a pre-release, so that 1.0.0~rc1 sorts before 1.0.0, but the
+# file name has none: GitHub replaces "~" in the names of release files.
+#   version  1.0.0~rc1-1.noble   file  postgresql-17-kaasearch_1.0.0-rc1-1.noble_amd64.deb
 set -eu
 
 PG=$1
@@ -16,7 +20,8 @@ PG_CONFIG=/usr/lib/postgresql/$PG/bin/pg_config
 NAME=postgresql-$PG-kaasearch
 ARCH=$(dpkg --print-architecture)
 CODENAME=$(. /etc/os-release && echo "$VERSION_CODENAME")
-DEBVER=$VERSION-1~$CODENAME
+DEBVER=$VERSION-1.$CODENAME
+FILEVER=$(echo "$DEBVER" | tr '~' '-')
 ROOT=$(mktemp -d)
 
 # with_llvm=no: no JIT bitcode, so clang is not needed
@@ -44,5 +49,5 @@ Description: Full-text search for the Karakalpak language in PostgreSQL $PG
 CONTROL
 
 mkdir -p "$OUT"
-dpkg-deb --build --root-owner-group "$ROOT" "$OUT/${NAME}_${DEBVER}_${ARCH}.deb"
+dpkg-deb --build --root-owner-group "$ROOT" "$OUT/${NAME}_${FILEVER}_${ARCH}.deb"
 rm -rf "$ROOT"
