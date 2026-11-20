@@ -1,0 +1,48 @@
+{
+   "name": "pg_kaasearch",
+   "abstract": "Full-text search for the Karakalpak language",
+   "description": "A text search configuration, dictionary and rule-based stemmer for Karakalpak. It finds every form of a word, searches Latin and Cyrillic text alike, reads the old apostrophe spelling and drops stop words.",
+   "version": "1.0.0",
+   "maintainer": "Turdıbek Jumabaev",
+   "license": "mit",
+   "provides": {
+      "pg_kaasearch": {
+         "abstract": "Full-text search for the Karakalpak language",
+         "file": "pg_kaasearch--1.0.sql",
+         "docfile": "README.md",
+         "version": "1.0.0"
+      }
+   },
+   "prereqs": {
+      "runtime": {
+         "requires": {
+            "PostgreSQL": "15.0.0"
+         }
+      }
+   },
+   "resources": {
+      "homepage": "https://github.com/erinshek/pg-kaasearch",
+      "bugtracker": {
+         "web": "https://github.com/erinshek/pg-kaasearch/issues"
+      },
+      "repository": {
+         "url": "https://github.com/erinshek/pg-kaasearch.git",
+         "web": "https://github.com/erinshek/pg-kaasearch",
+         "type": "git"
+      }
+   },
+   "generated_by": "Turdıbek Jumabaev",
+   "meta-spec": {
+      "version": "1.0.0",
+      "url": "https://pgxn.org/meta/spec.txt"
+   },
+   "tags": [
+      "full text search",
+      "tsearch",
+      "stemmer",
+      "dictionary",
+      "karakalpak",
+      "turkic"
+   ],
+   "release_status": "stable"
+}

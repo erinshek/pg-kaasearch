@@ -1,0 +1,5 @@
+# Left out of release archives (git archive), such as the PGXN zip
+.github/ export-ignore
+.dockerignore export-ignore
+packaging/ export-ignore
+docs/bench/*.png export-ignore
