@@ -20,27 +20,28 @@ SELECT to_tsvector('kaasearch', 'Мектепке барған балалар к
 ## Benchmarks
 
 Measured on 262,582 Karakalpak documents (news, health and parallel texts, 13 million words);
-the numbers are in [docs/bench/results.json](docs/bench/results.json).
+the numbers are in [docs/bench/results.json](https://github.com/erinshek/pg-kaasearch/blob/main/docs/bench/results.json).
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/bench/documents-dark.png">
-  <img alt="Documents found" src="docs/bench/documents-light.png">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/erinshek/pg-kaasearch/main/docs/bench/documents-dark.png">
+  <img alt="Documents found" src="https://raw.githubusercontent.com/erinshek/pg-kaasearch/main/docs/bench/documents-light.png">
 </picture>
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/bench/search_time-dark.png">
-  <img alt="Search time" src="docs/bench/search_time-light.png">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/erinshek/pg-kaasearch/main/docs/bench/search_time-dark.png">
+  <img alt="Search time" src="https://raw.githubusercontent.com/erinshek/pg-kaasearch/main/docs/bench/search_time-light.png">
 </picture>
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/bench/accuracy-dark.png">
-  <img alt="Stemmer accuracy" src="docs/bench/accuracy-light.png">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/erinshek/pg-kaasearch/main/docs/bench/accuracy-dark.png">
+  <img alt="Stemmer accuracy" src="https://raw.githubusercontent.com/erinshek/pg-kaasearch/main/docs/bench/accuracy-light.png">
 </picture>
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/bench/indexing-dark.png">
-  <img alt="Indexing time" src="docs/bench/indexing-light.png">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/erinshek/pg-kaasearch/main/docs/bench/indexing-dark.png">
+  <img alt="Indexing time" src="https://raw.githubusercontent.com/erinshek/pg-kaasearch/main/docs/bench/indexing-light.png">
 </picture>
+
 ## Install
 
 **Docker** (PostgreSQL 15–18, the extension is already enabled):
@@ -54,6 +55,13 @@ docker run -e POSTGRES_PASSWORD=secret -p 5432:5432 ghcr.io/erinshek/pg_kaasearc
 
 ```sh
 sudo apt install ./postgresql-18-kaasearch_1.0.0-1.noble_amd64.deb
+```
+
+**PGXN** (needs the PostgreSQL development files, a C compiler and the
+[pgxn client](https://pgxn.github.io/pgxnclient/)):
+
+```sh
+pgxn install pg_kaasearch
 ```
 
 **From source** (needs the PostgreSQL development files, a C compiler and `make`):
